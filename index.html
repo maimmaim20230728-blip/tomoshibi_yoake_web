@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.94.1（2026-11-22）：戸口・棚・家の戸口で起きることは、着いたときでなく、そのマスで行動を決めて終えたとき（11/22 ヒロさん「イベントのあるマスの上で攻撃終了と待機でイベント発生にしてほしい。あくまで行動を決定して終了した時にイベント発生」）。攻撃・待機・手当て・品など、行動を終えるものすべてで起きる。着いただけでは何も起きないので、移動は今までどおり戻せる（0.94.0 の「戻せない」はなくした）。同じマスで1ターンに1回だけ。16章の鐘を鳴らすはボタンのまま。マスの説明・章のはじめ・ユラの台詞を合わせた（文は仮） -->
 <!-- 版 0.94.0（2026-11-22）：操作を軽く（11/22 ヒロさん「マップ拡大を1.0倍、1.25、1.5、1.75、2.0、2.5→1.0」「戦闘スピードとユニットの動く速さも0.25倍、0.5倍、1.0、2.0、3.0」「設定でいつでも変えられる」「何もしない場合はもう一度ユニットをタップで待機。そのあとに乗り降りしたければ人間の行動力があれば可能。待機後の攻撃はできない」「調べる、尋ねるは要らない。乗っても自動でイベント発生」「音楽は早くなったり遅くならない」）。拡大ボタンは6段をぐるっと・設定にもマップの大きさ・戦いの場面の速さ・ユニットの動く速さ（どれも端末に覚える）。味方も霧の側も道にそって歩くようにした（1マス110ミリ秒・仮）。行動を選ぶところで味方をもう一度押すと、いつでも待機。待機したターンだけ、人は移動の残りがあれば隣の機械に乗れる・機械は乗っている人が降りられる（降りた人はそこで終わり）。倉庫の戸口・棚・家の戸口のボタンをなくし、着いたらひとりでに（行動は使わない・見つけたら移動は戻せない）。16章の「鐘を調べる」は「鐘を鳴らす」に。数字と台詞は仮 -->
 <!-- 版 0.93.0（2026-11-22）：スマホの音割れ・雑音（11/22 ヒロさん「スマホだと音割れと言うかノイズが混ざる」）。測ると出力の山は0.45まで（1.0に届かない）ので数字の上での音割れではない。sound.js でスマホ（指で触る画面）だけ、大きめのバッファ（latencyHint:playback）で途切れを防ぎ、小さなスピーカーが震える100Hzより下を切り、9kHzより上を少し落とす。パソコンはこれまでのまま。数字は仮 -->
 <!-- 版 0.92.0（2026-11-22）：はじめからの持ち物とプロローグ（11/22 ヒロさん「最初に最低レアのアイテムをランダムで１つ持っている状態でスタート」「始めるを選んだ後に、準備画面にすぐに行かず、ゲームのストーリーの話を少し入れて何のために冒険が始まるのかなんとなくはわかるようにして。いわゆるプロローグ的な部分が必要」）。はじめからはレア度1の袋の品を1つ持つ（評価の品と同じ引き方・newCamp）。タイトルの「はじめから」と中断の「最初から」のあと、準備画面の前に「プロローグ」の題の絵→灯台の会話17行（霧が夜ごと来る・影と暴走・倒すのでなく取り戻す・霧のわけはまだだれも知らない・だれも置いていかない・ユラが物置の品を渡す）→「第1部『港の灯』」の題の絵。幕間を見返すからも見られる。題・文・台詞・曲は仮 -->
@@ -500,7 +501,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.94.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.94.1</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -1588,7 +1589,7 @@ const CHAPTERS={
             6:[['shadow',19,7,{v:1}],['beast',10,0,{v:3}]],
             7:[['shadow',3,1,{v:3}],['beast',19,7,{v:3}]] },
     winLog:'かごが薬草でいっぱいになった。森の霧が、草の香りといっしょに引いていった。', winWhy:'森の薬草を集めた', resultHead:'薬草が集まりました', retry:'もう一度、薬草の森へ。',
-    startMsg:'11章「薬草の森」。森の草むらに、薬草が生えています。人（生身）が草むらのマスに立って「摘む」を選びます。機械では摘めません。6か所で摘むとクリアです。森の家の戸口に立ち寄ると、住んでいる人に会えます。'},
+    startMsg:'11章「薬草の森」。森の草むらに、薬草が生えています。人（生身）が草むらのマスに立って「摘む」を選びます。機械では摘めません。6か所で摘むとクリアです。森の家の戸口のマスで行動を終えると、住んでいる人に会えます。'},
  /* 0.47.0 12章（設計書 §7「静かな足音・夜・中・気配のない影をMP0で呼び戻す・ジュン（MP0）・機械なし」）。11/9 ヒロさんの答え：
     クリア＝気配のない影（spawn の 'jun'）の闇の心を0にして呼び戻す。耐久を0にすると負け（「呼び戻すまで終わらない」）。
     影は隣に味方がいるときだけ見える（「隣でだけ見える」・ターンのはじめに足音の方角を知らせる）。攻撃せず、人から離れるように歩く（「攻撃しない・逃げる」）。
@@ -1964,7 +1965,7 @@ const CHAPTERS={
             7:[['beast',19,12,{v:1}],['shadow',0,12,{v:3}]] },   /* 霧の側は16（仮） */
     endTalk:'c21end',
     winLog:'設計図と台帳を抱えて外へ出ると、丘の霧が引いていった。気象台の風見が、からからと回りはじめた。', winWhy:'設計図と台帳を見つけた', resultHead:'設計図と台帳を見つけました', retry:'もう一度、東の丘の気象台へ。',
-    startMsg:'21章「古い気象台」。記録の町の東の丘に、古い気象台があります。中の6つの棚のどこかに、ヨアケの設計図と工房の台帳が残っています。人（生身）が棚のマスに着くと、ひとりでに調べます。2回で1つの棚を調べ終わります（ボグダンとイネスは1回）。10ターン目が終わるまでに2つとも見つけるとクリアです。気象台の守りが0になると負けです。'},
+    startMsg:'21章「古い気象台」。記録の町の東の丘に、古い気象台があります。中の6つの棚のどこかに、ヨアケの設計図と工房の台帳が残っています。人（生身）が棚のマスで行動を終える（攻撃しても、待機しても）と、調べます。2回で1つの棚を調べ終わります（ボグダンとイネスは1回）。10ターン目が終わるまでに2つとも見つけるとクリアです。気象台の守りが0になると負けです。'},
  /* 0.60.0 22章（設計書 §7「町じゅうの影・夜・大・町を守る大きな機械の熱を下げる・イワオ（MP0）」）。第3部の6章目。
     goal:'iwao'＝広場のイワオ（spawn の 'iwao'）の熱を0にして呼び戻し、夜明け（maxTurn ターン目の霧の側の番のおわり）まで持ちこたえるとクリア（11/11 ヒロさん「夜明けまで」）。
     夜明けまでに熱を0にできなかったら負け（18章と同じ）。イワオの耐久を0にしても負け（ヒロさん「負け」）。人が全員倒れたときも負け。
@@ -4355,7 +4356,7 @@ function select(u){
 function deselect(){ if(G.sure!=null) G.sure=null; G.sel=null;   /* 0.80.0 必中は選び直すと取りやめ */ G.reach=null; G.snap=null; G.act=null; G.mode='idle'; }
 function undoToMove(){ walkStop(); const u=G.sel; if(G.snap) restore(G.snap); G.act=null; G.reach=reach(u); G.mode='move'; G.cursor={x:u.x,y:u.y}; }
 function cancelCurrent(){ walkStop(); if(G.sel&&G.snap) restore(G.snap); deselect(); }
-function finish(u){ u.done=true; u.moved=true; u.halfMove=false; u.quickOff=false; encoreGo(u); deselect(); stageJoin(); kasaMeet(); iceCrack(u); autoSpot(u); }   /* 0.94.0 autoSpot＝踏んで起きること */   /* 0.69.0 34章：機械が青い氷に止まると、ひび */   // 0.36.0 カササギの隣
+function finish(u){ u.done=true; u.moved=true; u.halfMove=false; u.quickOff=false; encoreGo(u); deselect(); stageJoin(); kasaMeet(); iceCrack(u); autoSpot(u); }   /* 0.94.1 autoSpot＝そのマスで行動を終えたときに起きること */   /* 0.69.0 34章：機械が青い氷に止まると、ひび */   // 0.36.0 カササギの隣
 /* 0.12.0 4章：味方が行動を終えたとき、まだ仲間でないアマラかウタカタの隣にいれば、2人とも仲間になる（ヒロさん「隣へ行くと仲間」）。
    アマラはずっと舞台で歌っていたので、そのターンからすぐ動ける（ウタカタは前の席に人が乗ると動ける）。乱数は使わない */
 function stageJoin(){
@@ -4413,7 +4414,7 @@ function back(){
     case 'exec': flash('いまは霧の側が動いています。取り消せません。'); return;
     case 'predict': backFromPredict(); break;
     case 'target': G.mode=G.act&&G.act.from==='late'?'late':'menu'; G.act=null; break;
-    case 'menu': if(spotLocked(G.sel)){ flash(`${G.sel.name}は、ここで見つけた物があるので、移動は戻せません。`); break; } undoToMove(); break;   /* 0.94.0 */
+    case 'menu': undoToMove(); break;
     case 'move': deselect(); break;
     case 'late': deselect(); break;   /* 0.94.0 */
     default: askQuit(); return;
@@ -4444,8 +4445,7 @@ function onTile(x,y){
     const s=G.sel;
     if(postOn(s)&&((x===s.x&&y===s.y)||(G.reach.has(key(x,y))&&!u))){ const sx=s.x, sy=s.y; s.x=x; s.y=y; G.inspect=s; junSpot(); finish(s); render(); walkAnim(s,sx,sy); spotAfter(); return; }   /* 0.94.0 歩く動き */   /* 0.80.0 あと動き：動くかその場で、行動が終わる */
     if(x===s.x&&y===s.y) G.mode='menu';
-    else if(G.reach.has(key(x,y))&&!u){ const sx=s.x, sy=s.y; s.mvUsed=G.reach.get(key(x,y)); s.x=x; s.y=y; s.moved=true; G.mode='menu'; G.inspect=s; junSpot(); walkAnim(s,sx,sy);   /* 0.94.0 歩く動き */
-      if(autoSpot(s)){ G.snap=snapshot(); render(); spotAfter(); return; } }   /* 0.94.0 戸口・棚・家の戸口は、着いたらひとりでに */   /* 0.80.0 mvUsed＝使った歩数（ツバメの仕上げ） */   /* 0.47.0 */
+    else if(G.reach.has(key(x,y))&&!u){ const sx=s.x, sy=s.y; s.mvUsed=G.reach.get(key(x,y)); s.x=x; s.y=y; s.moved=true; G.mode='menu'; G.inspect=s; junSpot(); walkAnim(s,sx,sy); }   /* 0.94.0 歩く動き */   /* 0.94.1 戸口・棚・家の戸口は、着いただけでは起きない（行動を終えたときに finish から） */   /* 0.80.0 mvUsed＝使った歩数（ツバメの仕上げ） */   /* 0.47.0 */
     else if(pickable(u)) select(u);
     else { deselect(); G.inspect=seen||{tile:[x,y]}; }
   } else if(G.mode==='menu'){
@@ -4548,7 +4548,7 @@ function menuCommands(u){
   { const zi=zaiAt(u); if(zi>=0&&((u.kind==='person'&&!u.inMachine)||(u.kind==='machine'&&canAct(u)))){ const Z=CH().zai, P=Z.spots[zi], left=Z.need-zaiN();
     cmds.push({label:'拾う',sub:`${u.name}が${P[2]}を拾う（あと ${left}つ）`,key:true,
       act:()=>startAct({name:'拾う',noTarget:true,list:[null],card:()=>`<span class="p">${u.name}</span> が <span class="big">${P[2]}</span> を拾う${left<=1?'<br><b>38章のクリア</b>':`<br>あと ${left-1}つ`}<br><small>${u.name}の行動はここで終わります</small>`,run:()=>{pickZai(u,zi);finish(u);}})}); } }
-  /* 0.58.0 21章の棚の「調べる」は、0.94.0 から着いたらひとりでに（autoSpot） */
+  /* 0.58.0 21章の棚の「調べる」は、0.94.1 から棚のマスで行動を終えたとき（autoSpot） */
   /* 0.62.0 29章：家の隣で「伝える」（人だけ） */
   { const ti=tellAt(u); if(ti>=0&&u.kind==='person'){ const P=CH().tell[ti], left=G.told.filter(v=>!v).length;
     cmds.push({label:'伝える',sub:`${u.name}が${P.name}にヨアケのことを伝える`,key:true,
@@ -4557,7 +4557,7 @@ function menuCommands(u){
   { const si=shareAt(u); if(si>=0){ const P=CH().share[si];
     cmds.push({label:'灯を受け取る',sub:`${P.name}から灯を分けてもらう（力・守り・説得力が少し上がる）`,key:true,
       act:()=>startAct({name:'灯を受け取る',noTarget:true,list:[null],card:()=>`<span class="p">${u.name}</span> が <span class="big">${P.name}</span> から灯を分けてもらう<br>この章のあいだ、${u.name}の力・守り・説得力が ${SK.akari}倍<br><small>灯は1けんに1つ、1人に1つ。説得力は乗っていても効きます。${u.name}の行動はここで終わります</small>`,run:()=>{shareLight(u,si);finish(u);}})}); } }
-  /* 0.39.0 11章の家の戸口の「訪ねる」は、0.94.0 から着いたらひとりでに（autoSpot） */
+  /* 0.39.0 11章の家の戸口の「訪ねる」は、0.94.1 から戸口のマスで行動を終えたとき（autoSpot） */
   if(u.kind==='person'){
     /* 0.37.0 ペマの動物の友：鳥に頼んで、2マス先のマスとまわりの霧を、このターンだけ晴らす（1ターンに1回・行動を使わない・乱数は使わない・仮） */
     if(u.footSkill==='bird'){ const bt=birdTiles(u), used=u.birdT===G.turn;
@@ -4600,7 +4600,7 @@ function menuCommands(u){
     /* 0.52.0 16章：止まった鐘の機械を調べる（隣・生身の人・行動を使う・1章に1回） */
     { const TW=CH().tower; if(TW&&man(u.x,u.y,TW.x,TW.y)===1) cmds.push({label:'鐘を鳴らす',sub:G.bellRung?'もう鳴らした（1章に1回）':'一度だけ鳴る・次の霧の側の番、霧の側が動けない',off:!!G.bellRung,key:!G.bellRung,
       act:()=>startAct({name:'鐘を鳴らす',noTarget:true,list:[null],card:()=>`止まった <span class="big">鐘の機械</span> を動かして鳴らす<br><b>鐘が一度だけ鳴り、次の霧の側の番、霧の側はみな動けない</b><br><small>1章に1回だけ。${u.name}の行動はここで終わります</small>`,run:()=>{ringBell(u);finish(u);}})}); }
-    /* 0.10.0 2章の倉庫の戸口の「調べる」は、0.94.0 から着いたらひとりでに（autoSpot） */
+    /* 0.10.0 2章の倉庫の戸口の「調べる」は、0.94.1 から戸口のマスで行動を終えたとき（autoSpot） */
     /* 0.11.0 ダグニの網さばき：隣の敵を1ターン止める（行動を使う・外れない・乱数は使わない） */
     if(u.footSkill==='net'){ const nt=adjEnemies(u).filter(e=>e.kind!=='machine');   // 0.26.0 機械には効かない
       cmds.push({label:'網さばき',sub:nt.length?'隣の人を1ターン止める・回避0%・反撃なし':adjEnemies(u).length?'機械には効かない':'隣に敵がいない',off:!nt.length,key:nt.length>0,
@@ -4816,17 +4816,17 @@ function lateCmds(u){ const c=[]; if(!u||u.side!=='ally'||u.out||u.inMachine||u.
         run:p=>{ r.done=true; dismount(u,r,p.x,p.y); deselect(); autoSpot(r); }})}); });
   return c; }
 /* 0.94.0 調べる・訪ねるのボタンをなくした（11/22 ヒロさん「調べる、尋ねるは要らない。そこに人間、マップによっては機械で乗っても自動でイベント発生、アイテムが手にはいったりする」）。
-   倉庫の戸口・気象台の棚・家の戸口のマスに着いたら（移動で着いたとき。ほかの形で着いたときは行動を終えたとき）、ひとりでに起きる。行動は使わない（そのあと攻撃や説得もできる）。
+   0.94.1 から（11/22 ヒロさん「イベントのあるマスの上で攻撃終了と待機でイベント発生にしてほしい。あくまで行動を決定して終了した時にイベント発生」）：
+   倉庫の戸口・気象台の棚・家の戸口のマスの上で、行動を決めて終えたとき（攻撃・待機・手当て・品など、finish を通るものすべて）に起きる。着いただけでは起きない。
    起こせるのは前と同じ：戸口と棚は生身の人、家の戸口は生身の人か人が乗っている機械。棚は同じ人が同じターンに1回だけ数える（仮）。
-   見つけたあとは、その移動は戻せない（見つけた物が消えないように） */
+   行動を決めるまでは何も起きていないので、移動は今までどおり戻せる。同じマスでは1ターンに1回だけ（spotK・仮） */
 function autoSpot(u){ if(!u||u.side!=='ally'||u.out||u.inMachine||u.x==null||G.over) return false;
   const k=`${G.turn}:${u.x},${u.y}`; if(u.spotK===k) return false;
   const foot=u.kind==='person', manned=foot||(u.seats||[]).some(Boolean); let hit=false;
   if(foot){ const dk=doorKey(u.x,u.y); if(dk&&(CH().doors||{})[`${u.x},${u.y}`]&&!G.opened[dk]){ searchDoor(u); hit=true; } }
   if(foot){ const si=shelfAt(u.x,u.y); if(si>=0){ searchShelf(u,si); hit=true; } }
   if(manned){ const vi=visitAt(u.x,u.y); if(vi>=0&&!G.visited[vi]){ visitHouse(u,vi); hit=true; } }
-  if(hit){ u.spotK=k; u.spotT=G.turn; } return hit; }
-function spotLocked(u){ return !!(u&&u.spotT===G.turn&&u.spotK===`${G.turn}:${u.x},${u.y}`); }
+  if(hit) u.spotK=k; return hit; }
 function spotAfter(){ if(G.over) return; if(G.phase==='player'&&goalMet()) win(); else talkFlush(); }
 /* 0.56.0 ゾエの野営上手：生身で、動かずに待機すると、耐久が満タンに戻る（11/11 ヒロさん「待機で100%回復」）。乱数は使わない */
 function campOn(u){ return !!(u&&u.side==='ally'&&u.kind==='person'&&u.footSkill==='camp'&&!u.inMachine); }
@@ -5114,11 +5114,11 @@ function terrainHTML(x,y){
   else if(t==='K') s+=G.beaconLit?'<br>灯がともっている':'<br>灯が消えている。隣で人が「灯をともす」とクリア（機械に乗ったままでもよい）';   // 0.33.0
   if(t==='D'&&houseAt(x,y)>=0){ const i=houseAt(x,y), h=CH().houses[i]; s=`<b>${h.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.deliv[i]?'<br>荷物はもう届けた':h.last&&!lastReady()?'<br>ほかの4軒に届けてから、ここに届ける':'<br>人か、人が乗っている機械がこのマスに立つと「届ける」'); }   // 0.37.0 外伝1
   else if(treasureAt(x,y)>=0) s+='<br><b>光る品</b>：人か、人が乗っている機械がこのマスに立つと「拾う」（評価の点が1つ増える）';   /* 0.38.0 外伝7 */
-  else if(t==='D'&&visitAt(x,y)>=0){ const i=visitAt(x,y), v=CH().visit[i]; s=`<b>${v.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.visited[i]?'<br>もう訪ねた':'<br>人か、人が乗っている機械がこのマスに着くと、訪ねる'); }   /* 0.39.0 11章 */
-  else if(t==='D'){ const k=doorKey(x,y); s+=G.opened[k]?`<br>この${SN}はもう調べた`:'<br>人がこのマスに着くと、中を見られる'; }   // 0.10.0
+  else if(t==='D'&&visitAt(x,y)>=0){ const i=visitAt(x,y), v=CH().visit[i]; s=`<b>${v.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.visited[i]?'<br>もう訪ねた':'<br>人か、人が乗っている機械がこのマスで行動を終えると、訪ねる'); }   /* 0.39.0 11章 */
+  else if(t==='D'){ const k=doorKey(x,y); s+=G.opened[k]?`<br>この${SN}はもう調べた`:'<br>人がこのマスで行動を終えると、中を見られる'; }   // 0.10.0
   if(CH().share&&G.shared){ const i=CH().share.findIndex(p=>p.x===x&&p.y===y); if(i>=0) s+=G.shared[i]?`<br><b>${CH().share[i].name}</b>：もう灯を分けてもらった`:`<br><b>${CH().share[i].name}</b>：上下左右の隣で、人が「灯を受け取る」（力・守り・説得力が少し上がる）`; }   /* 0.67.0 32章 */
   if(CH().tell&&G.told){ const i=CH().tell.findIndex(p=>p.x===x&&p.y===y); if(i>=0) s+=G.told[i]?`<br><b>${CH().tell[i].name}</b>：もう伝えた`:`<br><b>${CH().tell[i].name}</b>：上下左右の隣で、人が「伝える」`; }   /* 0.62.0 29章 */
-  if(isShelfSpot(x,y)){ const S=CH().shelves, i=S.spots.findIndex(p=>p.x===x&&p.y===y), c=G.shelf[i]; s+=c>=S.need?`<br><b>${S.spots[i].name}</b>：もう調べた`:`<br><b>${S.spots[i].name}</b>：人（生身）がこのマスに着くと調べる（あと ${S.need-c}回・ボグダンとイネスは1回で）`; }   /* 0.58.0 21章 */
+  if(isShelfSpot(x,y)){ const S=CH().shelves, i=S.spots.findIndex(p=>p.x===x&&p.y===y), c=G.shelf[i]; s+=c>=S.need?`<br><b>${S.spots[i].name}</b>：もう調べた`:`<br><b>${S.spots[i].name}</b>：人（生身）がこのマスで行動を終えると調べる（あと ${S.need-c}回・ボグダンとイネスは1回で）`; }   /* 0.58.0 21章 */
   { const zi=zaiSpot(x,y); if(zi>=0) s+=G.zai[zi]?'<br><b>材料のあった場所</b>：もう拾った':`<br><b>${CH().zai.spots[zi][2]}</b>：声の部品の材料。人か動ける機械が、このマスか隣で「拾う」`; }   /* 0.74.0 38章 */
   if(isHerbSpot(x,y)) s+=herbAt(x,y)>=0?'<br><b>草むら</b>：薬草が生えている。人（生身）がこのマスに立つと「摘む」':'<br><b>草むら</b>：もう摘んだ';   /* 0.39.0 11章 */
   if(t==='H'&&isSheep()) s+='<br>羊はここへ帰る。霧の側は入れません';   // 0.37.0 10章の羊小屋
@@ -7018,7 +7018,7 @@ const BTALK={
     ['ユラ','normal','倉庫の奥で、運搬の機械が止まったままだそうです。名前はカモメ。'],
     [['イネス','@'],'normal','止まってるだけなら、隣で手を入れれば動くかも。直してみよう。'],
     ['ユラ','normal','それから、倉庫の持ち主から言づけです。「中の物は、霧を払うのに使ってくれ」と。'],
-    ['ユラ','normal','戸口のマスに人が着くと、中の物を持ち出せます。持たせるのは、次の準備画面で。'],
+    ['ユラ','normal','戸口のマスで人が行動を終えると、中の物を持ち出せます。攻撃しても、待機しても構いません。持たせるのは、次の準備画面で。'],
     [['ノア','@'],'smile','ありがとう。霧を晴らしながら、倉庫も見ていこう。']]},
   c2kiran:{head:'2章「港の倉庫」　キランが来た',lines:[
     ['','','（港の道から、棒を背負った旅の人が走ってくる）'],
@@ -7039,7 +7039,7 @@ const BTALK={
     [['イネス','@'],'normal','桟橋に、放水の機械がいるよ。ミズハっていうんだって。'],
     [['イネス','@'],'normal','人が乗っていないと動かないけど、前の席に乗れば、いっしょに戦ってくれる。'],
     ['ミズハ','','（ミズハのランプが、短く1回点く）'],
-    ['ユラ','normal','網小屋の戸口も、倉庫と同じです。立ち寄れば、中の物を使わせてもらえます。'],
+    ['ユラ','normal','網小屋の戸口も、倉庫と同じです。戸口のマスで行動を終えれば、中の物を使わせてもらえます。'],
     [['ノア','@'],'smile','わかった。行こう、ミズハ。']]},
   c3join:{head:'3章「漁港を守れ」　漁師の二人',lines:[
     ['','','（一番船から、二人の漁師が岸へ跳び移ってくる）'],
@@ -7066,7 +7066,7 @@ const BTALK={
     [['ノア','@'],'normal','あの人、まだ戻れるかもしれない。話しかけてみる。']]),
     [['イネス','@'],'normal','通りのはずれに、照らし機のアカリが止まってる。前の席に乗れば動かせるよ。'],
     ['アカリ','','（アカリのランプが、ぼんやり点く）'],
-    ['ユラ','normal','家の戸口も、立ち寄れば中を見られます。夜明けまで、避難所の灯を守ってください。']]},
+    ['ユラ','normal','家の戸口も、そのマスで行動を終えれば中を見られます。夜明けまで、避難所の灯を守ってください。']]},
   c5elif:{head:'5章「影の行列」　エリフ',lines:[
     ['エリフ','sad','……ずっと、だれかが呼んでいた。'],
     [['ノア','@'],'surprise','気がついた？ ここは港だよ。灯台の光が届くところ。'],
@@ -7084,7 +7084,7 @@ const BTALK={
     ['ボグダン','normal','わかっとる。わしとパブロは、中で道具と部品を守る。外は任せていいか。'],
     [['ノア','@'],'smile','任せて。8ターン目が終わるまで、工房には霧を入れないよ。'],
     ['ボグダン','normal','物置の戸口のものは、好きに使え。霧を払うためなら、惜しくはない。'],
-    ['ユラ','normal','物置の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','物置の戸口も、そのマスで行動を終えれば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.31.0 クリアのあとに仲間になる3人（11/7 ヒロさん「クリアのあとに仲間」・必ず「いっしょに行く」話をする）。結果の窓の前に出す */
   c6join:{head:'6章「坂の上の工房」　ボグダンとパブロとスパナ',lines:[
     ['','','（霧が引いた坂の上。工房の戸が開き、白いひげの職人が出てくる）'],
@@ -7107,7 +7107,7 @@ const BTALK={
     ['ユラ','normal','防波堤の途中に、漁師のシオネさんがいます。船の機械を2つ、守っているそうです。'],
     [['ケンタ','イネス','@'],'normal','シオネさんは、ほとんどしゃべらないけど、海のことならだれより詳しいんだ。隣まで行って、声をかけてみよう。'],
     ['ユラ','normal','それから、2ターンごとに大波が来ます。水辺にいると、波をかぶって、陸のほうへ押し戻されます。来る前のターンに知らせますね。'],
-    ['ユラ','normal','番小屋の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','番小屋の戸口も、そのマスで行動を終えれば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.33.0 シオネとナミノリとイカリが仲間になるとき（11/7 ヒロさん・必ず「いっしょに行く」話をする） */
   c7join:{head:'7章「嵐の防波堤」　シオネとナミノリとイカリ',lines:[
     ['シオネ','normal','……灯台の者か。'],
@@ -7127,7 +7127,7 @@ const BTALK={
     [['ボグダン','イネス','@'],'normal','あいつのしずく砲は遠くまで届く。そのかわり、すぐ隣には撃てん。懐に入れば、話しかけられる。'],
     [['ノア','@'],'normal','わかった。壊さないように、熱を下げて止めてあげよう。'],
     ['ユラ','normal','それから……灯台のレンズに、霧の煤がたまってきています。ターンごとに、光が遠くまで届かなくなります。'],
-    ['ユラ','normal','船具小屋の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','船具小屋の戸口も、そのマスで行動を終えれば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.34.0 4ターン目の鐘の音（設計書「霧の奥から鐘のような音が聞こえる」） */
   c8bell:{head:'8章「灯台の長い夜」　鐘の音',lines:[
     ['','','（霧の奥、ずっと北のほうから、低い音がひとつ響いた）'],
@@ -7238,7 +7238,7 @@ const BTALK={
     ['ユラ','normal','中継灯の光が、森の入り口まで届いています。……草むらに、薬草が生えているようです。'],
     [['イネス','@'],'normal','霧で倒れた人の手当てに、薬草はいくらあっても足りないもんね。'],
     [['ノア','@'],'normal','草むらで摘んでいこう。6か所で摘めば、かごがいっぱいになりそう。'],
-    ['ユラ','normal','森の家の人たちにも、会ってみてください。戸口に立ち寄れば、話ができます。'],
+    ['ユラ','normal','森の家の人たちにも、会ってみてください。戸口のマスで行動を終えれば、話ができます。'],
     [['ルカ','@'],'normal','薬草小屋の戸口にも寄ってみよう！']]},
   /* 0.39.0 オユナの家を訪ねたとき（必ず「いっしょに行く」話をする・11/7 ヒロさん）。シャボンはオユナの薬草小屋の機械（私の案・仮） */
   c11oyuna:{head:'11章「薬草の森」　オユナの家',lines:[
