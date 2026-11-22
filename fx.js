@@ -11,7 +11,7 @@ const $=id=>document.getElementById(id);
 const now=()=>performance.now();
 const ease=p=>1-(1-p)*(1-p), clamp01=p=>p<0?0:p>1?1:p, lerp=(a,b,p)=>a+(b-a)*p;
 function calm(){ return typeof isCalm==='function'&&isCalm(); }
-function fastK(){ return (typeof SET!=='undefined'&&SET.speed==='fast')?0.7:1; }
+function fastK(){ return typeof btSpd==='function'?1/btSpd():1; }   /* 0.94.0 設定の「戦いの場面の速さ」 */
 /* 乱数を使わないゆれ（時刻から作るので、ゲームの乱数の順番に触れない） */
 function wob(t,s){ return Math.sin(t*0.091+s*1.7)*0.6+Math.sin(t*0.173+s*4.1)*0.4; }
 function pixText(c,s,x,y,k,col){ if(window.BTL&&BTL.pixText) BTL.pixText(c,s,x,y,k,col); }

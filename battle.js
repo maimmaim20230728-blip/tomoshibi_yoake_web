@@ -27,7 +27,7 @@ function pixText(c,s,x,y,k,col){
 }
 const now=()=>performance.now();
 const lerp=(a,b,p)=>a+(b-a)*p, ease=p=>1-(1-p)*(1-p);
-function k(){ return (SET.speed==='fast'?0.55:1)*1.5; }   // 0.18.0 戦いの場面を1.5倍ゆっくり（11/7 ヒロさん「1.5倍くらい」）
+function k(){ return 1.5/(typeof btSpd==='function'?btSpd():1); }   /* 0.94.0 設定の「戦いの場面の速さ」（0.25倍〜3倍）で割る */   // 0.18.0 戦いの場面を1.5倍ゆっくり（11/7 ヒロさん「1.5倍くらい」）
 function calm(){ return typeof isCalm==='function'&&isCalm(); }
 function wait(ms){ return new Promise(r=>{ if(BT.skip) return r(); const end=now()+ms*k(); const f=()=>{ if(BT.skip||now()>=end) r(); else setTimeout(f,16); }; setTimeout(f,16); }); }
 function tween(ms,fn,motion){ return new Promise(r=>{ if(BT.skip||(motion&&calm())){ fn(1); return r(); } const t0=now(),d=ms*k();

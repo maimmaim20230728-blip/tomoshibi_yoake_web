@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.94.0（2026-11-22）：操作を軽く（11/22 ヒロさん「マップ拡大を1.0倍、1.25、1.5、1.75、2.0、2.5→1.0」「戦闘スピードとユニットの動く速さも0.25倍、0.5倍、1.0、2.0、3.0」「設定でいつでも変えられる」「何もしない場合はもう一度ユニットをタップで待機。そのあとに乗り降りしたければ人間の行動力があれば可能。待機後の攻撃はできない」「調べる、尋ねるは要らない。乗っても自動でイベント発生」「音楽は早くなったり遅くならない」）。拡大ボタンは6段をぐるっと・設定にもマップの大きさ・戦いの場面の速さ・ユニットの動く速さ（どれも端末に覚える）。味方も霧の側も道にそって歩くようにした（1マス110ミリ秒・仮）。行動を選ぶところで味方をもう一度押すと、いつでも待機。待機したターンだけ、人は移動の残りがあれば隣の機械に乗れる・機械は乗っている人が降りられる（降りた人はそこで終わり）。倉庫の戸口・棚・家の戸口のボタンをなくし、着いたらひとりでに（行動は使わない・見つけたら移動は戻せない）。16章の「鐘を調べる」は「鐘を鳴らす」に。数字と台詞は仮 -->
 <!-- 版 0.93.0（2026-11-22）：スマホの音割れ・雑音（11/22 ヒロさん「スマホだと音割れと言うかノイズが混ざる」）。測ると出力の山は0.45まで（1.0に届かない）ので数字の上での音割れではない。sound.js でスマホ（指で触る画面）だけ、大きめのバッファ（latencyHint:playback）で途切れを防ぎ、小さなスピーカーが震える100Hzより下を切り、9kHzより上を少し落とす。パソコンはこれまでのまま。数字は仮 -->
 <!-- 版 0.92.0（2026-11-22）：はじめからの持ち物とプロローグ（11/22 ヒロさん「最初に最低レアのアイテムをランダムで１つ持っている状態でスタート」「始めるを選んだ後に、準備画面にすぐに行かず、ゲームのストーリーの話を少し入れて何のために冒険が始まるのかなんとなくはわかるようにして。いわゆるプロローグ的な部分が必要」）。はじめからはレア度1の袋の品を1つ持つ（評価の品と同じ引き方・newCamp）。タイトルの「はじめから」と中断の「最初から」のあと、準備画面の前に「プロローグ」の題の絵→灯台の会話17行（霧が夜ごと来る・影と暴走・倒すのでなく取り戻す・霧のわけはまだだれも知らない・だれも置いていかない・ユラが物置の品を渡す）→「第1部『港の灯』」の題の絵。幕間を見返すからも見られる。題・文・台詞・曲は仮 -->
 <!-- 版 0.91.0（2026-11-22）：まとめてのおすすめで、打たれ弱い人も守りの品を持てば歩く形を試す（11/22 ヒロさん「レベルが上がったりアイテム次第ではノアでも歩いた方が良い場面もある」）。品なしの体から始める形と、歩くなら品を1つ持てるとして始める形の2つを回し、点の合計が高いほう（recFootBest・recTot）。歩く人の「倒れるまで影に約何回」は難しさが簡単のときだけ見せる（11/22 ヒロさん「かんたんモードだけで出るようにして。ヒントがあるとつまらなくなる人もいる」） -->
@@ -249,6 +250,8 @@ body.land #panel{flex:1;min-width:0;overflow-y:auto;scroll-padding-top:calc(var(
 .seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
 .seg2{grid-template-columns:1fr 1fr}
 .seg3{grid-template-columns:1fr 1fr 1fr}
+.seg5{grid-template-columns:repeat(5,1fr)}
+.seg5 button{white-space:nowrap;padding-left:2px;padding-right:2px}   /* 0.94.0 0.25倍を1行に */
 .seg button[aria-pressed="true"]{background:#3d5aa8;border-color:#fff}
 /* 0.39.5 音量のスライダー */
 .vrow{display:flex;align-items:center;gap:8px;margin-top:4px}
@@ -497,7 +500,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.93.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.94.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -1585,7 +1588,7 @@ const CHAPTERS={
             6:[['shadow',19,7,{v:1}],['beast',10,0,{v:3}]],
             7:[['shadow',3,1,{v:3}],['beast',19,7,{v:3}]] },
     winLog:'かごが薬草でいっぱいになった。森の霧が、草の香りといっしょに引いていった。', winWhy:'森の薬草を集めた', resultHead:'薬草が集まりました', retry:'もう一度、薬草の森へ。',
-    startMsg:'11章「薬草の森」。森の草むらに、薬草が生えています。人（生身）が草むらのマスに立って「摘む」を選びます。機械では摘めません。6か所で摘むとクリアです。森の家の戸口で「訪ねる」と、住んでいる人に会えます。'},
+    startMsg:'11章「薬草の森」。森の草むらに、薬草が生えています。人（生身）が草むらのマスに立って「摘む」を選びます。機械では摘めません。6か所で摘むとクリアです。森の家の戸口に立ち寄ると、住んでいる人に会えます。'},
  /* 0.47.0 12章（設計書 §7「静かな足音・夜・中・気配のない影をMP0で呼び戻す・ジュン（MP0）・機械なし」）。11/9 ヒロさんの答え：
     クリア＝気配のない影（spawn の 'jun'）の闇の心を0にして呼び戻す。耐久を0にすると負け（「呼び戻すまで終わらない」）。
     影は隣に味方がいるときだけ見える（「隣でだけ見える」・ターンのはじめに足音の方角を知らせる）。攻撃せず、人から離れるように歩く（「攻撃しない・逃げる」）。
@@ -1771,7 +1774,7 @@ const CHAPTERS={
             6:[['beast',19,6,{v:2}],['shadow',10,0,{v:1}]] },   /* 霧の側は鐘番のほかに16（仮） */
     endTalk:'c16end',
     winLog:'さいごの霧が、鐘楼のまわりから引いていった。止まった鐘の機械が、月の光の中に静かに立っている。', winWhy:'鐘楼のまわりの霧を晴らした', resultHead:'森の奥の鐘楼に着きました', retry:'もう一度、森の奥の鐘楼へ。',
-    startMsg:'16章「森の奥の鐘楼」。森のいちばん奥に、古い鐘楼があります。霧の側を全部晴らすとクリアです。鐘楼の前では、番の機械「鐘番」が霧で暴走しています（熱を0にしても、耐久を0にしても止まります）。鐘楼の隣で人が「鐘を調べる」と、鐘が一度だけ鳴ります。'},
+    startMsg:'16章「森の奥の鐘楼」。森のいちばん奥に、古い鐘楼があります。霧の側を全部晴らすとクリアです。鐘楼の前では、番の機械「鐘番」が霧で暴走しています（熱を0にしても、耐久を0にしても止まります）。鐘楼の隣で人が「鐘を鳴らす」を選ぶと、鐘が一度だけ鳴ります。'},
  /* 0.53.0 17章（設計書 §7「記録所の灯・昼・中・町の記録係と古い天気の記録を探す・ミレイユ」）。第3部「記録の町」の最初の章。
     goal:'guard'（6章と同じ形）＝ミレイユが古い天気の記録を探しているあいだ、記録所（地図の H）を maxTurn ターン守り切ったらクリア（11/10 ヒロさん「記録所を守り切る」）。
     記録所の守りが0で負け。人が全員倒れたときも負け。ミレイユはクリアのあとの会話で仲間になる（11/10 ヒロさん「クリアのあとに仲間に」・c17end で必ず「いっしょに行く」話をする）。
@@ -1961,7 +1964,7 @@ const CHAPTERS={
             7:[['beast',19,12,{v:1}],['shadow',0,12,{v:3}]] },   /* 霧の側は16（仮） */
     endTalk:'c21end',
     winLog:'設計図と台帳を抱えて外へ出ると、丘の霧が引いていった。気象台の風見が、からからと回りはじめた。', winWhy:'設計図と台帳を見つけた', resultHead:'設計図と台帳を見つけました', retry:'もう一度、東の丘の気象台へ。',
-    startMsg:'21章「古い気象台」。記録の町の東の丘に、古い気象台があります。中の6つの棚のどこかに、ヨアケの設計図と工房の台帳が残っています。人（生身）が棚のマスで「調べる」と、2回で1つの棚を調べ終わります（ボグダンとイネスは1回）。10ターン目が終わるまでに2つとも見つけるとクリアです。気象台の守りが0になると負けです。'},
+    startMsg:'21章「古い気象台」。記録の町の東の丘に、古い気象台があります。中の6つの棚のどこかに、ヨアケの設計図と工房の台帳が残っています。人（生身）が棚のマスに着くと、ひとりでに調べます。2回で1つの棚を調べ終わります（ボグダンとイネスは1回）。10ターン目が終わるまでに2つとも見つけるとクリアです。気象台の守りが0になると負けです。'},
  /* 0.60.0 22章（設計書 §7「町じゅうの影・夜・大・町を守る大きな機械の熱を下げる・イワオ（MP0）」）。第3部の6章目。
     goal:'iwao'＝広場のイワオ（spawn の 'iwao'）の熱を0にして呼び戻し、夜明け（maxTurn ターン目の霧の側の番のおわり）まで持ちこたえるとクリア（11/11 ヒロさん「夜明けまで」）。
     夜明けまでに熱を0にできなかったら負け（18章と同じ）。イワオの耐久を0にしても負け（ヒロさん「負け」）。人が全員倒れたときも負け。
@@ -3769,7 +3772,9 @@ async function enemyPhase(){
     if(G.over) return; if(e.out||e.side!=='enemy') continue;
     if(e.stun>0){ e.stun--; if(!e.stun) e.netted=false; addLog(`${e.name}は網にからまって動けない。`); render(); continue; }   // 0.33.0 巻き取り機で2ターン止まることがある
     G.acting=e; await sleep(280*speedK());
+    const sx=e.x, sy=e.y;   /* 0.94.0 歩く動き */
     const pre=btSnap(); let pa=null; REC=[]; try{ pa=enemyAct(e); } finally{ var rec=REC; REC=null; }
+    if(!G.over&&(e.x!==sx||e.y!==sy)){ render(); await walkAnim(e,sx,sy); }
     if(pa&&!G.over){ const cv=coverOf(e,pa.t); if(cv){ addLog(`${cv.name}が${pa.t.name}をかばった。`); pa.t=cv; } }   /* 0.60.0 仲間のイワオのかばう（反撃か守りを聞くのも、かばったイワオで） */
     if(pa&&!G.over){ let g=null; if(guardable(pa.t)){ render(); const c=await askGuard(e,pa.t,pa.w); if(c!=='counter') g=c; }   /* 0.44.0 */
       REC=rec; G.guard=g?{t:pa.t,g}:null; try{ doAttack(e,pa.t,true,pa.w); } finally{ REC=null; G.guard=null; } }
@@ -4306,8 +4311,16 @@ function showResult(){
    設定（端末に覚える。消えても動く）
    ========================================================= */
 const SET_KEY='tomoshibi_settings_v1';
-const SET={font:1,skip:false,speed:'normal',calm:false,buzz:true,diff:'normal',battle:true,cutin:true,bgm:true,se:true,talk:true,volAll:100,volBgm:100,volSe:100};   /* 0.39.5 音量（0〜100） */   // 0.15.0 音楽・効果音。0.19.0 talk＝章の中の会話（設定の画面には出さない。試験で止めるため）
+const SET={font:1,skip:false,speed:'normal',calm:false,buzz:true,diff:'normal',battle:true,cutin:true,bgm:true,se:true,talk:true,volAll:100,volBgm:100,volSe:100,zoom:1,btSpd:1,mvSpd:1};   /* 0.39.5 音量（0〜100）。0.94.0 zoom・btSpd・mvSpd */   // 0.15.0 音楽・効果音。0.19.0 talk＝章の中の会話（設定の画面には出さない。試験で止めるため）
 try{ const s=JSON.parse(localStorage.getItem(SET_KEY)||'null'); if(s) Object.assign(SET,s); }catch(_){}
+/* 0.94.0 マップの大きさ（1倍→1.25→1.5→1.75→2→2.5→1倍）と、戦いの場面の速さ・ユニットの動く速さ（0.25倍〜3倍）（11/22 ヒロさん「マップの大きさが小さすぎてタップでユニットを押しにくい」「戦闘スピードとユニットの動く速さも0.25倍、0.5倍、1.0、2.0、3.0を選べるように」「設定でいつでも変えられるように」）。
+   音楽の速さは変えない（11/22 ヒロさん「音楽は早くなったり遅くならないよ」）。前の「霧の側の動く速さ：はやい」は、両方2倍として引き継ぐ */
+const ZOOMS=[1,1.25,1.5,1.75,2,2.5], SPDS=[0.25,0.5,1,2,3];
+if(SET.speed==='fast'){ if(SET.btSpd===1) SET.btSpd=2; if(SET.mvSpd===1) SET.mvSpd=2; SET.speed='normal'; }
+function zoomNow(){ return ZOOMS.includes(SET.zoom)?SET.zoom:1; }
+function btSpd(){ return SPDS.includes(SET.btSpd)?SET.btSpd:1; }
+function mvSpd(){ return SPDS.includes(SET.mvSpd)?SET.mvSpd:1; }
+function spdName(v){ return v+'倍'; }
 function saveSet(){ try{ localStorage.setItem(SET_KEY,JSON.stringify(SET)); }catch(_){} applySet(); }
 const FONT_PX=[14,16,19,23], FONT_NAME=['小','中','大','特大'];
 function applySet(){
@@ -4324,7 +4337,7 @@ function songOf(ch){ const K=CHAPTERS[ch]||{}; if(K.bgm) return K.bgm; if(ch===4
 const TITLE={on:false,stage:'press',raf:0,t0:0,last:0,bg:null,fog:null,w:0,h:0,L:null};   // 0.16.0 タイトル画面（下の「タイトル画面」）
 function songNow(){ return G&&G.gd?(CH().bgm||(CH().night?'night':'day')):songOf(G.ch); }   /* 0.78.0 外伝8は最終マップの曲 */   // 0.37.0 外伝は昼か夜の曲
 function sceneSong(){ if(TITLE.on) return 'title'; if(MK.on||PREP.on) return 'interlude'; if(G&&G.over) return null; return G&&G.ch?songNow():null; }
-function speedK(){ return G.fast?0.1:(SET.speed==='fast'?0.4:1); }
+function speedK(){ return G.fast?0.1:1/mvSpd(); }   /* 0.94.0 霧の側の番の間は「ユニットの動く速さ」で */
 function buzz(){ if(SET.buzz&&navigator.vibrate){ try{ navigator.vibrate(12); }catch(_){} } }
 
 /* =========================================================
@@ -4340,9 +4353,9 @@ function select(u){
   G.cursor={x:u.x,y:u.y}; centerOn(u.x,u.y);
 }
 function deselect(){ if(G.sure!=null) G.sure=null; G.sel=null;   /* 0.80.0 必中は選び直すと取りやめ */ G.reach=null; G.snap=null; G.act=null; G.mode='idle'; }
-function undoToMove(){ const u=G.sel; if(G.snap) restore(G.snap); G.act=null; G.reach=reach(u); G.mode='move'; G.cursor={x:u.x,y:u.y}; }
-function cancelCurrent(){ if(G.sel&&G.snap) restore(G.snap); deselect(); }
-function finish(u){ u.done=true; u.moved=true; u.halfMove=false; u.quickOff=false; encoreGo(u); deselect(); stageJoin(); kasaMeet(); iceCrack(u); }   /* 0.69.0 34章：機械が青い氷に止まると、ひび */   // 0.36.0 カササギの隣
+function undoToMove(){ walkStop(); const u=G.sel; if(G.snap) restore(G.snap); G.act=null; G.reach=reach(u); G.mode='move'; G.cursor={x:u.x,y:u.y}; }
+function cancelCurrent(){ walkStop(); if(G.sel&&G.snap) restore(G.snap); deselect(); }
+function finish(u){ u.done=true; u.moved=true; u.halfMove=false; u.quickOff=false; encoreGo(u); deselect(); stageJoin(); kasaMeet(); iceCrack(u); autoSpot(u); }   /* 0.94.0 autoSpot＝踏んで起きること */   /* 0.69.0 34章：機械が青い氷に止まると、ひび */   // 0.36.0 カササギの隣
 /* 0.12.0 4章：味方が行動を終えたとき、まだ仲間でないアマラかウタカタの隣にいれば、2人とも仲間になる（ヒロさん「隣へ行くと仲間」）。
    アマラはずっと舞台で歌っていたので、そのターンからすぐ動ける（ウタカタは前の席に人が乗ると動ける）。乱数は使わない */
 function stageJoin(){
@@ -4399,9 +4412,10 @@ function back(){
   switch(G.mode){
     case 'exec': flash('いまは霧の側が動いています。取り消せません。'); return;
     case 'predict': backFromPredict(); break;
-    case 'target': G.mode='menu'; G.act=null; break;
-    case 'menu': undoToMove(); break;
+    case 'target': G.mode=G.act&&G.act.from==='late'?'late':'menu'; G.act=null; break;
+    case 'menu': if(spotLocked(G.sel)){ flash(`${G.sel.name}は、ここで見つけた物があるので、移動は戻せません。`); break; } undoToMove(); break;   /* 0.94.0 */
     case 'move': deselect(); break;
+    case 'late': deselect(); break;   /* 0.94.0 */
     default: askQuit(); return;
   }
   render();
@@ -4423,19 +4437,26 @@ function onTile(x,y){
   if(G.over||G.phase!=='player'){ G.inspect=seen||{tile:[x,y]}; render(); return; }
   if(G.mode==='idle'){
     if(pickable(u)) select(u);
+    else if(lateCmds(u).length){ G.sel=u; G.inspect=u; G.snap=null; G.reach=null; G.act=null; G.mode='late'; }   /* 0.94.0 待機のあとの乗り降り */
     else if(seen) G.inspect=seen;
     else { G.inspect={tile:[x,y]}; render(); emptyTileMenu(); return; }   // 0.35.0 何もないマスは「ターン終了」「保存する」（11/8 ヒロさん）
   } else if(G.mode==='move'){
     const s=G.sel;
-    if(postOn(s)&&((x===s.x&&y===s.y)||(G.reach.has(key(x,y))&&!u))){ s.x=x; s.y=y; G.inspect=s; junSpot(); finish(s); render(); return; }   /* 0.80.0 あと動き：動くかその場で、行動が終わる */
+    if(postOn(s)&&((x===s.x&&y===s.y)||(G.reach.has(key(x,y))&&!u))){ const sx=s.x, sy=s.y; s.x=x; s.y=y; G.inspect=s; junSpot(); finish(s); render(); walkAnim(s,sx,sy); spotAfter(); return; }   /* 0.94.0 歩く動き */   /* 0.80.0 あと動き：動くかその場で、行動が終わる */
     if(x===s.x&&y===s.y) G.mode='menu';
-    else if(G.reach.has(key(x,y))&&!u){ s.mvUsed=G.reach.get(key(x,y)); s.x=x; s.y=y; s.moved=true; G.mode='menu'; G.inspect=s; junSpot(); }   /* 0.80.0 mvUsed＝使った歩数（ツバメの仕上げ） */   /* 0.47.0 */
+    else if(G.reach.has(key(x,y))&&!u){ const sx=s.x, sy=s.y; s.mvUsed=G.reach.get(key(x,y)); s.x=x; s.y=y; s.moved=true; G.mode='menu'; G.inspect=s; junSpot(); walkAnim(s,sx,sy);   /* 0.94.0 歩く動き */
+      if(autoSpot(s)){ G.snap=snapshot(); render(); spotAfter(); return; } }   /* 0.94.0 戸口・棚・家の戸口は、着いたらひとりでに */   /* 0.80.0 mvUsed＝使った歩数（ツバメの仕上げ） */   /* 0.47.0 */
     else if(pickable(u)) select(u);
     else { deselect(); G.inspect=seen||{tile:[x,y]}; }
   } else if(G.mode==='menu'){
-    /* できることがなければ、もう一度その味方のマスを押すと待機（11/5 ヒロさん） */
-    if(x===G.sel.x&&y===G.sel.y&&nothingToDo(G.sel)){ doWait(G.sel); return; }
+    /* もう一度その味方のマスを押すと待機（11/5 ヒロさん。0.94.0 からは、できることがあっても（11/22 ヒロさん「何もしない場合はもう一度ユニットをタップで待機」）） */
+    if(x===G.sel.x&&y===G.sel.y){ doWait(G.sel); return; }
     if(seen&&seen!==G.sel) G.inspect=seen;     // メニュー中は情報だけ
+  } else if(G.mode==='late'){   /* 0.94.0 */
+    if(x===G.sel.x&&y===G.sel.y) deselect();
+    else if(pickable(u)) select(u);
+    else if(lateCmds(u).length){ G.sel=u; G.inspect=u; }
+    else { deselect(); G.inspect=seen||{tile:[x,y]}; }
   } else if(G.mode==='target'||G.mode==='predict'){
     const i=G.act.list.findIndex(t=>t&&t.x===x&&t.y===y);
     if(i>=0){ pickTarget(i); return; }
@@ -4527,10 +4548,7 @@ function menuCommands(u){
   { const zi=zaiAt(u); if(zi>=0&&((u.kind==='person'&&!u.inMachine)||(u.kind==='machine'&&canAct(u)))){ const Z=CH().zai, P=Z.spots[zi], left=Z.need-zaiN();
     cmds.push({label:'拾う',sub:`${u.name}が${P[2]}を拾う（あと ${left}つ）`,key:true,
       act:()=>startAct({name:'拾う',noTarget:true,list:[null],card:()=>`<span class="p">${u.name}</span> が <span class="big">${P[2]}</span> を拾う${left<=1?'<br><b>38章のクリア</b>':`<br>あと ${left-1}つ`}<br><small>${u.name}の行動はここで終わります</small>`,run:()=>{pickZai(u,zi);finish(u);}})}); } }
-  /* 0.58.0 21章：棚のマスで「調べる」（生身の人だけ） */
-  { const si=shelfAt(u.x,u.y); if(si>=0&&u.kind==='person'){ const S=CH().shelves, P=S.spots[si], v=shelfV(u), left=S.need-G.shelf[si], after=Math.max(0,left-v);
-    cmds.push({label:'調べる',sub:`${u.name}が${P.name}を調べる（あと ${left}回・${u.name}は ${v}）`,key:true,
-      act:()=>startAct({name:'調べる',noTarget:true,list:[null],card:()=>`<span class="p">${u.name}</span> が <span class="big">${P.name}</span> を調べる<br>あと ${left} → <span class="big">${after}</span>${after===0?'<br>中に何があるか、わかります':''}<br><small>${u.name}は ${v}（ボグダンとイネスは2・ほかの人は1）。${u.name}の行動はここで終わります</small>`,run:()=>{searchShelf(u,si);finish(u);}})}); } }
+  /* 0.58.0 21章の棚の「調べる」は、0.94.0 から着いたらひとりでに（autoSpot） */
   /* 0.62.0 29章：家の隣で「伝える」（人だけ） */
   { const ti=tellAt(u); if(ti>=0&&u.kind==='person'){ const P=CH().tell[ti], left=G.told.filter(v=>!v).length;
     cmds.push({label:'伝える',sub:`${u.name}が${P.name}にヨアケのことを伝える`,key:true,
@@ -4539,9 +4557,7 @@ function menuCommands(u){
   { const si=shareAt(u); if(si>=0){ const P=CH().share[si];
     cmds.push({label:'灯を受け取る',sub:`${P.name}から灯を分けてもらう（力・守り・説得力が少し上がる）`,key:true,
       act:()=>startAct({name:'灯を受け取る',noTarget:true,list:[null],card:()=>`<span class="p">${u.name}</span> が <span class="big">${P.name}</span> から灯を分けてもらう<br>この章のあいだ、${u.name}の力・守り・説得力が ${SK.akari}倍<br><small>灯は1けんに1つ、1人に1つ。説得力は乗っていても効きます。${u.name}の行動はここで終わります</small>`,run:()=>{shareLight(u,si);finish(u);}})}); } }
-  { const vi=visitAt(u.x,u.y); if(vi>=0&&(u.kind==='person'||(u.seats||[]).some(Boolean))){ const V=CH().visit[vi], who=u.kind==='person'?u:u.seats.find(Boolean), done=G.visited[vi];
-    cmds.push({label:'訪ねる',sub:done?`${V.name}はもう訪ねた`:`${who.name}が${V.name}を訪ねる`,off:done,key:!done,
-      act:()=>startAct({name:'訪ねる',noTarget:true,list:[null],card:()=>`<span class="p">${who.name}</span> が <span class="big">${V.name}</span> の戸をたたく<br>${V.join.join('と')}が仲間になる（このターンは動けない）<br><small>${u.name}の行動はここで終わります</small>`,run:()=>{visitHouse(u,vi);finish(u);}})}); } }
+  /* 0.39.0 11章の家の戸口の「訪ねる」は、0.94.0 から着いたらひとりでに（autoSpot） */
   if(u.kind==='person'){
     /* 0.37.0 ペマの動物の友：鳥に頼んで、2マス先のマスとまわりの霧を、このターンだけ晴らす（1ターンに1回・行動を使わない・乱数は使わない・仮） */
     if(u.footSkill==='bird'){ const bt=birdTiles(u), used=u.birdT===G.turn;
@@ -4582,12 +4598,9 @@ function menuCommands(u){
       cmds.push({label:'直す',sub:`${p.name}を直す（あと ${G.linkLeft[i]}・${u.name}は ${v}）`,key:true,
         act:()=>startAct({name:'直す',noTarget:true,list:[null],card:()=>`古い <span class="big">${p.name}</span> を直す<br>あと ${G.linkLeft[i]} → <span class="big">${left}</span>${left===0?(rest<=1?'<br><b>火が入り、3つの中継灯がみなつながる。31章のクリア</b>':`<br><b>火が入り、まわりが明るくなる。のこりの中継灯は${rest-1}つ</b>`):''}<br><small>${u.name}は ${v}（${u.footSkill==='repair'?'機械いじり':'機械いじりの人は 2'}）。${u.name}の行動はここで終わります</small>`,run:()=>{linkFix(u,i);finish(u);}})}); });
     /* 0.52.0 16章：止まった鐘の機械を調べる（隣・生身の人・行動を使う・1章に1回） */
-    { const TW=CH().tower; if(TW&&man(u.x,u.y,TW.x,TW.y)===1) cmds.push({label:'鐘を調べる',sub:G.bellRung?'もう鳴らした（1章に1回）':'一度だけ鳴る・次の霧の側の番、霧の側が動けない',off:!!G.bellRung,key:!G.bellRung,
-      act:()=>startAct({name:'鐘を調べる',noTarget:true,list:[null],card:()=>`止まった <span class="big">鐘の機械</span> を調べる<br><b>鐘が一度だけ鳴り、次の霧の側の番、霧の側はみな動けない</b><br><small>1章に1回だけ。${u.name}の行動はここで終わります</small>`,run:()=>{ringBell(u);finish(u);}})}); }
-    /* 0.10.0 2章：倉庫の戸口に立つと、中を調べられる（1回だけ） */
-    const dk=doorKey(u.x,u.y), dr=dk&&CH().doors[`${u.x},${u.y}`], SN=shedName();   // 0.11.0 3章は網小屋
-    if(dr) cmds.push({label:'調べる',sub:G.opened[dk]?`この${SN}はもう調べた`:`${SN}の中を見る`,off:!!G.opened[dk],key:!G.opened[dk],
-      act:()=>startAct({name:'調べる',noTarget:true,list:[null],card:()=>`<span class="big">${SN}の中を調べる</span><br><small>${u.name}の行動はここで終わります</small>`,run:()=>{searchDoor(u);finish(u);}})});
+    { const TW=CH().tower; if(TW&&man(u.x,u.y,TW.x,TW.y)===1) cmds.push({label:'鐘を鳴らす',sub:G.bellRung?'もう鳴らした（1章に1回）':'一度だけ鳴る・次の霧の側の番、霧の側が動けない',off:!!G.bellRung,key:!G.bellRung,
+      act:()=>startAct({name:'鐘を鳴らす',noTarget:true,list:[null],card:()=>`止まった <span class="big">鐘の機械</span> を動かして鳴らす<br><b>鐘が一度だけ鳴り、次の霧の側の番、霧の側はみな動けない</b><br><small>1章に1回だけ。${u.name}の行動はここで終わります</small>`,run:()=>{ringBell(u);finish(u);}})}); }
+    /* 0.10.0 2章の倉庫の戸口の「調べる」は、0.94.0 から着いたらひとりでに（autoSpot） */
     /* 0.11.0 ダグニの網さばき：隣の敵を1ターン止める（行動を使う・外れない・乱数は使わない） */
     if(u.footSkill==='net'){ const nt=adjEnemies(u).filter(e=>e.kind!=='machine');   // 0.26.0 機械には効かない
       cmds.push({label:'網さばき',sub:nt.length?'隣の人を1ターン止める・回避0%・反撃なし':adjEnemies(u).length?'機械には効かない':'隣に敵がいない',off:!nt.length,key:nt.length>0,
@@ -4785,7 +4798,36 @@ function searchDoor(u){
   else if(!d.item&&!d.items){ G.parts+=d.parts; addLog(`${u.name}は${SN}の中で部品の箱を見つけた。部品${d.parts}を手に入れた。`); }
 }
 function shedName(){ return CH().shed||'倉庫'; }   // 0.11.0 地図の B と D の呼び名（2章は倉庫・3章は網小屋）
-function doWait(u){ buzz(); const cp=campOn(u)&&!u.moved&&u.hp<u.maxHp; if(cp) u.hp=u.maxHp; addLog(cp?`${u.name}は待機した。野営上手。腰を下ろして一息つき、耐久が満タンに戻った。`:`${u.name}は待機した。`); finish(u); render(); talkFlush(); }
+function doWait(u){ buzz(); const cp=campOn(u)&&!u.moved&&u.hp<u.maxHp; if(cp) u.hp=u.maxHp; addLog(cp?`${u.name}は待機した。野営上手。腰を下ろして一息つき、耐久が満タンに戻った。`:`${u.name}は待機した。`); finish(u); if(u.side==='ally') u.waitT=G.turn; render(); spotAfter(); }   /* 0.94.0 waitT＝このターンに待機した（あとの乗り降り）・踏んで起きたことで目的を果たしたらクリア */
+/* 0.94.0 待機のあとの乗り降り（11/22 ヒロさん「何もしない場合はもう一度ユニットをタップで待機。そのあとに乗り降りしたければ人間の行動力があれば可能とする。待機後の攻撃はできない」）。
+   待機したそのターンだけ、待機した味方をもう一度押すと出る。
+   生身の人：移動の残り（移動力から、使った歩数を引いた数）が1以上で、隣に席の空いた機械がいれば「乗る」。
+   機械：このターンにまだ行動していない人（ほかのターンから乗っていた人）が乗っていれば「〇〇が降りる」。降りた人は、そこで行動が終わる。
+   攻撃・説得・わざ・品はどれも出さない。人の「乗る」は1回だけ（仮） */
+function lateLeft(p){ return Math.max(0,movOf(p)-(p.mvUsed||0)); }
+function lateCmds(u){ const c=[]; if(!u||u.side!=='ally'||u.out||u.inMachine||u.waitT!==G.turn||G.phase!=='player'||G.over||!u.done) return c;
+  if(u.kind==='person'&&!u.stay&&lateLeft(u)>=1){ const rt=rideTargets(u);
+    if(rt.length) c.push({label:'乗る',sub:`隣の機械に乗る（移動の残り ${lateLeft(u)}）`,key:true,
+      act:()=>startAct({name:'乗る',list:rt,label:t=>`${t.name}の${t.seats[0]?'後ろ':'前'}の席`,card:t=>`${u.name} が <span class="m">${t.name}</span> の<span class="big">${t.seats[0]?'後ろ':'前'}の席</span>に乗る<br><small>乗ったとき：${u.rideNote}</small><br><small>待機のあとの乗り降り。攻撃などはできません</small>`,
+        run:t=>{ ride(u,t); u.waitT=null; deselect(); if(t.done&&!t.out) stepAfter(t); }})}); }
+  if(u.kind==='machine'&&u.seats) u.seats.forEach(r=>{ if(!r||r.done) return; const tiles=freeAdj(u); if(!tiles.length) return;
+    c.push({label:`${r.name}が降りる`,sub:'となりのマスへ（降りた人の行動は、そこで終わる）',
+      act:()=>startAct({name:'降りる',list:tiles,label:p=>`${DIRNAME(u,p)}のマスへ降りる`,card:p=>`<span class="p">${r.name}</span> が ${u.name}から降りる<br>降りるマス：<span class="big">${DIRNAME(u,p)}</span><br><small>待機のあとの乗り降り。${r.name}の行動は、ここで終わります</small>`,
+        run:p=>{ r.done=true; dismount(u,r,p.x,p.y); deselect(); autoSpot(r); }})}); });
+  return c; }
+/* 0.94.0 調べる・訪ねるのボタンをなくした（11/22 ヒロさん「調べる、尋ねるは要らない。そこに人間、マップによっては機械で乗っても自動でイベント発生、アイテムが手にはいったりする」）。
+   倉庫の戸口・気象台の棚・家の戸口のマスに着いたら（移動で着いたとき。ほかの形で着いたときは行動を終えたとき）、ひとりでに起きる。行動は使わない（そのあと攻撃や説得もできる）。
+   起こせるのは前と同じ：戸口と棚は生身の人、家の戸口は生身の人か人が乗っている機械。棚は同じ人が同じターンに1回だけ数える（仮）。
+   見つけたあとは、その移動は戻せない（見つけた物が消えないように） */
+function autoSpot(u){ if(!u||u.side!=='ally'||u.out||u.inMachine||u.x==null||G.over) return false;
+  const k=`${G.turn}:${u.x},${u.y}`; if(u.spotK===k) return false;
+  const foot=u.kind==='person', manned=foot||(u.seats||[]).some(Boolean); let hit=false;
+  if(foot){ const dk=doorKey(u.x,u.y); if(dk&&(CH().doors||{})[`${u.x},${u.y}`]&&!G.opened[dk]){ searchDoor(u); hit=true; } }
+  if(foot){ const si=shelfAt(u.x,u.y); if(si>=0){ searchShelf(u,si); hit=true; } }
+  if(manned){ const vi=visitAt(u.x,u.y); if(vi>=0&&!G.visited[vi]){ visitHouse(u,vi); hit=true; } }
+  if(hit){ u.spotK=k; u.spotT=G.turn; } return hit; }
+function spotLocked(u){ return !!(u&&u.spotT===G.turn&&u.spotK===`${G.turn}:${u.x},${u.y}`); }
+function spotAfter(){ if(G.over) return; if(G.phase==='player'&&goalMet()) win(); else talkFlush(); }
 /* 0.56.0 ゾエの野営上手：生身で、動かずに待機すると、耐久が満タンに戻る（11/11 ヒロさん「待機で100%回復」）。乱数は使わない */
 function campOn(u){ return !!(u&&u.side==='ally'&&u.kind==='person'&&u.footSkill==='camp'&&!u.inMachine); }
 /* 動いたあと、待機（と席の入れ替え）のほかに押せるものがない */
@@ -4861,18 +4903,43 @@ function nextAlly(dir){
    描く（上の行から下の行の順。頭は上のマスへはみ出す）
    ========================================================= */
 function tileY(y){ return OY+y*TS; }
+/* 0.94.0 歩く動き（11/22 ヒロさん「ユニットの動く速さも選べるように」）。いままでは一瞬で移っていた。
+   位置（u.x,u.y）は先に変えておき、絵だけを道にそって動かす（押す操作は待たせない）。1マスの時間は WALK_MS（仮）を「ユニットの動く速さ」で割る。
+   道は、通れるマスを縦横にたどるいちばん短い道（見た目だけ）。早送り中と、霧の中から霧の中へ動く霧の側は動かさない */
+const WALK_MS=110, WALK={u:null,path:null,t0:0,dur:1,raf:0,tm:0,res:null};
+function walkPath(u,sx,sy,tx,ty){
+  const prev=new Map([[key(sx,sy),null]]), q=[[sx,sy]];
+  while(q.length){ const [x,y]=q.shift(); if(x===tx&&y===ty) break;
+    for(const [dx,dy] of DIRS){ const nx=x+dx, ny=y+dy, k=key(nx,ny); if(nx<0||ny<0||nx>=W||ny>=H||prev.has(k)) continue;
+      if(moveCost(terrain(nx,ny))>=99&&!(nx===tx&&ny===ty)) continue; const o=unitAt(nx,ny); if(o&&o!==u&&o.side!==u.side) continue;
+      prev.set(k,[x,y]); q.push([nx,ny]); } }
+  if(!prev.has(key(tx,ty))) return [[sx,sy],[tx,ty]];
+  const p=[]; let c=[tx,ty]; while(c){ p.unshift(c); c=prev.get(key(c[0],c[1])); } return p; }
+function walkPos(u){ if(WALK.u!==u||!WALK.path) return [u.x,u.y]; const P=WALK.path, n=P.length-1, t=Math.max(0,Math.min(1,(performance.now()-WALK.t0)/WALK.dur))*n, i=Math.min(n-1,Math.floor(t)), f=t-i;
+  return [P[i][0]+(P[i+1][0]-P[i][0])*f, P[i][1]+(P[i+1][1]-P[i][1])*f]; }
+function walkStop(){ if(WALK.raf) cancelAnimationFrame(WALK.raf); clearTimeout(WALK.tm); const r=WALK.res; WALK.u=null; WALK.path=null; WALK.raf=0; WALK.res=null; if(r) r(); }
+function walkAnim(u,sx,sy){
+  walkStop();
+  if(!u||u.x==null||sx==null||(sx===u.x&&sy===u.y)||G.fast||G.over) return Promise.resolve();
+  if(u.side==='enemy'&&!seeU(u)&&!isVis(sx,sy)) return Promise.resolve();
+  const path=walkPath(u,sx,sy,u.x,u.y);
+  WALK.u=u; WALK.path=path; WALK.t0=performance.now(); WALK.dur=Math.max(1,(path.length-1)*WALK_MS/mvSpd());
+  return new Promise(res=>{ WALK.res=res;
+    const step=()=>{ if(WALK.u!==u) return; draw(); WALK.raf=requestAnimationFrame(step); };
+    WALK.raf=requestAnimationFrame(step);
+    WALK.tm=setTimeout(()=>{ walkStop(); draw(); },WALK.dur+20); }); }
 function drawUnit(u){
-  const px=u.x*TS, py=tileY(u.y)-8;   // 16×24：足元のマスから上へ8ドットはみ出す
+  const [wx,wy]=walkPos(u), px=Math.round(wx*TS), py=Math.round(OY+wy*TS)-8;   /* 0.94.0 歩いている間は道の途中に */   // 16×24：足元のマスから上へ8ドットはみ出す
   ctx.globalAlpha=(u.side==='ally'&&u.done&&G.phase==='player'&&!G.over)?0.5:1;
   ART.drawUnit(ctx,u,px,py,{active:u.broken?false:u.side==='ally'&&u.kind==='machine'?canAct(u):true,calm:isCalm()});   // 絵は art.js（版 0.5.0）
-  if(u.hold){ ctx.save(); ctx.imageSmoothingEnabled=false; ctx.translate(px+8,tileY(u.y)+3); ctx.scale(0.5,0.5); ART.drawUnit(ctx,u.hold,0,0,{active:true,calm:isCalm()}); ctx.restore(); }   // 0.10.1 つかんでいる人を、右下に小さく
+  if(u.hold){ ctx.save(); ctx.imageSmoothingEnabled=false; ctx.translate(px+8,py+11); ctx.scale(0.5,0.5); ART.drawUnit(ctx,u.hold,0,0,{active:true,calm:isCalm()}); ctx.restore(); }   // 0.10.1 つかんでいる人を、右下に小さく
   ctx.globalAlpha=1;
 }
 function isCalm(){ return SET.calm||matchMedia('(prefers-reduced-motion: reduce)').matches; }
 // 動き（波・灯・たき火・息）。「動きを減らす」と、画面が隠れているときは進めない
 setInterval(()=>{ if(!G||!G.units||isCalm()||document.hidden) return; ART.tick++; draw(); },250);   // 0.5.6：顔のまばたきはやめた
 function drawBars(u){
-  const px=u.x*TS, py=tileY(u.y);
+  const [wx,wy]=walkPos(u), px=Math.round(wx*TS), py=Math.round(OY+wy*TS);   /* 0.94.0 */
   ctx.fillStyle='#000'; ctx.fillRect(px+1,py+TS-3,TS-2,u.side==='enemy'?3:2);
   ctx.fillStyle=u.side!=='enemy'?'#5e5':'#f66'; ctx.fillRect(px+1,py+TS-3,(TS-2)*u.hp/u.maxHp,1);   // 0.12.0 まだ仲間でない人も緑
   if(u.side==='enemy'){ ctx.fillStyle='#f8c'; ctx.fillRect(px+1,py+TS-1,(TS-2)*u.mp/u.maxMp,1); }
@@ -5041,17 +5108,17 @@ function terrainHTML(x,y){
   if(t==='~'&&!bt) s+=boatLane(x,y)?'<br>船の水路。浮き袋を付けた機械でも入れない':`<br>浮き袋を付けた機械・ナミノリ・泳げる人（シオネ）は入れる（移動 ${RULES.floatSea}）`;   // 0.11.3。0.33.0 ナミノリとシオネ
   if(CH().voice&&x===CH().voice.x&&y===CH().voice.y) s+='<br><b>声のするところ</b>：ここに人が着くとクリア';   /* 0.64.0 外伝2 */
   if(t==='K'&&CH().relay) s+=G.relayLit?`<br>火がともっている。ユラの光はここから回る。守り ${G.shelter} / ${G.shelterMax}（0で負け）`:`<br>古い中継灯。隣で人が「直す」と火が入る（あと ${G.relayLeft}・イネスは2、ほかの人は1）`;   // 0.36.0
-  else if(t==='Q') s+=G.bellRung?'<br>止まった鐘の機械。一度だけ鳴って、また静かになった':'<br>止まった鐘の機械。隣で人が「鐘を調べる」と、一度だけ鳴る（次の霧の側の番、霧の側が動けない）';   /* 0.52.0 */
+  else if(t==='Q') s+=G.bellRung?'<br>止まった鐘の機械。一度だけ鳴って、また静かになった':'<br>止まった鐘の機械。隣で人が「鐘を鳴らす」を選ぶと、一度だけ鳴る（次の霧の側の番、霧の側が動けない）';   /* 0.52.0 */
   else if(t==='K'&&CH().links&&G.linkLeft){ const i=CH().links.findIndex(p=>p.x===x&&p.y===y); if(i>=0) s+=G.linkLeft[i]===0?`<br><b>${CH().links[i].name}</b>：火がともっている。まわり${yuragiOn()?CH().yuragi.r:CH().linkR}マスが明るい（霧の側に消されない）`:`<br><b>${CH().links[i].name}</b>：古い中継灯。上下左右の隣で人が「直す」と火が入る（あと ${G.linkLeft[i]}・イネスは1回で2）`; }   /* 0.63.0 31章 */
   else if(t==='K'&&CH().lamps) s+=`<br>峠の中継灯。火がともっている。霧の側が隣に来ると守りが減る。守り ${G.shelter} / ${G.shelterMax}（2つで1つ・0で負け）`;   /* 0.62.0 30章 */
   else if(t==='K') s+=G.beaconLit?'<br>灯がともっている':'<br>灯が消えている。隣で人が「灯をともす」とクリア（機械に乗ったままでもよい）';   // 0.33.0
   if(t==='D'&&houseAt(x,y)>=0){ const i=houseAt(x,y), h=CH().houses[i]; s=`<b>${h.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.deliv[i]?'<br>荷物はもう届けた':h.last&&!lastReady()?'<br>ほかの4軒に届けてから、ここに届ける':'<br>人か、人が乗っている機械がこのマスに立つと「届ける」'); }   // 0.37.0 外伝1
   else if(treasureAt(x,y)>=0) s+='<br><b>光る品</b>：人か、人が乗っている機械がこのマスに立つと「拾う」（評価の点が1つ増える）';   /* 0.38.0 外伝7 */
-  else if(t==='D'&&visitAt(x,y)>=0){ const i=visitAt(x,y), v=CH().visit[i]; s=`<b>${v.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.visited[i]?'<br>もう訪ねた':'<br>人か、人が乗っている機械がこのマスに立つと「訪ねる」'); }   /* 0.39.0 11章 */
-  else if(t==='D'){ const k=doorKey(x,y); s+=G.opened[k]?`<br>この${SN}はもう調べた`:'<br>人がこのマスに立つと「調べる」で中を見られる'; }   // 0.10.0
+  else if(t==='D'&&visitAt(x,y)>=0){ const i=visitAt(x,y), v=CH().visit[i]; s=`<b>${v.name}の戸口</b>（移動 ${moveCost(t)}）`+(G.visited[i]?'<br>もう訪ねた':'<br>人か、人が乗っている機械がこのマスに着くと、訪ねる'); }   /* 0.39.0 11章 */
+  else if(t==='D'){ const k=doorKey(x,y); s+=G.opened[k]?`<br>この${SN}はもう調べた`:'<br>人がこのマスに着くと、中を見られる'; }   // 0.10.0
   if(CH().share&&G.shared){ const i=CH().share.findIndex(p=>p.x===x&&p.y===y); if(i>=0) s+=G.shared[i]?`<br><b>${CH().share[i].name}</b>：もう灯を分けてもらった`:`<br><b>${CH().share[i].name}</b>：上下左右の隣で、人が「灯を受け取る」（力・守り・説得力が少し上がる）`; }   /* 0.67.0 32章 */
   if(CH().tell&&G.told){ const i=CH().tell.findIndex(p=>p.x===x&&p.y===y); if(i>=0) s+=G.told[i]?`<br><b>${CH().tell[i].name}</b>：もう伝えた`:`<br><b>${CH().tell[i].name}</b>：上下左右の隣で、人が「伝える」`; }   /* 0.62.0 29章 */
-  if(isShelfSpot(x,y)){ const S=CH().shelves, i=S.spots.findIndex(p=>p.x===x&&p.y===y), c=G.shelf[i]; s+=c>=S.need?`<br><b>${S.spots[i].name}</b>：もう調べた`:`<br><b>${S.spots[i].name}</b>：人（生身）がこのマスに立つと「調べる」（あと ${S.need-c}回・ボグダンとイネスは1回で）`; }   /* 0.58.0 21章 */
+  if(isShelfSpot(x,y)){ const S=CH().shelves, i=S.spots.findIndex(p=>p.x===x&&p.y===y), c=G.shelf[i]; s+=c>=S.need?`<br><b>${S.spots[i].name}</b>：もう調べた`:`<br><b>${S.spots[i].name}</b>：人（生身）がこのマスに着くと調べる（あと ${S.need-c}回・ボグダンとイネスは1回で）`; }   /* 0.58.0 21章 */
   { const zi=zaiSpot(x,y); if(zi>=0) s+=G.zai[zi]?'<br><b>材料のあった場所</b>：もう拾った':`<br><b>${CH().zai.spots[zi][2]}</b>：声の部品の材料。人か動ける機械が、このマスか隣で「拾う」`; }   /* 0.74.0 38章 */
   if(isHerbSpot(x,y)) s+=herbAt(x,y)>=0?'<br><b>草むら</b>：薬草が生えている。人（生身）がこのマスに立つと「摘む」':'<br><b>草むら</b>：もう摘んだ';   /* 0.39.0 11章 */
   if(t==='H'&&isSheep()) s+='<br>羊はここへ帰る。霧の側は入れません';   // 0.37.0 10章の羊小屋
@@ -5303,7 +5370,7 @@ function updatePanel(){
   } else if(G.mode==='idle'){
     hint(c,'味方を押すと選べます。「次の味方」でも選べます。');
     mkBtn(c,{label:'前の味方',fn:()=>nextAlly(-1)});
-    mkBtn(c,{label:G.zoom===2?'縮小':'拡大',sub:G.zoom===2?'元の大きさ':'マップを2倍',fn:toggleZoom});
+    mkBtn(c,{label:'拡大',sub:zoomSub(),fn:toggleZoom});
     mkBtn(c,{label:'これまでの出来事',fn:showLog});
     mkBtn(c,{label:'くわしく',sub:'仲間と持ち物',fn:showParty});
     if(CH().cheer){ const cb=cheerBlock(), cl=cheerList();   // 0.12.0 応援
@@ -5312,13 +5379,18 @@ function updatePanel(){
     if(CH().yuraAgain){ const yb=yuraBlock(); mkBtn(c,{label:'ユラの呼び声',off:!!yb,sub:yb||'光の当たるところで動き終えた味方を、もう一度動かす',fn:yuraAct}); }   /* 0.72.0 37章 */
   } else if(G.mode==='move'){
     hint(c,`<b class="p">${G.sel.name}</b>：青いしましまのマスで移動。いまのマスを押すと、その場で行動。`);
-    if(postOn(G.sel)) mkBtn(c,{label:'ここで終える',cls:'wide key',fn:()=>{finish(G.sel);render();}});   /* 0.80.0 あと動き */
+    if(postOn(G.sel)) mkBtn(c,{label:'ここで終える',cls:'wide key',fn:()=>{finish(G.sel);render();spotAfter();}});   /* 0.80.0 あと動き */
     else mkBtn(c,{label:'その場で行動',cls:'wide key',fn:()=>{G.mode='menu';render();}});
     mkBtn(c,{label:'前の味方',fn:()=>nextAlly(-1)});
-    mkBtn(c,{label:G.zoom===2?'縮小':'拡大',fn:toggleZoom});
+    mkBtn(c,{label:'拡大',sub:zoomSub(),fn:toggleZoom});
   } else if(G.mode==='menu'){
     if(nothingToDo(G.sel)) hint(c,`<b class="p">${G.sel.name}</b>：ここでできることはありません。もう一度${G.sel.name}を押すと待機します。`);
+    else hint(c,`<b class="p">${G.sel.name}</b>：することを選びます。何もしないなら、もう一度${G.sel.name}を押すと待機します。`);   /* 0.94.0 */
     for(const m of menuCommands(G.sel)) mkBtn(c,{label:m.label,sub:m.sub,off:m.off,cls:(m.wide?'wide ':'')+(m.key?'key':''),fn:m.act});
+  } else if(G.mode==='late'){   /* 0.94.0 待機のあとの乗り降り */
+    hint(c,`<b class="p">${G.sel.name}</b>：待機のあとの乗り降り。攻撃などはできません。もう一度${G.sel.name}を押すと、やめます。`);
+    for(const m of lateCmds(G.sel)) mkBtn(c,{label:m.label,sub:m.sub,cls:'wide'+(m.key?' key':''),fn:m.act});
+    mkBtn(c,{label:'やめる',cls:'wide',fn:()=>{deselect();render();}});
   } else if(G.mode==='target'){
     hint(c,`${G.act.name}：赤い点の相手を、マップか下のボタンで選びます。`);
     G.act.list.forEach((t,i)=>mkBtn(c,{label:G.act.label(t),cls:'wide',fn:()=>pickTarget(i)}));
@@ -5379,7 +5451,9 @@ function showSettings(){
    <div class="setrow">難しさ<br><small>変わるのは敵のレベルだけです。もらえる物は、どれを選んでも同じです。途中で変えても、何も失いません</small><div class="seg seg3">${segD}</div></div>
    <div class="setrow">文字の大きさ<div class="seg">${segF}</div></div>
    <div class="setrow">「決定」を省く<br><small>慣れた人向け。オンにすると、予測を出さずにすぐ実行します。ターン終了で、まだ動いていない人がいるときだけは確かめます</small><div class="seg seg2">${yn('skip','オン','オフ')}</div></div>
-   <div class="setrow">霧の側の動く速さ<div class="seg seg2"><button data-s="normal" aria-pressed="${SET.speed==='normal'}">ふつう</button><button data-s="fast" aria-pressed="${SET.speed==='fast'}">はやい</button></div></div>
+   <div class="setrow">マップの大きさ<br><small>マップの下の「拡大」ボタンでも、1倍→1.25倍→1.5倍→1.75倍→2倍→2.5倍→1倍と変わります。大きいときは、ドラッグで動かせます</small><div class="seg seg3">${ZOOMS.map(z=>`<button data-z="${z}" aria-pressed="${zoomNow()===z}">${spdName(z)}</button>`).join('')}</div></div>
+   <div class="setrow">戦いの場面の速さ<br><small>攻撃と説得の場面・カットイン・マップの上の数字の速さ。音楽の速さは変わりません</small><div class="seg seg5">${SPDS.map(v=>`<button data-bs="${v}" aria-pressed="${btSpd()===v}">${spdName(v)}</button>`).join('')}</div></div>
+   <div class="setrow">ユニットの動く速さ<br><small>味方と霧の側が歩く速さと、霧の側の番の間。音楽の速さは変わりません</small><div class="seg seg5">${SPDS.map(v=>`<button data-ms="${v}" aria-pressed="${mvSpd()===v}">${spdName(v)}</button>`).join('')}</div></div>
    <div class="setrow">戦いの場面<br><small>攻撃と説得のあとに、ダメージ・よけた・倒した・手に入れた物を大きく見せます。押すと早送り</small><div class="seg seg2">${yn('battle','見る','見ない')}</div></div>
    <div class="setrow">カットイン<br><small>影を呼び戻したときと、夜明けに、顔とひとことを大きく見せます。押すと次へ</small><div class="seg seg2">${yn('cutin','見る','見ない')}</div></div>
    <div class="setrow">動きを減らす<br><small>点滅・画面のゆれ・流れる線を止めます</small><div class="seg seg2">${yn('calm','オン','オフ')}</div></div>
@@ -5394,12 +5468,14 @@ function showSettings(){
     if(b.dataset.xfer){ if(b.dataset.xfer==='qr') xferQRPick(); else if(b.dataset.xfer==='out') xferOut(); else xferIn(); return; }   /* 0.88.0 ほかの端末へ引き継ぐ */
     if(b.dataset.t){ if(!SET.bgm){ SET.bgm=true; saveSet(); } Sound.tap(); Sound.play(b.dataset.t); const y=$('mbox').scrollTop; showSettings(); $('mbox').scrollTop=y; const a=$('mtext').querySelector(`[data-t="${b.dataset.t}"]`); if(a) a.focus(); return; }   // 0.15.0 曲を聴く（音楽がなしなら、ありにする）
     if(b.dataset.f!=null) SET.font=+b.dataset.f;
-    else if(b.dataset.s) SET.speed=b.dataset.s;
+    else if(b.dataset.z){ SET.zoom=+b.dataset.z; PAN={x:0,y:0}; }   /* 0.94.0 */
+    else if(b.dataset.bs) SET.btSpd=+b.dataset.bs;
+    else if(b.dataset.ms) SET.mvSpd=+b.dataset.ms;
     else if(b.dataset.d){ if(SET.diff!==b.dataset.d){ SET.diff=b.dataset.d; relevelEnemies(); addLog(`難しさを「${diffOf().name}」にした。`); render();
       if(PREP.on&&PREP.view==='main'){ renderPrep(); const sb=[...$('pbox').querySelectorAll('button')].find(x=>x.textContent.startsWith('設定')); if(sb) MODAL.prevFocus=sb; } } }   /* 0.39.5 準備画面の「設定」ボタンの「いま：」を合わせる */
     else SET[b.dataset.k]=b.dataset.v==='1';
     saveSet(); const y=$('mbox').scrollTop; showSettings(); $('mbox').scrollTop=y;
-    const again=$('mtext').querySelector(b.dataset.f!=null?`[data-f="${b.dataset.f}"]`:b.dataset.s?`[data-s="${b.dataset.s}"]`:b.dataset.d?`[data-d="${b.dataset.d}"]`:`[data-k="${b.dataset.k}"][data-v="${b.dataset.v}"]`); if(again) again.focus();
+    const again=$('mtext').querySelector(b.dataset.f!=null?`[data-f="${b.dataset.f}"]`:b.dataset.z?`[data-z="${b.dataset.z}"]`:b.dataset.bs?`[data-bs="${b.dataset.bs}"]`:b.dataset.ms?`[data-ms="${b.dataset.ms}"]`:b.dataset.d?`[data-d="${b.dataset.d}"]`:`[data-k="${b.dataset.k}"][data-v="${b.dataset.v}"]`); if(again) again.focus();
   }));
   /* 0.39.5 音量のスライダー。動かしている間は画面を作り直さない（作り直すと指が外れる） */
   $('mtext').querySelectorAll('input[data-vol]').forEach(r=>{
@@ -6942,7 +7018,7 @@ const BTALK={
     ['ユラ','normal','倉庫の奥で、運搬の機械が止まったままだそうです。名前はカモメ。'],
     [['イネス','@'],'normal','止まってるだけなら、隣で手を入れれば動くかも。直してみよう。'],
     ['ユラ','normal','それから、倉庫の持ち主から言づけです。「中の物は、霧を払うのに使ってくれ」と。'],
-    ['ユラ','normal','戸口に立って「調べる」を押すと、中の物を持ち出せます。持たせるのは、次の準備画面で。'],
+    ['ユラ','normal','戸口のマスに人が着くと、中の物を持ち出せます。持たせるのは、次の準備画面で。'],
     [['ノア','@'],'smile','ありがとう。霧を晴らしながら、倉庫も見ていこう。']]},
   c2kiran:{head:'2章「港の倉庫」　キランが来た',lines:[
     ['','','（港の道から、棒を背負った旅の人が走ってくる）'],
@@ -6963,7 +7039,7 @@ const BTALK={
     [['イネス','@'],'normal','桟橋に、放水の機械がいるよ。ミズハっていうんだって。'],
     [['イネス','@'],'normal','人が乗っていないと動かないけど、前の席に乗れば、いっしょに戦ってくれる。'],
     ['ミズハ','','（ミズハのランプが、短く1回点く）'],
-    ['ユラ','normal','網小屋の戸口も、倉庫と同じです。「調べる」で、中の物を使わせてもらえます。'],
+    ['ユラ','normal','網小屋の戸口も、倉庫と同じです。立ち寄れば、中の物を使わせてもらえます。'],
     [['ノア','@'],'smile','わかった。行こう、ミズハ。']]},
   c3join:{head:'3章「漁港を守れ」　漁師の二人',lines:[
     ['','','（一番船から、二人の漁師が岸へ跳び移ってくる）'],
@@ -6990,7 +7066,7 @@ const BTALK={
     [['ノア','@'],'normal','あの人、まだ戻れるかもしれない。話しかけてみる。']]),
     [['イネス','@'],'normal','通りのはずれに、照らし機のアカリが止まってる。前の席に乗れば動かせるよ。'],
     ['アカリ','','（アカリのランプが、ぼんやり点く）'],
-    ['ユラ','normal','家の戸口も「調べる」で見られます。夜明けまで、避難所の灯を守ってください。']]},
+    ['ユラ','normal','家の戸口も、立ち寄れば中を見られます。夜明けまで、避難所の灯を守ってください。']]},
   c5elif:{head:'5章「影の行列」　エリフ',lines:[
     ['エリフ','sad','……ずっと、だれかが呼んでいた。'],
     [['ノア','@'],'surprise','気がついた？ ここは港だよ。灯台の光が届くところ。'],
@@ -7008,7 +7084,7 @@ const BTALK={
     ['ボグダン','normal','わかっとる。わしとパブロは、中で道具と部品を守る。外は任せていいか。'],
     [['ノア','@'],'smile','任せて。8ターン目が終わるまで、工房には霧を入れないよ。'],
     ['ボグダン','normal','物置の戸口のものは、好きに使え。霧を払うためなら、惜しくはない。'],
-    ['ユラ','normal','物置の戸口も、「調べる」で中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','物置の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.31.0 クリアのあとに仲間になる3人（11/7 ヒロさん「クリアのあとに仲間」・必ず「いっしょに行く」話をする）。結果の窓の前に出す */
   c6join:{head:'6章「坂の上の工房」　ボグダンとパブロとスパナ',lines:[
     ['','','（霧が引いた坂の上。工房の戸が開き、白いひげの職人が出てくる）'],
@@ -7031,7 +7107,7 @@ const BTALK={
     ['ユラ','normal','防波堤の途中に、漁師のシオネさんがいます。船の機械を2つ、守っているそうです。'],
     [['ケンタ','イネス','@'],'normal','シオネさんは、ほとんどしゃべらないけど、海のことならだれより詳しいんだ。隣まで行って、声をかけてみよう。'],
     ['ユラ','normal','それから、2ターンごとに大波が来ます。水辺にいると、波をかぶって、陸のほうへ押し戻されます。来る前のターンに知らせますね。'],
-    ['ユラ','normal','番小屋の戸口も、「調べる」で中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','番小屋の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.33.0 シオネとナミノリとイカリが仲間になるとき（11/7 ヒロさん・必ず「いっしょに行く」話をする） */
   c7join:{head:'7章「嵐の防波堤」　シオネとナミノリとイカリ',lines:[
     ['シオネ','normal','……灯台の者か。'],
@@ -7051,7 +7127,7 @@ const BTALK={
     [['ボグダン','イネス','@'],'normal','あいつのしずく砲は遠くまで届く。そのかわり、すぐ隣には撃てん。懐に入れば、話しかけられる。'],
     [['ノア','@'],'normal','わかった。壊さないように、熱を下げて止めてあげよう。'],
     ['ユラ','normal','それから……灯台のレンズに、霧の煤がたまってきています。ターンごとに、光が遠くまで届かなくなります。'],
-    ['ユラ','normal','船具小屋の戸口も、「調べる」で中を見られます。持たせるのは、次の準備画面で。']]},
+    ['ユラ','normal','船具小屋の戸口も、立ち寄れば中を見られます。持たせるのは、次の準備画面で。']]},
   /* 0.34.0 4ターン目の鐘の音（設計書「霧の奥から鐘のような音が聞こえる」） */
   c8bell:{head:'8章「灯台の長い夜」　鐘の音',lines:[
     ['','','（霧の奥、ずっと北のほうから、低い音がひとつ響いた）'],
@@ -7080,7 +7156,7 @@ const BTALK={
     ['ルカ','smile','いっしょに行こう！ ツバメもいるよ。いちばん速い配達の機械なんだ。'],
     ['ツバメ','','（ツバメのランプが、短く2回点く。前の席には、ルチアが乗っている）'],
     [['ノア','@'],'smile','ありがとう。よろしくね、ルカ、ルチア、ツバメ。'],
-    ['ルチア','normal','中継灯は左の丘です。宿の戸口も「調べる」で見てください。宿の人が、霧を払うのに使ってほしいって。'],
+    ['ルチア','normal','中継灯は左の丘です。宿の戸口にも立ち寄ってください。宿の人が、霧を払うのに使ってほしいって。'],
     ['ルカ','normal','あと、森の奥で何か光ってた。……カササギだったりして。じいちゃんが言ってた、市の機械。']]:[
     ['','','（昼。森の街道に、また霧がたまっている）'],
     [['ルチア','@'],'normal','中継灯は左の丘です。直したら、霧の側から守ってください。']]},
@@ -7122,7 +7198,7 @@ const BTALK={
     ['ユラ','normal','霧の側が、羊をねらっています。羊が小屋に戻るまで、守ってあげてください。'],
     [['イネス','@'],'normal','羊は人をよけて歩くけど、道をふさぎすぎると、回り道で遅くなっちゃうね。'],
     ['ユラ','normal','牧場の人たちも、きっと近くで羊を探しています。'],
-    [['ルカ','@'],'normal','牧人の家の戸口も「調べる」で見てみよう。何か使えるものがあるかも。']]},
+    [['ルカ','@'],'normal','牧人の家の戸口にも寄ってみよう。何か使えるものがあるかも。']]},
   /* 0.37.0 ペマとフェリクスが来たとき（必ず「いっしょに行く」話をする・11/7 ヒロさん）。ペマは人には小声、動物には大きな声。フェリクスはゆっくり（設計書 §12） */
   c10join:{head:'10章「羊の丘」　ペマとフェリクス',lines:[
     ['','','（丘の下から、口笛と、羊の首の鈴の音が近づいてくる）'],
@@ -7162,8 +7238,8 @@ const BTALK={
     ['ユラ','normal','中継灯の光が、森の入り口まで届いています。……草むらに、薬草が生えているようです。'],
     [['イネス','@'],'normal','霧で倒れた人の手当てに、薬草はいくらあっても足りないもんね。'],
     [['ノア','@'],'normal','草むらで摘んでいこう。6か所で摘めば、かごがいっぱいになりそう。'],
-    ['ユラ','normal','森の家の人たちにも、会ってみてください。戸口で「訪ねる」と、話ができます。'],
-    [['ルカ','@'],'normal','薬草小屋の戸口も「調べる」で見てみよう！']]},
+    ['ユラ','normal','森の家の人たちにも、会ってみてください。戸口に立ち寄れば、話ができます。'],
+    [['ルカ','@'],'normal','薬草小屋の戸口にも寄ってみよう！']]},
   /* 0.39.0 オユナの家を訪ねたとき（必ず「いっしょに行く」話をする・11/7 ヒロさん）。シャボンはオユナの薬草小屋の機械（私の案・仮） */
   c11oyuna:{head:'11章「薬草の森」　オユナの家',lines:[
     ['','','（戸をたたくと、乾いた草の香りといっしょに、小柄なおばあさんが顔を出した）'],
@@ -7212,7 +7288,7 @@ const BTALK={
     ...(onMapP('エリフ')?[['エリフ','normal','あの影、だれかを探してる。……わたしも、そうだったから。']]:[]),
     ['ユラ','normal','すぐ隣まで近づけば、きっと見えます。足音の方角は、わたしがお知らせします。'],
     [['イネス','@'],'normal','攻撃しすぎないようにね。耐久を0にしたら、霧の奥へ消えちゃうかもしれない。'],
-    [['ノア','@'],'normal','うん。話しかけて、呼び戻そう。旅籠の跡の戸口も「調べる」で見てみようか。']]},
+    [['ノア','@'],'normal','うん。話しかけて、呼び戻そう。旅籠の跡の戸口にも寄ってみようか。']]},
   /* 0.47.0 12章の終わり（結果の窓の前）。はじめては、呼び戻したジュンと「いっしょに行く」話をする（11/7 ヒロさん・どの章でも省かない）。
      ジュンは戻ったばかりなので、名詞で止める・ひと言だけ（§12）。2回目は短く */
   c12end:{head:'12章「静かな足音」　霧の街道で',lines:()=>G&&!G.junFirst?[
@@ -7243,7 +7319,7 @@ const BTALK={
     [['イネス','@'],'normal','水で冷ますか、話しかけて熱を下げよう。耐久を0にすると、止まっちゃうよ。'],
     ['ユラ','normal','霧の側が、食堂のほうへ集まってきています。食堂の守りが0になると、霧が中へ入ってしまいます。'],
     ['クワメ','normal','中には、霧から逃げてきた人たちがいるんだ。……片づいたら、腹いっぱい食わせるからさ。'],
-    [['ノア','@'],'normal','まかせて。食堂を守りながら、ハリネズミを呼び戻そう。小屋の戸口も「調べる」で見てみようか。']]},
+    [['ノア','@'],'normal','まかせて。食堂を守りながら、ハリネズミを呼び戻そう。小屋の戸口にも寄ってみようか。']]},
   /* 0.48.0 13章の終わり（結果の窓の前）。はじめては、クワメと（呼び戻せたらハリネズミとも）「いっしょに行く」話をする（11/7 ヒロさん・どの章でも省かない）。
      ハリネズミを止めたときは、クワメが受けとめ、イネスが工房で直せるかもと言う（外伝3の芽）。2回目は短く */
   c13end:{head:'13章「森の食堂」　食堂の前で',lines:()=>{ const kw=!!(G&&(G.newJoin||[]).includes('クワメ')), ok=!!(G&&G.hariOk), l=[];
@@ -7283,7 +7359,7 @@ const BTALK={
     ['デウィ','smile','もちろん、あたしも行くけん。カザミ、出番だよ！'],
     ['カザミ','','（屋台の陰で休んでいた機械が、背中の風車をくるりと回した。前の席には、デウィが乗っている）'],
     ['デウィ','normal','カザミの突風に当たると、相手はねらいが定まらなくなるんだ。焼き場の煙を払うのにも、ちょうどいいのさ。'],
-    ['デウィ','normal','それと、宿の戸口も「調べる」で見ておいで。宿のおかみさんが、何か用意してるって。'],
+    ['デウィ','normal','それと、宿の戸口にも寄っておいで。宿のおかみさんが、何か用意してるって。'],
     [['ノア','@'],'smile','ありがとう、デウィさん、カザミ。よろしくね。']]:[
     ['','','（夜の宿場。広場の祭りの灯のまわりに、また霧がたまってきた）'],
     ['ユラ','normal','霧の側が、祭りの灯をねらっています。夜明けまで、祭りの灯を守ってください。']]},
@@ -7309,7 +7385,7 @@ const BTALK={
     [['キラン','@'],'normal','道が細いですね。……岩陰に、霧の側がいます。待ちかまえているようです。'],
     ['ユラ','normal','待っている霧の側は、近づくまで動かないようです。一度ぶつかると、追いかけてきます。'],
     [['イネス','@'],'normal','中継灯の隣で「直す」を3回。わたしなら、1回で2つぶん直せるよ。'],
-    [['ルカ','@'],'normal','途中に山小屋があるね。戸口を「調べる」と、何か見つかるかも。'],
+    [['ルカ','@'],'normal','途中に山小屋があるね。戸口に寄ると、何か見つかるかも。'],
     [['ノア','@'],'smile','よし、登ろう。足もとに気をつけてね。']]},
   /* 0.50.0 ワタリが飛んでくる（11/10 ヒロさん「途中のターンに飛んでくる」・必ず「いっしょに行く」話をする）。機械は話さないので、ランプと動きで（設計書 §6）。
      伏線（幕間10）「今年は渡り鳥が北から下りてこない」を受ける。台詞は私の下書き */
@@ -7343,7 +7419,7 @@ const BTALK={
     ['ユラ','normal','峠の中継灯から、少しだけ光が届いています。でも、鐘楼のまわりの霧が、とても濃いです。'],
     [['ボグダン','イネス','@'],'normal','鐘楼の前に、大きな機械がいるな。……鐘を守ってきた番の機械だ。霧で熱がこもっている。'],
     ['ユラ','normal','鐘番は、近づくまで動かないようです。熱を下げても、止めても、もう霧の側には戻らないはずです。'],
-    [['イネス','@'],'normal','鐘楼の鐘の機械も、止まってるみたい。隣で「鐘を調べる」と、何かわかるかも。'],
+    [['イネス','@'],'normal','鐘楼の鐘の機械も、止まってるみたい。隣で「鐘を鳴らす」を選べば、動くかも。'],
     ['ユラ','normal','鐘が一度でも鳴れば、霧の側が驚いて、動きを止めるかもしれません。'],
     [['ノア','@'],'smile','霧の側を全部晴らそう。それから、鐘を見に行こう。']]},
   /* 0.52.0 鐘を調べて、一度だけ鳴ったとき */
@@ -8694,15 +8770,17 @@ function layout(){
   SCALE={cssW,cssH};
   document.documentElement.style.setProperty('--mapW',(land?Math.ceil(cssW)+8:vw)+'px');
   const box=$('mapbox'); box.style.width=cssW+'px'; box.style.height=cssH+'px';
-  const z=(G&&G.zoom)||1;
+  const z=zoomNow();   /* 0.94.0 設定の「マップの大きさ」 */
   cv.style.width=cssW*z+'px'; cv.style.height=cssH*z+'px';
-  $('zoomBadge').style.display=z===2?'block':'none';
+  $('zoomBadge').style.display=z>1?'block':'none'; $('zoomBadge').textContent=`${spdName(z)}・ドラッグで動かせます`;
   clampPan(); applyPan();
 }
-function clampPan(){ const z=(G&&G.zoom)||1; PAN.x=clamp(PAN.x,0,SCALE.cssW*(z-1)); PAN.y=clamp(PAN.y,0,SCALE.cssH*(z-1)); }
+function clampPan(){ const z=zoomNow(); PAN.x=clamp(PAN.x,0,SCALE.cssW*(z-1)); PAN.y=clamp(PAN.y,0,SCALE.cssH*(z-1)); }
 function applyPan(){ cv.style.transform=`translate(${-PAN.x}px,${-PAN.y}px)`; }
-function centerOn(x,y){ if(!G||G.zoom!==2) return; const k=SCALE.cssW/320*2; PAN.x=(x*TS+8)*k-SCALE.cssW/2; PAN.y=(tileY(y)+8)*k-SCALE.cssH/2; clampPan(); applyPan(); }
-function toggleZoom(){ G.zoom=G.zoom===2?1:2; PAN={x:0,y:0}; layout(); const f=G.sel||G.cursor; if(f) centerOn(f.x,f.y); render(); }
+function centerOn(x,y){ const z=zoomNow(); if(!G||z<=1) return; const k=SCALE.cssW/320*z; PAN.x=(x*TS+8)*k-SCALE.cssW/2; PAN.y=(tileY(y)+8)*k-SCALE.cssH/2; clampPan(); applyPan(); }
+function zoomNext(){ return ZOOMS[(ZOOMS.indexOf(zoomNow())+1)%ZOOMS.length]; }
+function zoomSub(){ return `いま${spdName(zoomNow())}・押すと${spdName(zoomNext())}`; }
+function toggleZoom(){ SET.zoom=zoomNext(); try{ localStorage.setItem(SET_KEY,JSON.stringify(SET)); }catch(_){} PAN={x:0,y:0}; layout();   /* 0.94.0 6段をぐるっと（設定にも覚える） */ const f=G.sel||G.cursor; if(f) centerOn(f.x,f.y); render(); }
 
 /* =========================================================
    入力：Tap（pointerdown/up＋click・長押しなし・36px）
@@ -8725,7 +8803,7 @@ window.addEventListener('pointermove',e=>{
   if(e.pointerType==='mouse'&&drag.id==null){ const r=cv.getBoundingClientRect(); if(e.clientX>=r.left&&e.clientX<r.right&&e.clientY>=r.top&&e.clientY<r.bottom){ const bx=(e.clientX-r.left)/r.width*320,by=(e.clientY-r.top)/r.height*248-OY; const x=Math.floor(bx/TS),y=Math.floor(by/TS); if(y>=0&&y<H&&(!G.hover||G.hover.x!==x||G.hover.y!==y)){ G.hover={x,y}; draw(); $('info').innerHTML=infoHTML(); } } else if(G.hover){ G.hover=null; draw(); $('info').innerHTML=infoHTML(); } }
   if(e.pointerId!==drag.id) return;
   const dx=e.clientX-drag.sx, dy=e.clientY-drag.sy;
-  if(!drag.moved&&Math.hypot(dx,dy)>36&&G.zoom===2) drag.moved=true;
+  if(!drag.moved&&Math.hypot(dx,dy)>36&&zoomNow()>1) drag.moved=true;
   if(drag.moved){ PAN.x=drag.px-dx; PAN.y=drag.py-dy; clampPan(); applyPan(); }
 });
 function endDrag(e){ if(e.pointerId!==drag.id) return; drag.id=null; setTimeout(()=>{ drag.moved=false; },0); }
