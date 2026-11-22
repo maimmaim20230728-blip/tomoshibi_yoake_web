@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.91.0（2026-11-22）：まとめてのおすすめで、打たれ弱い人も守りの品を持てば歩く形を試す（11/22 ヒロさん「レベルが上がったりアイテム次第ではノアでも歩いた方が良い場面もある」）。品なしの体から始める形と、歩くなら品を1つ持てるとして始める形の2つを回し、点の合計が高いほう（recFootBest・recTot）。歩く人の「倒れるまで影に約何回」は難しさが簡単のときだけ見せる（11/22 ヒロさん「かんたんモードだけで出るようにして。ヒントがあるとつまらなくなる人もいる」） -->
 <!-- 版 0.90.0（2026-11-22）：おすすめの作り直し（11/22 ヒロさん「決まり決まったものではなく、アルゴリズムでその都度レベルや移動距離、改造度に合わせて考え直してほしい」「説得が強くてもすぐやられる人を機械から降ろすのは危険」「もう一度おすすめを選んだ時に、優先することを変更して別のおすすめ結果を出せる」）。出撃する人と機械を点にして合計がいちばん大きい組み合わせを探す（recSeatsK・recItemsK・recRun）。点は、いまのレベル・改造・品の数と、この章の影の強さから押すたびに計算。打たれ弱い人は乗せて守る・コモリと大声は乗ったまま説得・拾う物のある章は移動を重く。「まとめておすすめにする」を足した。考え方（釣り合い・やられにくさ・説得・攻め・移動）を「ほかの考え方で」で変えられる（同じ結果は飛ばす）。重みと数は仮 -->
 <!-- 版 0.89.0（2026-11-22）：おすすめのボタン（11/22 ヒロさん「アイテムを持たせるのと、機械に乗るか乗らないか、乗る場合の組み合わせが難しい」「おすすめのボタンを付けて、面倒くさがりでも進めて行けるように」）。準備画面に「おすすめの乗り組みにする」「おすすめで品を持たせる」。押すと中身を見せてから決める。決め方は私の仮。乱数は使わない -->
 <!-- 版 0.88.0（2026-11-22）：ほかの端末へ引き継ぐ（11/22 ヒロさん「PC↔携帯系端末でセーブデータの引継ぎ、または連動ができる機能」「設定からできるようにするといい」）。設定に「引継ぎコードを作る」「引継ぎコードを読み込む」。保存の10の場所と難しさを1つのコードにまとめ、コピー・ファイル・ほかのアプリで送る。読み込むときは場所ごとに新しいほうを残すか、コードのとおりに全部置きかえる。サーバーには送らない。あわせて「QRで送る」（11/22 ヒロさん「QRを活用できないかな」）＝保存を1つ選んでQRを出し、スマホのカメラで読むとゲームが開いて引き継ぐ（大きい保存はQRを何枚かに分ける）。形は仮。乱数は使わない -->
@@ -494,7 +495,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.90.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.91.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -5564,7 +5565,7 @@ const REC_K=[
   {n:'やられにくさ',d:'すぐやられそうな人は機械に乗せて守り、打たれ強い人が歩きます。',per:1,atk:0.8,mov:0.8,safe:6,loss:24,dz:5},
   {n:'説得',d:'説得の強い人を前に出します。乗ったまま説得できる人（コモリ・大声）も数えます。',per:2.4,atk:0.6,mov:0.8,safe:2.5,loss:6,dz:3},
   {n:'攻め',d:'機械と人の攻撃がいちばん強くなるようにします。',per:0.6,atk:2.2,mov:0.8,safe:2.5,loss:6,dz:3},
-  {n:'移動',d:'足の速い組を作り、品や材料を拾いに行きやすくします。',per:1,atk:0.8,mov:2.6,safe:2.5,loss:6,dz:3}];   /* dz＝影に dz 回たたかれる前に倒れそうなら、どの考え方でも大きく減らす（すぐやられる人を歩かせない） */
+  {n:'移動',d:'足の速い組を作り、品や材料を拾いに行きやすくします。',per:1,atk:0.8,mov:2.6,safe:2.5,loss:6,dz:3}];   /* dz＝影に dz 回たたかれる前に倒れそうなら大きく減らす（すぐやられる人を歩かせない）。0.91.0 いまのレベルと品で数えるので、育ったり守りの品を持てば歩くこともある */
 function machSolo(m){ return !!(allyDef(m.name)||m).solo; }
 function seatBonus(m,i,p){ const k=p.rideSkill, w=RIDE_SEAT[k]; if(!k||k==='breath') return 0; if(w&&w!==(i?'b':'f')) return 0;
   if(k==='loudspk') return m.pipe||ifx(m,'pipe')?12:0; return 8; }
@@ -5587,12 +5588,17 @@ function recMach(m,X){ const s=m.seats; if(!s[0]&&!machSolo(m)) return 0;
   const ex=finOn(m,'コモリ')&&s[1]?perOf(s[1])*X.per:0, atk=Math.max(1,power(m)-X.foe.def)*recHit(hitBonus(m),aimK(m),X);
   let sb=0; s.forEach((p,i)=>{ if(p&&!REC_SEEN.includes(p.rideSkill)) sb+=seatBonus(m,i,p); });
   return sf*(recMix(per*X.per,atk*X.atk)+ex+n.mov*(X.pick?3:1.5)*X.mov)+sb-X.loss*0.5*(1-sf)-6*Math.max(0,X.dz-dur); }
+/* 0.91.0 歩くならいちばん効く品を1つ持ったとしたときの点（まとめての最初の見当だけ。pool＝余っている品の名前） */
+function recFootBest(p,X,pool){ let b=recFoot(p,X); if(slotGet(p,0)) return b; const so=CAMP.seat; CAMP.seat={};
+  try{ for(const n of pool){ if(itemFit(n,p)<=0) continue; slotSet(p,0,n); b=Math.max(b,recFoot(p,X)); slotSet(p,0,null); } } finally { CAMP.seat=so; } return b; }
+/* 0.91.0 乗り組みと品の点の合計（いま付いている品で） */
+function recTot(X,r){ let t=0; for(const n of r.walk){ const p=campAlly(n); if(p) t+=recFoot(p,X); } for(const m of rideMachs()) if(r.S[m.name]) t+=withSeats(m,r.S[m.name],()=>recMach(m,X)); return t; }
 function recPeople(){ const sg=stageSinger(); return CAMP.allies.filter(p=>p.kind==='person'&&goesOut(p)&&p.name!==sg); }
 /* 乗り組み：いま持っている品のまま。S＝{機械:[前,後ろ]}・walk＝歩く人 */
-function recSeatsK(X){
+function recSeatsK(X,pool){
   const P=recPeople(), Ms=rideMachs(), S={}; for(const m of Ms) S[m.name]=[null,null];
   if(!Ms.length) return {S,walk:P.map(p=>p.name)};
-  const fv={}, mv={}; for(const p of P) fv[p.name]=recFoot(p,X);
+  const fv={}, mv={}; for(const p of P) fv[p.name]=pool?recFootBest(p,X,pool):recFoot(p,X);   /* 0.91.0 pool があれば品を持って歩く見当で */
   const mt=m=>withSeats(m,S[m.name],()=>recMach(m,X)); for(const m of Ms) mv[m.name]=mt(m);
   const pos=n=>{ for(const k in S){ const i=S[k].indexOf(n); if(i>=0) return [k,i]; } return null; };
   const ok=k=>!(S[k][1]&&!S[k][0]);
@@ -5663,11 +5669,16 @@ function recSameS(a,b){ return Object.keys(a).every(k=>(a[k][0]||null)===((b[k]|
 function recRun(kind,k){ const X=recCtx(k);
   if(kind==='seat') return {X,seats:recSeatsK(X)};
   if(kind==='item') return {X,items:recItemsK(X,recSeatsNow())};
-  const sv=recItemsSave(); let r;
-  try{ for(const sl of recSlots()) slotSet(sl.a,sl.s,null); r=recSeatsK(X);
-    for(let i=0;i<3;i++){ const it=recItemsK(X,r.S); for(const [sl,n] of it) slotSet(sl.a,sl.s,n); const r2=recSeatsK(X); for(const sl of recSlots()) slotSet(sl.a,sl.s,null); if(recSameS(r2.S,r.S)) break; r=r2; }
+  /* 0.91.0 2つの出だしから回して、合計の高いほう。①品なしの体で乗り組み ②歩くなら品を1つ持てるとして乗り組み（打たれ弱くても、守りの品を持てば歩けるかもしれない人のため） */
+  const sv=recItemsSave(), clr=()=>{ for(const sl of recSlots()) slotSet(sl.a,sl.s,null); }, put=it=>{ for(const [sl,n] of it) if(n) slotSet(sl.a,sl.s,n); };
+  const pool=[...new Set(CAMP.items.filter(n=>RULES.items[n]))];
+  let best=null;
+  try{ for(const st of [null,pool]){ clr(); let r=recSeatsK(X,st);
+      for(let i=0;i<3;i++){ put(recItemsK(X,r.S)); const r2=recSeatsK(X); clr(); if(recSameS(r2.S,r.S)) break; r=r2; }
+      const it=recItemsK(X,r.S); put(it); const t=recTot(X,r); clr();
+      if(!best||t>best.t+0.01) best={t,r,it}; }
   } finally { recItemsLoad(sv); }
-  return {X,seats:r,items:recItemsK(X,r.S)}; }
+  return {X,seats:best.r,items:best.it}; }
 function recSig(r){ return JSON.stringify([r.seats?Object.keys(r.seats.S).sort().map(k=>[k,r.seats.S[k][0]||null,r.seats.S[k][1]||null]):0,r.items?[...r.items].map(([sl,n])=>n||null):0]); }
 function recSigNow(kind){ const r={}; if(kind!=='item') r.seats={S:recSeatsNow()}; if(kind!=='seat'){ r.items=new Map(); for(const sl of recSlots()) r.items.set(sl,slotGet(sl.a,sl.s)||null); } return recSig(r); }
 function recCan(kind){ const ms=!noMachCh()&&rideMachs().length>0, it=CAMP.items.length>0; return kind==='seat'?ms:kind==='item'?it:ms||it; }
@@ -5681,7 +5692,7 @@ function recShow(kind,k,r,sg,skip){ const X=r.X, rows=[];
     for(const m in r.seats.S){ const s=r.seats.S[m], a=now[m]||[null,null], same=(a[0]||null)===s[0]&&(a[1]||null)===s[1];
       rows.push(`<div class="xrow"><b>${m}</b>${same?'':'<span class="xnew">変わる</span>'}<br><small>前の席：${s[0]||(machSolo(campAlly(m))?'空き（ひとりで動く）':'空き（動けない）')}　後ろの席：${s[1]||'空き'}</small></div>`); } }
   if(r.seats){ const w=r.seats.walk.map(n=>{ const p=campAlly(n), it=r.items?[...r.items].find(([sl])=>sl.a===p&&!sl.s):null, d=recWith(p,it?it[1]:undefined,()=>footDur(p,X));
-      return `${n}（説得力${recWith(p,it?it[1]:undefined,()=>perOf(p))}・倒れるまで影に約${Math.max(1,Math.floor(d))}回）`; });
+      return `${n}（説得力${recWith(p,it?it[1]:undefined,()=>perOf(p))}${SET.diff==='easy'?`・倒れるまで影に約${Math.max(1,Math.floor(d))}回`:''}）`; });   /* 0.91.0 倒れるまでの回数は簡単だけ（11/22 ヒロさん「ヒントがあるとつまらなくなる人もいる」） */
     rows.push(`<div class="xrow"><b>歩いて出撃</b><br><small>${w.join('<br>')||'なし'}</small></div>`); }
   if(r.items){ const left={}; for(const n of CAMP.items) left[n]=(left[n]||0)+1; const ir=[];
     for(const [sl,n] of r.items){ if(n) left[n]--; const cur=slotGet(sl.a,sl.s); if(!n&&!cur) continue;
