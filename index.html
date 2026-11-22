@@ -34,7 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
-<!-- 版 0.88.0（2026-11-22）：ほかの端末へ引き継ぐ（11/22 ヒロさん「PC↔携帯系端末でセーブデータの引継ぎ、または連動ができる機能」「設定からできるようにするといい」）。設定に「引継ぎコードを作る」「引継ぎコードを読み込む」。保存の10の場所と難しさを1つのコードにまとめ、コピー・ファイル・ほかのアプリで送る。読み込むときは場所ごとに新しいほうを残すか、コードのとおりに全部置きかえる。サーバーには送らない。形は仮。乱数は使わない -->
+<!-- 版 0.88.0（2026-11-22）：ほかの端末へ引き継ぐ（11/22 ヒロさん「PC↔携帯系端末でセーブデータの引継ぎ、または連動ができる機能」「設定からできるようにするといい」）。設定に「引継ぎコードを作る」「引継ぎコードを読み込む」。保存の10の場所と難しさを1つのコードにまとめ、コピー・ファイル・ほかのアプリで送る。読み込むときは場所ごとに新しいほうを残すか、コードのとおりに全部置きかえる。サーバーには送らない。あわせて「QRで送る」（11/22 ヒロさん「QRを活用できないかな」）＝保存を1つ選んでQRを出し、スマホのカメラで読むとゲームが開いて引き継ぐ（大きい保存はQRを何枚かに分ける）。形は仮。乱数は使わない -->
 <!-- 版 0.87.0（2026-11-19）：地図で機械を見分けやすく（11/19 ヒロさん「マップ上で機械の区別がつきにくい」）。地図の小さな絵の窓を小さくして胴の色が多く見えるように・胸の帯を2段に。シャボンの胴を淡い桃色に、トモシビの胴を灯台の赤に、モリヒトの胴を設計書の「深い青」に近く濃く（戦いの場面と顔も同じ色）。あわせて、出撃して地図になるときに章の番号と題を大きく一度出す（11/19 ヒロさん「準備が終わってマップになる時に章とタイトルを大きく一度出した方が良い」・2.6秒で消える・押すとすぐ消える・会話は消えてから）。形・色・長さは仮。乱数は使わない -->
 <!-- 版 0.86.0（2026-11-19）：準備画面の見直し（11/19 ヒロさん「改造度が見にくかったり、誰がどの機械に乗っているかも一目でわかりにくかったり、乗り換える時名前しか出ないから選びにくかったり」「全部入れて」）。「機械」のページの上に乗り組みの表（機械ごとに前と後ろの席の人を顔つきで1行・押すとその席を選ぶ・歩いて出撃する人）。改造の段は星の行から系統ごとの10マスの帯に（塗り＝上げた段・灰＝いま上げられる段・点線＝まだ開いていない段）、カードと工房に改造の段の合計。席を選ぶ画面は、顔・操縦や支援・乗ったときのわざ・いまどこか・乗るとその機械の力・回避・移動（コモリは説得力も）がどう変わるかを1枚に。人のカードに「乗る機械を選ぶ」（機械ごとに前と後ろの席・降りる）。機械のカードの攻撃の一覧はたたむ（名前だけ見える）。準備画面の機械の数は、決めた席の人を乗せた数で出す。あわせて、コモリの説得力の合計に EP を足した（11/19 ヒロさん「コモリの説得力はEPも項目に入れて。ちょっと説得力が低めだから丁度よくなると思う」・耐久・力・装甲・回避・移動・EPの合計÷10＋乗っている人の説得力の合計の5%）。乱数は使わない -->
 <!-- 版 0.85.0（2026-11-19）：機械の顔の絵（11/19 ヒロさん「機械の顔グラも少し区別付くように細かくして欲しい」）。人の乗っていない機械と暴走した機械の顔は、マップの絵を4倍にしたものから、戦いの場面の立ち絵（機械ごとの背中の付け足し・頭の灯・胸のしるし・腕の先・改造の帯と灯の飾り）の頭から腰までを64×64でそのまま切り出したものにした（art.js の machPortrait）。人の乗っている機械は今までどおり前の席の人の顔。乱数は使わない。数や台詞は変えていない -->
@@ -234,6 +234,8 @@ body.land #panel{flex:1;min-width:0;overflow-y:auto;scroll-padding-top:calc(var(
 .xmsg{min-height:1.3em;font-size:.85rem;color:#ffe296;margin:2px 0 6px}
 .xlist{margin-top:8px;max-height:48vh;overflow:auto}
 .xrow{border-top:1px solid #2a3050;padding:6px 0}
+#xqr{display:block;margin:8px auto 4px;background:#fff;image-rendering:pixelated;max-width:100%;height:auto}
+.xqpg{text-align:center;font-size:1.05rem;color:#ffe296;margin:2px 0}
 .xnew{display:inline-block;margin-left:8px;padding:0 6px;border-radius:4px;background:#2c5a3a;color:#d8ffd8;font-size:.8rem}
 #mbox{background:var(--panel);border:1px solid var(--line);border-radius:10px;max-width:460px;width:100%;max-height:calc(100dvh - 32px);overflow-y:auto;padding:12px;line-height:1.6}
 #mbtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
@@ -507,6 +509,7 @@ body.calm #tPress{animation:none}
   <div id="btSkip">押すと早送り・もう一度で閉じる</div>
   <div id="btRw"></div>
 </div></div>
+<script src="qrcode.js"></script>
 <script src="tap.js"></script>
 <script src="sound.js"></script>
 <script src="art.js"></script>
@@ -5364,7 +5367,7 @@ function showSettings(){
   const onMap=G&&!G.over&&!PREP.on&&!TITLE.on&&!MK.on;   // 0.26.0 マップの途中の保存
   openModal(`<b>設定</b>${onMap?`
    <div class="setrow">保存<br><small>マップの途中を、いまの形のまま残します（味方の番で、何も選んでいないとき）</small><div class="seg"><button data-save="1">マップの途中を保存する</button></div></div>`:''}
-   <div class="setrow">ほかの端末へ引き継ぐ<br><small>パソコンとスマホのあいだで保存を引き継ぎます。保存の${SAVE_SLOTS}の場所と難しさを、ひとつの「引継ぎコード」にまとめます</small><div class="seg seg2"><button data-xfer="out">引継ぎコードを作る</button><button data-xfer="in">引継ぎコードを読み込む</button></div></div>
+   <div class="setrow">ほかの端末へ引き継ぐ<br><small>パソコンとスマホのあいだで保存を引き継ぎます。保存の${SAVE_SLOTS}の場所と難しさを、ひとつの「引継ぎコード」にまとめます</small><div class="seg seg3"><button data-xfer="qr">QRで送る<small>スマホのカメラで読む</small></button><button data-xfer="out">引継ぎコードを作る</button><button data-xfer="in">引継ぎコードを読み込む</button></div></div>
    <div class="setrow">難しさ<br><small>変わるのは敵のレベルだけです。もらえる物は、どれを選んでも同じです。途中で変えても、何も失いません</small><div class="seg seg3">${segD}</div></div>
    <div class="setrow">文字の大きさ<div class="seg">${segF}</div></div>
    <div class="setrow">「決定」を省く<br><small>慣れた人向け。オンにすると、予測を出さずにすぐ実行します。ターン終了で、まだ動いていない人がいるときだけは確かめます</small><div class="seg seg2">${yn('skip','オン','オフ')}</div></div>
@@ -5380,7 +5383,7 @@ function showSettings(){
    [['閉じる',()=>{ closeModal(); if(window.Sound) Sound.play(sceneSong()); },'wide']],'settings',()=>{ if(window.Sound) Sound.play(sceneSong()); });
   $('mtext').querySelectorAll('button').forEach(b=>Tap.bind(b,()=>{
     if(b.dataset.save){ showMapSave(); return; }   // 0.26.0
-    if(b.dataset.xfer){ if(b.dataset.xfer==='out') xferOut(); else xferIn(); return; }   /* 0.88.0 ほかの端末へ引き継ぐ */
+    if(b.dataset.xfer){ if(b.dataset.xfer==='qr') xferQRPick(); else if(b.dataset.xfer==='out') xferOut(); else xferIn(); return; }   /* 0.88.0 ほかの端末へ引き継ぐ */
     if(b.dataset.t){ if(!SET.bgm){ SET.bgm=true; saveSet(); } Sound.tap(); Sound.play(b.dataset.t); const y=$('mbox').scrollTop; showSettings(); $('mbox').scrollTop=y; const a=$('mtext').querySelector(`[data-t="${b.dataset.t}"]`); if(a) a.focus(); return; }   // 0.15.0 曲を聴く（音楽がなしなら、ありにする）
     if(b.dataset.f!=null) SET.font=+b.dataset.f;
     else if(b.dataset.s) SET.speed=b.dataset.s;
@@ -5613,8 +5616,8 @@ const XFER_APP='tomoshibi_yoake';
 function b64u(u){ let t=''; for(let i=0;i<u.length;i+=0x8000) t+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000)); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
 function unb64u(t){ t=t.replace(/-/g,'+').replace(/_/g,'/'); while(t.length%4) t+='='; const b=atob(t), u=new Uint8Array(b.length); for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
 async function xferZip(u,pack){ const st=pack?new CompressionStream('deflate-raw'):new DecompressionStream('deflate-raw'); return new Uint8Array(await new Response(new Blob([u]).stream().pipeThrough(st)).arrayBuffer()); }
-async function xferMake(){
-  const slots={}; let n=0; for(let i=1;i<=SAVE_SLOTS;i++){ const v=saveRead(i); if(v){ slots[i]=v; n++; } }
+async function xferMake(only){
+  const slots={}; let n=0; for(let i=1;i<=SAVE_SLOTS;i++){ if(only&&i!==only) continue; const v=saveRead(i); if(v){ slots[i]=v; n++; } }
   const raw=new TextEncoder().encode(JSON.stringify({app:XFER_APP,v:1,at:Date.now(),ver:$('tVer').textContent,diff:SET.diff,slots}));
   if(typeof CompressionStream==='function'){ try{ return {code:'TMY1.'+b64u(await xferZip(raw,true)),n}; }catch(_){} }
   return {code:'TMY0.'+b64u(raw),n};
@@ -5664,6 +5667,56 @@ function xferPlan(d){
     ['新しいほうに合わせる',()=>xferApply(d,false),'go wide'],
     ['コードのとおりに全部置きかえる',()=>openModal('この端末の保存を、全部コードのとおりにしますか。<br><small>コードにない場所は空きになります。元にはもどせません。</small>',[['はい',()=>xferApply(d,true),'go'],['いいえ',()=>xferPlan(d)]],'xfer',()=>xferPlan(d)),'wide'],
     ['もどる',xferIn,'wide']],'xfer',()=>showSettings());
+}
+/* 0.88.0 QRで送る（11/22 ヒロさん「QRを活用できないかな」）。パソコンの画面にQRを出し、スマホのカメラで読む。
+   QRの中身はこのゲームのURL＋「#tmy=しるし.何枚目.全部の枚数.コードの切れはし」。カメラで読むとゲームが開き、切れはしを端末にためる。全部そろったら「どう読み込みますか」を出す。
+   1枚のQRに入るのは千数百文字までなので、保存は1つずつ選んで送る（10全部だと枚数が多くなる）。#以降はサーバーに送られない。しるしは時刻から作る（乱数は使わない） */
+const XQ_CHUNK=1800, XQ_KEY='tomoshibi_xfer_parts';
+function xferQRPick(){
+  const back=()=>showSettings();
+  openModal('<b>QRで送る</b><br><small>送る保存を1つ選んでください。パソコンの画面にQRを出すので、スマホのカメラ（QRを読むアプリ）で読みます。読むとゲームが開いて引き継ぎます。</small><div id="xbtn" class="pbtns"></div>',[['もどる',back,'wide']],'xfer',back);
+  const g=$('xbtn'); let n=0;
+  for(let i=1;i<=SAVE_SLOTS;i++){ const v=saveRead(i); if(!v) continue; n++; mkBtn(g,{label:`保存${i}`,cls:'wide',sub:saveSum(v),fn:()=>xferQRShow(i)}); }
+  if(!n) $('xbtn').innerHTML='<small>まだ保存がありません。準備画面の「保存する」か、マップの途中の保存で残してから送ってください。</small>';
+}
+function xferQRDraw(cv,text){
+  const q=qrcode(0,'L'); q.addData(text,'Byte'); q.make();
+  const m=q.getModuleCount(), quiet=4, cell=Math.max(2,Math.floor(Math.max(200,Math.min(560,(innerWidth||360)-72,(innerHeight||640)-280))/(m+quiet*2))), sz=(m+quiet*2)*cell;
+  cv.width=sz; cv.height=sz; const c=cv.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,sz,sz); c.fillStyle='#000';
+  for(let y=0;y<m;y++) for(let x=0;x<m;x++) if(q.isDark(y,x)) c.fillRect((x+quiet)*cell,(y+quiet)*cell,cell,cell);
+}
+async function xferQRShow(slot){
+  const back=()=>xferQRPick();
+  openModal('<b>QRで送る</b><br><small>まとめています…</small>',[['もどる',back,'wide']],'xfer',back);
+  let r=null; try{ r=await xferMake(slot); }catch(_){}
+  if(!modalOpen()||MODAL.kind!=='xfer') return;
+  if(!r||!r.n){ openModal('<b>QRで送る</b><br>QRを作れませんでした。<br><small>「引継ぎコードを作る」を使ってください。</small>',[['もどる',back,'wide']],'xfer',back); return; }
+  const base=location.href.replace(/[?#].*$/,''), id=Date.now().toString(36), n=Math.ceil(r.code.length/XQ_CHUNK);
+  const urls=[]; for(let i=0;i<n;i++) urls.push(`${base}#tmy=${id}.${i+1}.${n}.${r.code.slice(i*XQ_CHUNK,(i+1)*XQ_CHUNK)}`);
+  window.XQ_LAST=urls;   /* 確かめ用 */
+  let k=0;
+  const page=()=>{
+    openModal(`<b>QRで送る（保存${slot}）</b><br><small>スマホのカメラで読んで、出てきたURLを開いてください。${n>1?`QRは${n}枚あります。1枚読んだら「次のQR」を押して、全部読んでください（順番は問いません）。`:''}</small><div class="xqpg">${n>1?`${k+1}枚目 / ${n}枚`:''}</div><canvas id="xqr" role="img" aria-label="引継ぎのQR ${k+1}枚目 ${n}枚のうち"></canvas><div id="xbtn" class="pbtns"></div>`,[['もどる',back,'wide']],'xfer',back);
+    try{ xferQRDraw($('xqr'),urls[k]); }catch(_){ $('xqr').replaceWith(Object.assign(document.createElement('div'),{textContent:'QRを描けませんでした。「引継ぎコードを作る」を使ってください。'})); }
+    const g=$('xbtn');
+    if(n>1){ mkBtn(g,{label:'次のQR',cls:'go wide',fn:()=>{ k=(k+1)%n; page(); }}); mkBtn(g,{label:'前のQR',cls:'wide',off:k===0,sub:k===0?'1枚目です':'',fn:()=>{ k=Math.max(0,k-1); page(); }}); }
+  };
+  page();
+}
+/* スマホの側：URLの #tmy= を受け取る。開いたときに1回だけ呼ぶ */
+function xferHash(){
+  const m=(location.hash||'').match(/^#tmy=([0-9a-z]+)\.(\d+)\.(\d+)\.(.+)$/); if(!m) return false;
+  try{ history.replaceState(null,'',location.href.replace(/#.*$/,'')); }catch(_){}
+  const id=m[1], i=+m[2], n=+m[3]; if(!(n>=1&&i>=1&&i<=n&&n<=99)) return false;
+  let st=null; try{ st=JSON.parse(localStorage.getItem(XQ_KEY)||'null'); }catch(_){}
+  if(!st||st.id!==id||st.n!==n) st={id,n,parts:{}};
+  st.parts[i]=m[4]; try{ localStorage.setItem(XQ_KEY,JSON.stringify(st)); }catch(_){}
+  const miss=[]; for(let j=1;j<=n;j++) if(!st.parts[j]) miss.push(j);
+  if(miss.length){ openModal(`QRを読みました（${n}枚のうち${n-miss.length}枚）。<br><small>パソコンの画面で残りのQR（${miss.join('・')}枚目）を出して、カメラで読んでください。読み終わると、ここで引き継ぎます。</small>`,[['閉じる',closeModal,'go wide']]); return true; }
+  let code=''; for(let j=1;j<=n;j++) code+=st.parts[j];
+  try{ localStorage.removeItem(XQ_KEY); }catch(_){}
+  xferParse(code).then(d=>xferPlan(d)).catch(e=>openModal(e&&e.message==='old'?'このブラウザでは、このQRを開けません。ブラウザを新しくしてください。':'QRの中身を読めませんでした。<br><small>パソコンで「QRで送る」をはじめからやり直してください。</small>',[['閉じる',closeModal,'go wide']]));
+  return true;
 }
 function xferApply(d,all){
   let n=0, bad=0;
@@ -8504,6 +8557,7 @@ window.addEventListener('orientationchange',()=>setTimeout(layout,200));
 newGame(); G.talks.length=0; applySet(); layout(); render();   // 0.19.0 開いたときの裏の章では会話を出さない（出撃で始まる章で出す）
 openPrep('start'); TALK_READY=true;   // 0.9.0 最初の1回目も準備画面から（出撃の顔ぶれを選べる）
 if(!/[?&]notitle\b/.test(location.search)) titleShow();   // 0.16.0 その上にタイトル画面（?notitle は確かめ用で、準備画面から始める）
+xferHash(); window.addEventListener('hashchange',xferHash);   /* 0.88.0 QRで開いたとき（#tmy=）は引き継ぐ。開いているタブでURLの#だけ変わったときも */
 </script>
 </body>
 </html>
