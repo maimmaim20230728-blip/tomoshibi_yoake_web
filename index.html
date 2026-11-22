@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.96.0（2026-11-22）：見つけたときの顔とひとこと（11/22 ヒロさん「アイテムを拾うイベントが分かりにくいので、拾った時に拾った人の顔とキャラごとのセリフ」）。倉庫の戸口の品と部品の箱・外伝7の光る品・38章の材料・21章の設計図と台帳で、見つけた人の顔と台詞と、見つけた物の説明の枠を出す（押すと閉じる）。台詞は全員ぶん（§12の話し方）。機械だけで見つけたときは機械の顔とようすの文。会話を切っていても出す。章のクリアになる最後のひとつでは出さない。台詞と出し方は仮 -->
 <!-- 版 0.95.0（2026-11-22）：11/22 ヒロさん「スマホのマップのレイアウト変えて、マップの画面を少し広げて」「攻撃を選ぶと攻撃方法選択画面が出てくるようにして。攻撃方法にはちゃんと威力もわかりやすく」「品だけを選ぶときにもっといろいろな考えで人と機械に持たせるパターンが欲しい」「戦闘画面でこちらのEPバーが無い」。縦の画面では地図を横幅いっぱいに（整数倍でなくてよい・地図の高さの上限を0.62→0.66）。攻撃のボタンは1つにして、武装が2つ以上なら押すと攻撃方法を選ぶ画面（名前・威力の数字と帯・属性・射程・命中・EP・届く相手・与えるダメージの最大）。武装が1つなら今までどおりすぐ相手を選ぶ（ボタンの下に名前と威力）。品だけのおすすめに考え方を5つ足した（人に多く・機械に多く・広く配る・強い仲間に集める・使い切りの品は残す・重みは仮）。戦いの場面で味方の機械の EP を青い棒で見せ、攻撃で減るのも見せる -->
 <!-- 版 0.94.1（2026-11-22）：戸口・棚・家の戸口で起きることは、着いたときでなく、そのマスで行動を決めて終えたとき（11/22 ヒロさん「イベントのあるマスの上で攻撃終了と待機でイベント発生にしてほしい。あくまで行動を決定して終了した時にイベント発生」）。攻撃・待機・手当て・品など、行動を終えるものすべてで起きる。着いただけでは何も起きないので、移動は今までどおり戻せる（0.94.0 の「戻せない」はなくした）。同じマスで1ターンに1回だけ。16章の鐘を鳴らすはボタンのまま。マスの説明・章のはじめ・ユラの台詞を合わせた（文は仮） -->
 <!-- 版 0.94.0（2026-11-22）：操作を軽く（11/22 ヒロさん「マップ拡大を1.0倍、1.25、1.5、1.75、2.0、2.5→1.0」「戦闘スピードとユニットの動く速さも0.25倍、0.5倍、1.0、2.0、3.0」「設定でいつでも変えられる」「何もしない場合はもう一度ユニットをタップで待機。そのあとに乗り降りしたければ人間の行動力があれば可能。待機後の攻撃はできない」「調べる、尋ねるは要らない。乗っても自動でイベント発生」「音楽は早くなったり遅くならない」）。拡大ボタンは6段をぐるっと・設定にもマップの大きさ・戦いの場面の速さ・ユニットの動く速さ（どれも端末に覚える）。味方も霧の側も道にそって歩くようにした（1マス110ミリ秒・仮）。行動を選ぶところで味方をもう一度押すと、いつでも待機。待機したターンだけ、人は移動の残りがあれば隣の機械に乗れる・機械は乗っている人が降りられる（降りた人はそこで終わり）。倉庫の戸口・棚・家の戸口のボタンをなくし、着いたらひとりでに（行動は使わない・見つけたら移動は戻せない）。16章の「鐘を調べる」は「鐘を鳴らす」に。数字と台詞は仮 -->
@@ -405,6 +406,7 @@ body.calm #chCard.out{animation:none;opacity:0}
 #mkNm{display:block;font-size:.85rem;color:var(--key);min-height:1.2em}
 #mkLn{font-size:1.05rem;line-height:1.7}
 #mkLn.note{color:#cfd6f0}
+#mkLn .mkSub{display:block;margin-top:6px;font-size:.85rem;line-height:1.5;color:#c9d2ee;white-space:pre-line}   /* 0.96.0 見つけた物の説明 */
 #mkFoot{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
 #mkHint{font-size:.72rem;color:#aab;text-align:center;margin-top:4px}
 @media (max-width:370px){#mkFace{width:64px;height:64px}#mkRow{min-height:72px}}
@@ -510,7 +512,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.95.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.96.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -3525,7 +3527,8 @@ function zaiN(){ return G.zai?G.zai.filter(Boolean).length:0; }
 function zaiAt(u){ const Z=CH().zai; if(!Z||!G.zai||!u||u.x==null) return -1; return Z.spots.findIndex((p,i)=>!G.zai[i]&&man(u.x,u.y,p[0],p[1])<=1); }
 function zaiSpot(x,y){ const Z=CH().zai; return Z&&G.zai?Z.spots.findIndex(p=>p[0]===x&&p[1]===y):-1; }
 function pickZai(u,i){ const Z=CH().zai; G.zai[i]=true; se('found'); const left=Math.max(0,Z.need-zaiN());
-  addLog(`${u.name}が${Z.spots[i][2]}を拾った。${left?`（あと ${left}つ）`:'材料がそろった。'}`); }
+  addLog(`${u.name}が${Z.spots[i][2]}を拾った。${left?`（あと ${left}つ）`:'材料がそろった。'}`);
+  if(left) findShow(u,[`『${Z.spots[i][2]}』`],`声の部品の材料　あと ${left}つ`,'拾った！'); }   /* 0.96.0 */
 /* 0.75.0 39章：塔の番機（toban）の数と、まだ止まっていない数 */
 function tobanAll(){ let n=0; for(const sp of Object.values(CH().spawn||{})) for(const e of sp) if(e[0]==='toban') n++; return n; }
 function tobanLeft(){ return G&&G.units?G.units.filter(u=>u.toban&&u.side==='enemy'&&!u.out).length:0; }
@@ -4123,7 +4126,8 @@ function g7Base(){ const R=CH().reward, p=partOf(G.ch||9); return R[p]||R[Math.m
 function treasureAt(x,y){ const ts=CH().treasures; if(!ts||!G.tre) return -1; const i=ts.findIndex(([tx,ty])=>tx===x&&ty===y); return i>=0&&!G.tre[i]?i:-1; }   /* まだ拾っていない光る品の番号（なければ -1） */
 function pickTreasure(u,i){ const who=u.kind==='person'?u:u.seats.find(Boolean);
   G.tre[i]=true; se('found'); const n=G.tre.filter(d=>!d).length;
-  addLog(`${who.name}が光る品を拾った。${n?`（のこり ${n}）`:'市の跡の光る品を、ぜんぶ拾った。'}`); }
+  addLog(`${who.name}が光る品を拾った。${n?`（のこり ${n}）`:'市の跡の光る品を、ぜんぶ拾った。'}`);
+  findShow(u,['『光る品』'],n?`のこり ${n}`:'市の跡の光る品を、ぜんぶ拾った','拾った！'); }   /* 0.96.0 */
 /* 0.39.0 11章：草むらで摘む・森の家を訪ねる（どちらも乱数は使わない） */
 function herbN(){ return G.herb?G.herb.filter(Boolean).length:0; }
 function herbAt(x,y){ const H=CH().herb; if(!H||!G.herb) return -1; const i=H.spots.findIndex(([hx,hy])=>hx===x&&hy===y); return i>=0&&!G.herb[i]?i:-1; }   /* まだ摘んでいない草むらの番号（なければ -1） */
@@ -4140,7 +4144,7 @@ function shelfDocs(){ const S=CH().shelves; return S&&G.shelf?S.spots.filter((p,
 function searchShelf(u,i){ const S=CH().shelves, P=S.spots[i]; G.shelf[i]=Math.min(S.need,G.shelf[i]+shelfV(u));
   if(G.shelf[i]<S.need){ se('press'); addLog(`${u.name}が${P.name}を調べている。（あと ${S.need-G.shelf[i]}回）`); return; }
   se('found'); addLog(`${u.name}が${P.name}を調べた。${P.log}`);
-  if(P.doc){ const n=shelfDocs(); addLog(n>=2?'設計図と台帳が、そろった。':`${P.doc}が見つかった。あとひとつ。`); } }
+  if(P.doc){ const n=shelfDocs(); addLog(n>=2?'設計図と台帳が、そろった。':`${P.doc}が見つかった。あとひとつ。`); if(n<2) findShow(u,[`『${P.doc}』`],`${P.log}\nあとひとつ見つけるとクリア`,`${P.name}で見つけた！`); } }   /* 0.96.0 */
 /* 0.62.0 29章：村の家（tell の x,y は家の B のマス）の上下左右の隣で、人が「伝える」。行動を使う・乱数は使わない */
 /* 0.67.0 32章：村の家の隣で灯を受け取る（生身の人・まだ灯を持っていない人・まだ分けていない家） */
 function shareAt(u){ const S=CH().share; if(!S||!G.shared||u.x==null||u.inMachine||u.kind!=='person'||(G.akari&&G.akari[u.name])) return -1; return S.findIndex((p,i)=>!G.shared[i]&&man(u.x,u.y,p.x,p.y)===1); }
@@ -4811,6 +4815,27 @@ function kasaMeet(){
   G.kasaMet=true; k.out='kasa'; addLog('カササギが、光る品の籠を抱えたまま羽をふるわせた。カササギが仲間になった（戦わない機械。章のあと、準備画面に店を開きます）。');
   talkQ('c9kasa');
 }
+/* 0.96.0 見つけたときの顔とひとこと（11/22 ヒロさん「アイテムを拾うイベントが分かりにくいので、拾った時に拾った人の顔とキャラごとのセリフ」）。
+   倉庫の戸口の品と部品の箱・外伝7の光る品・38章の材料・21章の設計図と台帳で、見つけた人の顔と台詞の枠を出す（押すと閉じる）。
+   話し方は設計書 §12 にそろえた。台詞は仮。ノアは一人称を使わない。機械だけで見つけたときは、ようすの文。
+   会話の設定を切っていても出す（仮）。章のクリアになる最後のひとつでは出さない（すぐ結果の画面になるため） */
+const FIND_LINE={
+  ノア:'{X}だ！ ここに眠ってたんだね。', イネス:'{X}、見つけた。ちゃんと使えるよ。', キラン:'{X}を見つけました！……よし、やった！',
+  ダグニ:'ほら見て、{X}があったんよ！', ケンタ:'やった！ {X}、おれが見つけたぞ！', アマラ:'見て見て〜、{X}だよ〜！',
+  エリフ:'……{X}。見つけた。役に立つと、いいな。', ボグダン:'{X}か。まだ十分使えるさ。', パブロ:'あ、{X}だ。おれが運ぶね。',
+  シオネ:'{X}。拾った。', ルカ:'{X}発見！ 次いこ、次！', ルチア:'{X}、見つけた。兄さんより先にね。',
+  ペマ:'……あ、{X}。鳥さん、教えてくれてありがとう！', フェリクス:'{X}があったよ。ゆっくり運ぼう。', オユナ:'おや、{X}。いいものを見つけたとよ。',
+  ハナ:'……{X}。あった。', ジュン:'{X}。確保。', クワメ:'おっ、{X}だ！ いいもん見つけたさ。', デウィ:'はいはい、{X}見つけたよ！ もうけもん！',
+  ミレイユ:'{X}を発見。記しておきます。', ライラ:'暗がりに、{X}が眠っていたの。', ゾエ:'あったー！ {X}！ さあ、次へ行こう！',
+  リン:'さあさ、お立ち会い！ {X}でございます！', ユラ:'{X}がありましたよ。', ベルタ:'おや、{X}じゃないかい。いい拾いものさ。',
+  ソルヴェイ:'……{X}。見つけた。', トゥヤ:'{X}を見つけました。持ち帰ります。', ヤスミン:'{X}、たしかに確認しました。' };
+/* u＝見つけた味方（機械なら前の席の人。だれも乗っていなければ機械のようす）。what＝見つけた物の名前の並び（『』で囲む）。sub＝下に小さく出す説明 */
+function findShow(u,what,sub,head){ if(!G||!u||!what.length) return;
+  const who=u.kind==='machine'?((u.seats||[]).find(Boolean)||u):u, X=what.length>1?what.slice(0,-1).join('、')+'と'+what[what.length-1]:what[0];
+  const L=who.kind==='machine'?['','',`（${who.name}が${X}を見つけて、ランプをちかちかさせた）`,sub,who.name]:[who.name,'smile',(FIND_LINE[who.name]||'いいものを見つけた！ {X}だ！').split('{X}').join(X),sub];
+  G.talks.push({k:'find:'+G.turn+':'+who.name+':'+X,find:true,sc:{head:head||'見つけた！',lines:[L],find:true}}); }
+function findItem(n){ return `『${n}』`; }   /* 台詞の「」の中なので『』 */
+function findParts(n){ return `『部品${n}個』`; }
 function doorKey(x,y){ return terrain(x,y)==='D'?`${G.ch}:${x},${y}`:null; }
 function searchDoor(u){
   const k=doorKey(u.x,u.y), d=CH().doors[`${u.x},${u.y}`]; if(!k||!d||G.opened[k]) return;
@@ -4820,6 +4845,8 @@ function searchDoor(u){
   else if(d.item){ G.items.push(d.item); addLog(`${u.name}は${SN}の中で「${d.item}」を見つけた。（${RULES.items[d.item].eff}・付けるのは章の前の準備画面で）`); }
   if(d.parts&&(d.item||d.items)){ G.parts+=d.parts; addLog(`部品の箱もあった。部品${d.parts}を手に入れた。`); }   // 0.14.0 部品の箱と品が同じ戸口に
   else if(!d.item&&!d.items){ G.parts+=d.parts; addLog(`${u.name}は${SN}の中で部品の箱を見つけた。部品${d.parts}を手に入れた。`); }
+  { const its=d.items||(d.item?[d.item]:[]);   /* 0.96.0 見つけた人の顔とひとこと */
+    findShow(u,[...its.map(findItem),...(d.parts?[findParts(d.parts)]:[])],[...its.map(n=>`「${n}」：${RULES.items[n].eff}`),...(its.length?['品を付けるのは、章の前の準備画面で']:[])].join('\n'),`${SN}で見つけた！`); }
 }
 function shedName(){ return CH().shed||'倉庫'; }   // 0.11.0 地図の B と D の呼び名（2章は倉庫・3章は網小屋）
 function doWait(u){ buzz(); const cp=campOn(u)&&!u.moved&&u.hp<u.maxHp; if(cp) u.hp=u.maxHp; addLog(cp?`${u.name}は待機した。野営上手。腰を下ろして一息つき、耐久が満タンに戻った。`:`${u.name}は待機した。`); finish(u); if(u.side==='ally') u.waitT=G.turn; render(); spotAfter(); }   /* 0.94.0 waitT＝このターンに待機した（あとの乗り降り）・踏んで起きたことで目的を果たしたらクリア */
@@ -8126,9 +8153,11 @@ function talkWho(w,ctx){
 let TALK_READY=false;   // 開いたときの裏の章（newGame）では出さない
 function talkFlush(){
   if(!TALK_READY) return;
-  if(!SET.talk){ if(G) G.talks.length=0; return; }
+  if(!SET.talk&&G){ for(let i=G.talks.length-1;i>=0;i--) if(!G.talks[i].find) G.talks.splice(i,1); }   /* 0.96.0 見つけた枠（find）は会話を切っていても出す */
+  if(!SET.talk&&!(G&&G.talks.length)) return;
   if(!G||G.over||!G.talks.length||MK.on||PREP.on||TITLE.on||CHC.on||G.phase!=='player'||G.mode==='exec') return;   /* 0.87.0 章のはじめの題のあいだは待つ */
-  const t=G.talks.shift(), B=BTALK[t.k], ls=typeof B.lines==='function'?B.lines():B.lines;
+  const t=G.talks.shift(); if(t.sc){ talkPlay(t.sc,()=>{ render(); talkFlush(); }); return; }   /* 0.96.0 見つけた枠 */
+  const B=BTALK[t.k], ls=typeof B.lines==='function'?B.lines():B.lines;
   const gone=w=>typeof w==='string'&&w&&(allyDef(w)||{}).kind==='machine'&&!G.units.some(u=>u.name===w&&!u.out);   // マップにいない機械の行は出さない
   talkPlay({head:B.head,lines:ls.filter(([w])=>!gone(w)).map(([w,ex,s])=>[talkWho(w,t.ctx),ex,s])},()=>{ render(); talkFlush(); });
 }
@@ -8145,12 +8174,14 @@ function mkFaceURL(name,ex){
 function mkShow(){
   const M=MK.sc, L=M.lines[MK.i]; if(L&&L.choose){ mkShowChoose(M,L); return; }   /* 0.73.0 返事を選ぶ行 */
   $('mkHint').textContent='押すと次へ';
-  const [who,ex,t]=L, img=$('mkFace'), u=who?mkFaceURL(who,ex):null, note=!who||t.startsWith('（');
-  $('mkHead').textContent=`${M.head}　${MK.i+1} / ${M.lines.length}`;
+  const [who,ex,t,sub,fw]=L, img=$('mkFace'), u=who?mkFaceURL(who,ex):fw?mkFaceURL(fw,'normal'):null, note=!who||t.startsWith('（');   /* 0.96.0 sub＝下に小さく出す説明・fw＝台詞のない行で出す顔（機械） */
+  $('mkHead').textContent=M.find?M.head:`${M.head}　${MK.i+1} / ${M.lines.length}`;   /* 0.96.0 見つけた枠は1枚なので数を出さない */
   if(u){ img.src=u; img.classList.remove('no'); } else { img.removeAttribute('src'); img.classList.add('no'); }
   $('mkNm').textContent=who&&!note?who:''; const ln=$('mkLn'); ln.textContent=note||!who?t:`「${t}」`; ln.className=note?'note':'';
+  if(sub){ const sm=document.createElement('small'); sm.className='mkSub'; sm.textContent=sub; ln.appendChild(sm); }   /* 0.96.0 */
   const f=$('mkFoot'); f.innerHTML='';
   const last=MK.i>=M.lines.length-1;
+  if(M.find){ $('mkHint').textContent='押すと閉じる'; const cb=mkBtn(f,{label:'とじる',cls:'go wide',fn:mkNext}); cb.style.gridColumn='1/-1'; cb.style.flex='1 1 100%'; try{ cb.focus({preventScroll:true}); }catch(_){} return; }   /* 0.96.0 見つけた枠はボタン1つ */
   const nb=mkBtn(f,{label:last?'おわり':'次へ',cls:'go',fn:mkNext});
   mkBtn(f,{label:'飛ばす',sub:M.song?'幕間を閉じる':'会話を閉じる',fn:mkEnd});
   try{ nb.focus({preventScroll:true}); }catch(_){}
