@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.96.2（2026-11-22）：11/22 ヒロさん「スマホの画面でマップ部分と、情報部分を固定にして、別々にスクロールできるようにならないかな？やはり操作性が悪い気がする」。縦の画面では、ページ全体をスクロールするのをやめ、地図を上に止めて、下の情報とボタンの欄だけを中でスクロールさせる（横の画面は前から別々） -->
 <!-- 版 0.96.1（2026-11-22）：コモリがひとり（だれも乗っていない）で影を呼び戻したときのカットインで、コモリが言葉を話さないようにした（11/22 ヒロさん「コモリの説得成功した場合、コモリが言葉をしゃべるのは違和感がある」「コモリ単体の時ね」）。「こっちだよ」などの台詞の代わりに、ランプや救助アームのようすの文（3通り・仮）。口も動かさない。fx.js -->
 <!-- 版 0.96.0（2026-11-22）：見つけたときの顔とひとこと（11/22 ヒロさん「アイテムを拾うイベントが分かりにくいので、拾った時に拾った人の顔とキャラごとのセリフ」）。倉庫の戸口の品と部品の箱・外伝7の光る品・38章の材料・21章の設計図と台帳で、見つけた人の顔と台詞と、見つけた物の説明の枠を出す（押すと閉じる）。台詞は全員ぶん（§12の話し方）。機械だけで見つけたときは機械の顔とようすの文。会話を切っていても出す。章のクリアになる最後のひとつでは出さない。台詞と出し方は仮 -->
 <!-- 版 0.95.0（2026-11-22）：11/22 ヒロさん「スマホのマップのレイアウト変えて、マップの画面を少し広げて」「攻撃を選ぶと攻撃方法選択画面が出てくるようにして。攻撃方法にはちゃんと威力もわかりやすく」「品だけを選ぶときにもっといろいろな考えで人と機械に持たせるパターンが欲しい」「戦闘画面でこちらのEPバーが無い」。縦の画面では地図を横幅いっぱいに（整数倍でなくてよい・地図の高さの上限を0.62→0.66）。攻撃のボタンは1つにして、武装が2つ以上なら押すと攻撃方法を選ぶ画面（名前・威力の数字と帯・属性・射程・命中・EP・届く相手・与えるダメージの最大）。武装が1つなら今までどおりすぐ相手を選ぶ（ボタンの下に名前と威力）。品だけのおすすめに考え方を5つ足した（人に多く・機械に多く・広く配る・強い仲間に集める・使い切りの品は残す・重みは仮）。戦いの場面で味方の機械の EP を青い棒で見せ、攻撃で減るのも見せる -->
@@ -216,6 +217,11 @@ small{color:#aab}
 #main{padding-top:var(--topH);padding-bottom:var(--botH)}
 #mapcol{display:flex;justify-content:center;padding:4px 0}
 body:not(.land) #mapcol{padding:0}   /* 0.95.0 縦は地図を横幅いっぱい */
+/* 0.96.2 縦の画面では、地図を上に止めて、下の情報とボタンだけを中でスクロールさせる（11/22 ヒロさん「スマホの画面でマップ部分と、情報部分を固定にして、別々にスクロールできるように」）。
+   ページ全体は動かないので、情報やボタンを下まで見ても地図が画面の外に出ない。地図は今までどおり拡大中ならドラッグで動かす */
+body:not(.land) #main{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+body:not(.land) #mapcol{flex:none}
+body:not(.land) #panel{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:12px}
 #mapbox{position:relative;overflow:hidden;background:#000;touch-action:none}
 #cv{display:block;image-rendering:pixelated;image-rendering:crisp-edges;transform-origin:0 0;touch-action:none}
 #zoomBadge{position:absolute;right:4px;top:4px;font-size:.7rem;background:rgba(0,0,0,.6);padding:1px 6px;border-radius:4px;pointer-events:none;display:none}
@@ -513,7 +519,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.96.1</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.96.2</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
