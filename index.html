@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.89.0（2026-11-22）：おすすめのボタン（11/22 ヒロさん「アイテムを持たせるのと、機械に乗るか乗らないか、乗る場合の組み合わせが難しい」「おすすめのボタンを付けて、面倒くさがりでも進めて行けるように」）。準備画面に「おすすめの乗り組みにする」「おすすめで品を持たせる」。押すと中身を見せてから決める。決め方は私の仮。乱数は使わない -->
 <!-- 版 0.88.0（2026-11-22）：ほかの端末へ引き継ぐ（11/22 ヒロさん「PC↔携帯系端末でセーブデータの引継ぎ、または連動ができる機能」「設定からできるようにするといい」）。設定に「引継ぎコードを作る」「引継ぎコードを読み込む」。保存の10の場所と難しさを1つのコードにまとめ、コピー・ファイル・ほかのアプリで送る。読み込むときは場所ごとに新しいほうを残すか、コードのとおりに全部置きかえる。サーバーには送らない。あわせて「QRで送る」（11/22 ヒロさん「QRを活用できないかな」）＝保存を1つ選んでQRを出し、スマホのカメラで読むとゲームが開いて引き継ぐ（大きい保存はQRを何枚かに分ける）。形は仮。乱数は使わない -->
 <!-- 版 0.87.0（2026-11-19）：地図で機械を見分けやすく（11/19 ヒロさん「マップ上で機械の区別がつきにくい」）。地図の小さな絵の窓を小さくして胴の色が多く見えるように・胸の帯を2段に。シャボンの胴を淡い桃色に、トモシビの胴を灯台の赤に、モリヒトの胴を設計書の「深い青」に近く濃く（戦いの場面と顔も同じ色）。あわせて、出撃して地図になるときに章の番号と題を大きく一度出す（11/19 ヒロさん「準備が終わってマップになる時に章とタイトルを大きく一度出した方が良い」・2.6秒で消える・押すとすぐ消える・会話は消えてから）。形・色・長さは仮。乱数は使わない -->
 <!-- 版 0.86.0（2026-11-19）：準備画面の見直し（11/19 ヒロさん「改造度が見にくかったり、誰がどの機械に乗っているかも一目でわかりにくかったり、乗り換える時名前しか出ないから選びにくかったり」「全部入れて」）。「機械」のページの上に乗り組みの表（機械ごとに前と後ろの席の人を顔つきで1行・押すとその席を選ぶ・歩いて出撃する人）。改造の段は星の行から系統ごとの10マスの帯に（塗り＝上げた段・灰＝いま上げられる段・点線＝まだ開いていない段）、カードと工房に改造の段の合計。席を選ぶ画面は、顔・操縦や支援・乗ったときのわざ・いまどこか・乗るとその機械の力・回避・移動（コモリは説得力も）がどう変わるかを1枚に。人のカードに「乗る機械を選ぶ」（機械ごとに前と後ろの席・降りる）。機械のカードの攻撃の一覧はたたむ（名前だけ見える）。準備画面の機械の数は、決めた席の人を乗せた数で出す。あわせて、コモリの説得力の合計に EP を足した（11/19 ヒロさん「コモリの説得力はEPも項目に入れて。ちょっと説得力が低めだから丁度よくなると思う」・耐久・力・装甲・回避・移動・EPの合計÷10＋乗っている人の説得力の合計の5%）。乱数は使わない -->
@@ -492,7 +493,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.88.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.89.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -5545,6 +5546,81 @@ function crewTable(pg){
   const sg=stageSinger(), w=CAMP.allies.filter(p=>p.kind==='person'&&goesOut(p)&&p.name!==sg&&!seatOfPerson(p.name));
   const wk=document.createElement('div'); wk.className='cwalk'; wk.textContent=`歩いて出撃：${w.length?w.map(p=>p.name).join('・'):'なし'}`; t.appendChild(wk);
 }
+/* 0.89.0 おすすめ（11/22 ヒロさん「アイテムを持たせるのと、機械に乗るか乗らないか、乗る場合の組み合わせが難しい」「おすすめのボタンを付けて、面倒くさがりでも進めて行けるように」）。
+   どちらも、押すと中身を見せて「はい」で決める（あとから手で直せる）。決め方は私の仮。乱数は使わない（同じ点なら仲間の並び順）。
+   乗り組み：説得の強い人を2人まで歩かせて（機械を動かす人が足りないときは減らす）、無人で動けない機械から前の席に乗せる。前の席・後ろの席とも、乗せたときの機械の強さ（力・装甲・回避・移動・命中）の伸びと、その席で効く「乗ったとき」のわざで選ぶ。後ろの席は、乗せて伸びる人だけ。
+   品：いまの乗り組みで、効く場面のある人・機械に、レア度の高い品から。生身だけの品は歩く人へ、乗った機械に効く品は乗る人へ、説得の品は歩く人へ、大鍋は留守番へ。1回だけ使える品は低めに見る */
+const RIDE_SEAT={aim:'f',brute:'f',helm:'f',guard:'b',loudspk:'b',guide:'b',soothe:'b',calm:'b',lamprec:'b',hyoshi:'b'};   /* 書いていないわざは、どちらの席でも効く */
+const TALK_FOOT=['call','second','song','scent','snack','eight','farsong','jijitsu','mai'];   /* 生身で説得を強めるわざ（舞は回避） */
+function machSolo(m){ return !!(allyDef(m.name)||m).solo; }
+function machScore(m){ const n=machNums(m); return power(m)*3+defense(m)*3+n.eva*0.5+n.mov*4+hitBonus(m)*0.5+(aimK(m)-1)*40+(n.per||0); }
+function seatBonus(m,i,p){ const k=p.rideSkill, w=RIDE_SEAT[k]; if(!k||k==='breath') return 0; if(w&&w!==(i?'b':'f')) return 0;
+  if(k==='loudspk') return m.pipe||ifx(m,'pipe')?12:0; return 8; }
+function footVal(p){ return perOf(p)*(TALK_FOOT.includes(p.footSkill)?1.3:1)*(p.rideSkill==='shout'?0.5:1); }
+function recSeats(){
+  const sg=stageSinger(), P=CAMP.allies.filter(p=>p.kind==='person'&&goesOut(p)&&p.name!==sg), Ms=rideMachs(), S={};
+  for(const m of Ms) S[m.name]=[null,null];
+  if(!Ms.length) return {S,walk:P.map(p=>p.name)};
+  const need=Ms.filter(m=>!machSolo(m)).length, keep=Math.min(2,Math.max(0,P.length-need));
+  const walk=P.slice().sort((a,b)=>footVal(b)-footVal(a)).slice(0,keep).map(p=>p.name);
+  let pool=P.filter(p=>!walk.includes(p.name));
+  const gain=(m,i,p)=>{ const ns=S[m.name].slice(), b=withSeats(m,ns,()=>machScore(m)); ns[i]=p.name; return withSeats(m,ns,()=>machScore(m))-b+seatBonus(m,i,p); };
+  const fill=(open,i,pos)=>{ while(open.length&&pool.length){ let best=null;
+      for(const m of open) for(const p of pool){ const g=gain(m,i,p); if(!best||g>best.g) best={m,p,g}; }
+      if(pos&&best.g<=0) break;
+      S[best.m.name][i]=best.p.name; open=open.filter(x=>x!==best.m); pool=pool.filter(x=>x!==best.p); } };
+  fill(Ms.filter(m=>!machSolo(m)),0,false); fill(Ms.filter(m=>machSolo(m)),0,true); fill(Ms.filter(m=>S[m.name][0]),1,true);
+  return {S,walk:P.filter(p=>!Object.values(S).some(s=>s.includes(p.name))).map(p=>p.name)};
+}
+function recSeatsAsk(){
+  if(noMachCh()||!rideMachs().length){ flashPrep(noMachCh()?'この章は機械が出撃しないので、みんな歩いて出撃します。':'出撃する機械がいません。'); return; }
+  const r=recSeats(), now=CAMP.seat||{}, same=(m)=>{ const a=now[m]||[null,null], b=r.S[m]; return (a[0]||null)===b[0]&&(a[1]||null)===b[1]; };
+  const rows=Object.keys(r.S).map(m=>{ const s=r.S[m]; return `<div class="xrow"><b>${m}</b>${same(m)?'':'<span class="xnew">変わる</span>'}<br><small>前の席：${s[0]||(machSolo(campAlly(m))?'空き（ひとりで動く）':'空き（動けない）')}　後ろの席：${s[1]||'空き'}</small></div>`; }).join('');
+  confirmBox(`<b>おすすめの乗り組み</b><br><small>説得の強い人を歩かせて、操縦の高い人を前の席に、その席でわざが効く人や機械が強くなる人を後ろの席に乗せます。決めたあとも、手で直せます。</small><div class="xlist">${rows}<div class="xrow"><b>歩いて出撃</b><br><small>${r.walk.join('・')||'なし'}</small></div></div>この乗り組みにしますか。`,()=>{
+    CAMP.seat={}; for(const m in r.S) if(r.S[m][0]||r.S[m][1]) CAMP.seat[m]=r.S[m].slice(); seatClean(); renderPrep(); flashPrep('おすすめの乗り組みにしました。'); });
+}
+function itemFit(n,a){ const it=RULES.items[n], f=it.fx||{}; if(!it||!canWear(a,n)||noneNow(it)) return 0;
+  if(f.pot) return CAMP.home[a.name]&&!CAMP.rest[a.name]?1:0;   /* 大鍋・炊き出しの大釜は留守番の人 */
+  if(!goesOut(a)||a.name===stageSinger()) return 0;
+  if(a.kind==='person'){ const at=noMachCh()?null:seatOfPerson(a.name), front=!!at&&at.i===0;
+    if(it.to==='ア') return at?0:1;
+    if(it.to==='ウ'){ if(!at) return 0; if((f.frontDef||f.pilot)&&!front) return f.belt||f.oil||f.rideMov||f.rideHit?0.6:0.1; return 1; }
+    if(f.cushion) return at&&!front?1:0;
+    if(f.per||f.namedPer||f.talk||f.tea) return !at?1:a.rideSkill==='shout'?0.8:0.3;
+    return 1; }
+  const st=campSeat(a.name), back=st[1]&&campAlly(st[1]), ws=(allyDef(a.name)||a).weps||[];
+  if(f.range||f.pow){ const es=Object.keys(f.range||{}).concat(Object.keys(f.pow||{})); if(!es.some(e=>ws.some(w=>w.e===e))) return f.def||f.vis||f.farCut?0.6:0; }
+  if(f.reel) return a.name==='イカリ'?1:0;
+  if(f.pipe) return !a.pipe&&back&&back.rideSkill==='loudspk'?1:0;
+  if(f.frontPilot) return st[0]?1:0;
+  if(f.backSup) return back?(RIDE_SEAT[back.rideSkill]==='b'?1:0.5):(f.seatRegen&&st[0]?0.6:0);
+  if(f.seatRegen) return st[0]||st[1]?1:0;
+  if(f.hush) return st[0]||machSolo(a)?0.2:0.6;
+  if(f.float||f.pedal) return 0.5;
+  return 1; }
+function itemVal(n,a){ const it=RULES.items[n]; return ([0,10,20,35,50,70,90][it.rare]||10)*(it.use?0.6:1)*itemFit(n,a); }
+function recItems(){
+  const pool=CAMP.items.filter(n=>RULES.items[n]), slots=[];
+  for(const a of CAMP.allies){ slots.push({a,s:0}); if(a.kind==='machine') for(let i=1;i<=bonusN(a,2);i++) slots.push({a,s:i}); }
+  const pairs=[]; pool.forEach((n,k)=>slots.forEach((sl,j)=>{ if(sl.s&&RULES.items[n].use) return; const v=itemVal(n,sl.a); if(v>0) pairs.push({k,j,v}); }));
+  pairs.sort((x,y)=>y.v-x.v||x.k-y.k||x.j-y.j);
+  const usedI={}, usedS={}, out=new Map(); for(const sl of slots) out.set(sl,null);
+  for(const p of pairs){ if(usedI[p.k]||usedS[p.j]) continue; usedI[p.k]=1; usedS[p.j]=1; out.set(slots[p.j],pool[p.k]); }
+  return out;
+}
+function recItemsAsk(){
+  if(!CAMP.items.length){ flashPrep('まだ品を持っていません。夜明けまで守ると、評価で品をもらえます。'); return; }
+  const r=recItems(), rows=[], left={}; for(const n of CAMP.items) left[n]=(left[n]||0)+1;
+  for(const [sl,n] of r){ if(n) left[n]--; const cur=slotGet(sl.a,sl.s); if(!n&&!cur) continue;
+    rows.push(`<div class="xrow"><b>${sl.a.kind==='machine'?'⚙':'☺'} ${sl.a.name}${sl.s?`（${sl.s+1}つ目の枠）`:''}</b>${(n||null)===(cur||null)?'':'<span class="xnew">変わる</span>'}<br><small>${n?`${n}（${RULES.items[n].eff}）`:'なし'}${(n||null)===(cur||null)?'':`　いま：${cur||'なし'}`}</small></div>`); }
+  const rest=Object.keys(left).filter(n=>left[n]>0).map(n=>left[n]>1?`${n}×${left[n]}`:n);
+  confirmBox(`<b>おすすめの品</b><br><small>いまの乗り組みで、効く場面のある人と機械に、レア度の高い品から持たせます。生身のときだけ効く品は歩く人へ、乗った機械に効く品は乗る人へ。乗り組みを変えたら、もう一度押してください。決めたあとも、手で直せます。</small><div class="xlist">${rows.join('')||'<div class="xrow"><small>持たせられる品がありません。</small></div>'}${rest.length?`<div class="xrow"><b>持ち物に残る品</b><br><small>${rest.join('・')}</small></div>`:''}</div>この持たせ方にしますか。`,()=>{
+    for(const [sl,n] of r) slotSet(sl.a,sl.s,n||null); renderPrep(); flashPrep('おすすめで品を持たせました。'); });
+}
+function recBtns(g,which){
+  if(which!=='i'){ const off=noMachCh()||!rideMachs().length; mkBtn(g,{label:'おすすめの乗り組みにする',cls:which?'wide':'',off,sub:off?(noMachCh()?'この章は機械が出撃しない':'出撃する機械がいない'):'だれが歩いて、だれがどの席に乗るか',fn:recSeatsAsk}); }
+  if(which!=='m') mkBtn(g,{label:'おすすめで品を持たせる',cls:which?'wide':'',off:!CAMP.items.length,sub:CAMP.items.length?'いまの乗り組みに合わせて':'まだ品がない',fn:recItemsAsk});
+}
 function prepStats(a,noBar){
   if(a.kind==='machine') return withSeats(a,campSeat(a.name),()=>prepStats0(a,noBar));
   return prepStats0(a,noBar);
@@ -5980,6 +6056,7 @@ function renderPrep(focusTop){
       const g=document.createElement('div'); g.className='pcards'; g.dataset.kind=k; pg.appendChild(g); for(const x of xs) g.appendChild(prepCard(x)); };
     if(PREP.tab==='p'){
       note(`小さいマップ：人${RULES.sortie.maxPeople}・機械${RULES.sortie.maxMachines}まで出撃できます。品は人も機械も1つ持てます。機械の席は、人のカードの「乗る機械を選ぶ」か、「機械」のページの乗り組みの表で決めます。${K.cheer?`<br>留守番にした人は、章の中で灯台のユラに応援を託します（1ターンに1回。がんばれは1人から、祈りの灯は${RULES.cheer.prayN}人から）。応援の経験値は、クリアしたとき留守番の全員に入ります。`:''}${Object.keys(CAMP.away||{}).length?`<br>${Object.keys(CAMP.away).join('、')}は灯台で休んでいます。物語では仲間ですが、出撃は外伝で迎えに行ってからです。`:''}`);
+      sec('おすすめ'); recBtns(btns());   /* 0.89.0 迷ったら、乗り組みを決めてから品 */
       cards('person','人',RULES.sortie.maxPeople);
       const gs=Object.keys(GAIDEN).map(Number).filter(gaidenOpen);
       if(gs.length){ sec('外伝'); const g=btns();
@@ -5988,11 +6065,13 @@ function renderPrep(focusTop){
             fn:()=>confirmBox(`<b>外伝${n}「${K.title}」</b>を始めますか。<br><small>${K.talkOnly||K.talkNote?K.talkNote:K.stalls?K.stallNote:K.only?`出るのは${K.only.join('・')}だけです。${c?'品は、はじめてのクリアでもらいました。部品と経験値は、クリアのたびに入ります。':'はじめてクリアすると、品を1つもらえます。'}`:`出るのは、この準備画面で出撃にしている顔ぶれです（${CAMP.allies.filter(goesOut).map(a=>a.name).join('・')||'まだいない'}）。5ターンのあいだに光る品を多く拾うか、霧の側を多く晴らすと評価が上がり、カササギのお礼（部品・宝石・灯のかけら）が増えます。品はもらえません。`}${K.talkOnly?'':'外伝では、倒れても次の章は休みません。'}</small>`,()=>gaidenGo(n))}); } }   /* 0.38.0 外伝7 */
     } else if(PREP.tab==='m'){
       note('前の席の人が操縦し、後ろの席の人が支えます。章の中で、降りたり乗りかえたりもできます。');
+      recBtns(btns(),'m');   /* 0.89.0 */
       crewTable(pg);   /* 0.86.0 乗り組みの表 */
       cards('machine','機械',RULES.sortie.maxMachines);
       if(CAMP.shop){ const g=btns(); mkBtn(g,{label:'工房',cls:'wide',sub:`部品で機械を改造する（部品 ${CAMP.parts}）`,fn:()=>{ PREP.view='shop'; renderPrep(true); }}); }
     } else if(PREP.tab==='i'){
       /* 0.45.0 だれが何を持っているかを1つの表に。押すと、その人（機械）の「品を変える」へ */
+      recBtns(btns(),'i');   /* 0.89.0 */
       sec('持たせている品'); const g=btns();
       for(const a of CAMP.allies){ const it=itemOf(a);
         mkBtn(g,{label:`${a.kind==='machine'?'⚙':'☺'} ${a.name}：${a.item||'なし'}`,cls:'wide',sub:it?`${toText(it)} ${it.eff}`:'押すと品を選べます',fn:()=>{ PREP.view='item'; PREP.who=a.name; renderPrep(true); }}); }
