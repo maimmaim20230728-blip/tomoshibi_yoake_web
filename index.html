@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.95.0（2026-11-22）：11/22 ヒロさん「スマホのマップのレイアウト変えて、マップの画面を少し広げて」「攻撃を選ぶと攻撃方法選択画面が出てくるようにして。攻撃方法にはちゃんと威力もわかりやすく」「品だけを選ぶときにもっといろいろな考えで人と機械に持たせるパターンが欲しい」「戦闘画面でこちらのEPバーが無い」。縦の画面では地図を横幅いっぱいに（整数倍でなくてよい・地図の高さの上限を0.62→0.66）。攻撃のボタンは1つにして、武装が2つ以上なら押すと攻撃方法を選ぶ画面（名前・威力の数字と帯・属性・射程・命中・EP・届く相手・与えるダメージの最大）。武装が1つなら今までどおりすぐ相手を選ぶ（ボタンの下に名前と威力）。品だけのおすすめに考え方を5つ足した（人に多く・機械に多く・広く配る・強い仲間に集める・使い切りの品は残す・重みは仮）。戦いの場面で味方の機械の EP を青い棒で見せ、攻撃で減るのも見せる -->
 <!-- 版 0.94.1（2026-11-22）：戸口・棚・家の戸口で起きることは、着いたときでなく、そのマスで行動を決めて終えたとき（11/22 ヒロさん「イベントのあるマスの上で攻撃終了と待機でイベント発生にしてほしい。あくまで行動を決定して終了した時にイベント発生」）。攻撃・待機・手当て・品など、行動を終えるものすべてで起きる。着いただけでは何も起きないので、移動は今までどおり戻せる（0.94.0 の「戻せない」はなくした）。同じマスで1ターンに1回だけ。16章の鐘を鳴らすはボタンのまま。マスの説明・章のはじめ・ユラの台詞を合わせた（文は仮） -->
 <!-- 版 0.94.0（2026-11-22）：操作を軽く（11/22 ヒロさん「マップ拡大を1.0倍、1.25、1.5、1.75、2.0、2.5→1.0」「戦闘スピードとユニットの動く速さも0.25倍、0.5倍、1.0、2.0、3.0」「設定でいつでも変えられる」「何もしない場合はもう一度ユニットをタップで待機。そのあとに乗り降りしたければ人間の行動力があれば可能。待機後の攻撃はできない」「調べる、尋ねるは要らない。乗っても自動でイベント発生」「音楽は早くなったり遅くならない」）。拡大ボタンは6段をぐるっと・設定にもマップの大きさ・戦いの場面の速さ・ユニットの動く速さ（どれも端末に覚える）。味方も霧の側も道にそって歩くようにした（1マス110ミリ秒・仮）。行動を選ぶところで味方をもう一度押すと、いつでも待機。待機したターンだけ、人は移動の残りがあれば隣の機械に乗れる・機械は乗っている人が降りられる（降りた人はそこで終わり）。倉庫の戸口・棚・家の戸口のボタンをなくし、着いたらひとりでに（行動は使わない・見つけたら移動は戻せない）。16章の「鐘を調べる」は「鐘を鳴らす」に。数字と台詞は仮 -->
 <!-- 版 0.93.0（2026-11-22）：スマホの音割れ・雑音（11/22 ヒロさん「スマホだと音割れと言うかノイズが混ざる」）。測ると出力の山は0.45まで（1.0に届かない）ので数字の上での音割れではない。sound.js でスマホ（指で触る画面）だけ、大きめのバッファ（latencyHint:playback）で途切れを防ぎ、小さなスピーカーが震える100Hzより下を切り、9kHzより上を少し落とす。パソコンはこれまでのまま。数字は仮 -->
@@ -212,6 +213,7 @@ small{color:#aab}
 /* まんなか */
 #main{padding-top:var(--topH);padding-bottom:var(--botH)}
 #mapcol{display:flex;justify-content:center;padding:4px 0}
+body:not(.land) #mapcol{padding:0}   /* 0.95.0 縦は地図を横幅いっぱい */
 #mapbox{position:relative;overflow:hidden;background:#000;touch-action:none}
 #cv{display:block;image-rendering:pixelated;image-rendering:crisp-edges;transform-origin:0 0;touch-action:none}
 #zoomBadge{position:absolute;right:4px;top:4px;font-size:.7rem;background:rgba(0,0,0,.6);padding:1px 6px;border-radius:4px;pointer-events:none;display:none}
@@ -225,6 +227,12 @@ small{color:#aab}
 #cmd{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 #cmd .wide{grid-column:1 / 3}
 #cmd .hint{grid-column:1 / 3;font-size:.85rem;color:#cde;line-height:1.5;padding:2px}
+/* 0.95.0 攻撃方法を選ぶ画面（名前と威力の数字・威力の帯・射程や EP） */
+#cmd .wepb{text-align:left;padding:6px 10px}
+.wepb .wn{font-weight:bold;font-size:1.05rem}
+.wepb .wpow{float:right;color:#ffd27a}.wepb .wpow b{font-size:1.3rem;color:#ffe9a8}
+.powbar{display:block;clear:both;height:7px;background:#2a2f50;border-radius:3px;overflow:hidden;margin:4px 0 2px}
+.powbar i{display:block;height:100%;background:linear-gradient(90deg,#ff9a40,#ffd27a)}
 
 /* 横画面：マップを左、パネルを右 */
 body.land #top,body.land #bottom{left:var(--mapW)}
@@ -459,6 +467,7 @@ body.calm #tPress{animation:none}
 .bbar{height:8px;background:#333;border-radius:3px;overflow:hidden;margin:3px 0 1px}
 .bbar i{display:block;height:100%;background:#5cd46a}
 .bbar i.mpb{background:#e88ad0}
+.bbar i.epb{background:#6ab4ff}   /* 0.95.0 味方の機械の EP */
 .bnum{font-size:.72rem;color:#cdd;white-space:nowrap}.bnum b{color:#fff;font-size:.9rem}
 #btc{display:block;width:100%;aspect-ratio:16/9;image-rendering:pixelated;border-radius:6px;background:#000}
 #btMsg{min-height:2.4em;font-size:1.05rem;font-weight:bold;padding:6px 4px 2px;text-align:center}
@@ -501,7 +510,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.94.1</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.95.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -3860,13 +3869,20 @@ function askGuard(e,t,w){
    敵が当てたら、与えたダメージに応じて闇の心（熱）が戻る（説得で減らしていても戻る） */
 /* 戦いの場面の記録（0.5.1）。見せるためだけに写す。計算には使わない */
 let REC=null;
-function doAttack(a,t,counter,w){
+/* 0.95.0 コモリがひとりで動いたとき（だれも乗っていない）の部品と宝石は1.5倍（11/22 ヒロさん「コモリが単体で説得や倒したときに経験値がもらえないため、損した気持ちになる。コモリに誰も操縦者がいない時は、部品や宝石を1.5倍もらえるようにしてほしい」）。
+   反撃で倒したときも入れる。灯のかけらと、章のクリアの部品は変えない。端数は四捨五入（仮） */
+const SOLO_K=1.5;
+function soloOn(a){ return !!(a&&a.side==='ally'&&a.kind==='machine'&&a.solo&&!(a.seats||[]).some(Boolean)); }
+function rw(n){ if(!G.solo||!n) return n; G.soloHit=true; return Math.round(n*SOLO_K); }
+function soloWrap(a,fn){ const o=G.solo, oh=G.soloHit; G.solo=soloOn(a); G.soloHit=false; try{ return fn(); } finally{ if(G.solo&&G.soloHit) addLog(`${a.name}がひとりで動いたので、部品と宝石は${SOLO_K}倍。`); G.solo=o; G.soloHit=oh; } }
+function doAttack(a,t,counter,w){ return soloWrap(a,()=>doAttack0(a,t,counter,w)); }
+function doAttack0(a,t,counter,w){
   computeVis();
   if(counter&&a.side==='ally'){ const cv=coverOf(a,t); if(cv){ addLog(`${cv.name}が${t.name}をかばった。`); t=cv; } }   /* 0.60.0 イワオのかばう（反撃はかばわない・仮）。霧の側の攻撃は enemyPhase で先に入れ替える */
   w=w||bestWep(a,t,man(a.x,a.y,t.x,t.y))||wepsOf(a)[0];
-  const ev=REC?{k:'atk',a,t,w,an:a.name,tn:t.name,tside:t.side,dist:man(a.x,a.y,t.x,t.y),hp0:t.hp,mpA0:a.mp,res:a.maxMp!=null?resName(a):''}:null;
+  const ev=REC?{k:'atk',a,t,w,an:a.name,tn:t.name,tside:t.side,dist:man(a.x,a.y,t.x,t.y),hp0:t.hp,mpA0:resOf(a),res:usesRes(a)?resName(a):''}:null;   /* 0.95.0 味方の機械は EP */
   pay(a,w);
-  if(ev){ ev.mpA1=a.mp; REC.push(ev); }
+  if(ev){ ev.mpA1=resOf(a); REC.push(ev); }
   const g=G.guard&&G.guard.t===t?G.guard.g:null; if(g){ addLog(`${t.name}は守りを固めた（${GUARD_NAME[g]}：${g==='def'?'ダメージ半分':'命中半分'}）。`); if(ev) ev.guard=g; }   /* 0.44.0 */
   const r=Math.random()*100, hr=guardHit(hitRate(a,t,w),g);   // 乱数は1つだけ（0.7.0 のクリティカルも同じ数で決める）
   if(counter&&sureOn(a)){ G.sureUsed=Object.assign(G.sureUsed||{},{[a.name]:true}); G.sure=null; addLog(`${a.name}の必中の一撃。`); if(ev) ev.sure=true; }   /* 0.80.0 照準7段（乱数の数は変えない） */
@@ -3874,7 +3890,7 @@ function doAttack(a,t,counter,w){
     const n=netTurns(a); t.stun=Math.max(t.stun||0,n);
     addLog(`${a.name}の${w.n}。${t.name}を${n>1?`${n}ターン`:'1ターン'}止めた。`);
     if(finOn(a,'イカリ')) for(const e of enemies().filter(e=>e!==t&&!e.out&&man(e.x,e.y,t.x,t.y)===1)) if(r<hitRate(a,e,w)){ e.stun=Math.max(e.stun||0,n); addLog(`網が広がって、${e.name}も止めた。`); }   /* 0.80.0 イカリの仕上げ（同じ1つの乱数で決める） */
-    if(ev){ ev.hit=true; ev.net=true; ev.stun=n; ev.dmg=0; ev.hp1=t.hp; ev.down=false; ev.mpA2=a.mp; }
+    if(ev){ ev.hit=true; ev.net=true; ev.stun=n; ev.dmg=0; ev.hp1=t.hp; ev.down=false; ev.mpA2=resOf(a); }
     return;
   }
   if(r<hr){
@@ -3883,7 +3899,7 @@ function doAttack(a,t,counter,w){
     addLog(`${a.name}の${w.n}。${crit?'クリティカル！':''}${t.name}に${dmg}。`);
     hurt(t,dmg);
     if(a.side==='enemy'&&!a.out&&dmg>0){ const b=a.mp, v=darkBack(dmg); a.mp=Math.min(a.maxMp,a.mp+v); if(a.mp>b) addLog(`${a.name}の${resName(a)}が${a.mp-b}戻った。`); }
-    if(ev){ ev.hit=true; ev.crit=crit; ev.dmg=dmg; ev.hp1=t.hp; ev.down=!!t.out; ev.mpA2=a.mp; }
+    if(ev){ ev.hit=true; ev.crit=crit; ev.dmg=dmg; ev.hp1=t.hp; ev.down=!!t.out; ev.mpA2=resOf(a); }
     if(a.side==='ally'&&(w.e||a.elem)==='光'){ G.glow=G.glow||{}; G.glow[key(t.x,t.y)]=G.turn; if(finOn(a,'トモシビ')) (G.glow2=G.glow2||{})[key(t.x,t.y)]=G.turn+1; computeVis(); }   /* 0.80.0 トモシビの仕上げ（次のターンも晴れたまま） */   // 0.17.0 光を当てたまわりの霧が、そのターン晴れる
     const cv=t.out?0:coolOf(a,t,w,dmg);   // 0.23.0 放水：機械の熱も下げる（乱数は使わない）
     if(cv>0){ const m0=t.mp; t.mp=Math.max(0,t.mp-cv); addLog(`${t.name}の${resName(t)}が${m0-t.mp}下がった。`);
@@ -3925,13 +3941,13 @@ function down(t){
     if(t.named==='iwao'){ addLog('イワオの耐久が0になり、雪かきの板を落として止まってしまった。'); lose('イワオが動かなくなってしまった。耐久を0にせず、熱を下げて呼び戻してください。'); return; }   /* 0.60.0 22章（11/11 ヒロさん「負け」） */
     if(t.named==='kiri'){ kiriDrop(true); checkEnd(); return; }   /* 0.60.0 24章：耐久0でも晴れる */
     if(t.named==='laila'){ addLog('夜回りの影の耐久が0になり、霧の中へ溶けるように消えてしまった。'); lose('夜回りの影が、霧の奥へ消えてしまった。耐久を0にせず、闇の心を0にして呼び戻してください。'); return; }   /* 0.55.0 18章 */
-    if(t.named==='tomo'){ G.tomoStop=true; G.parts+=R.faintMachineParts; addLog(`トモシビの耐久が0になり、灯を落として止まった。部品${R.faintMachineParts}を手に入れた。`); computeVis(); checkEnd(); return; }   /* 0.55.0 18章：止まるだけ。夜回りの影を呼び戻すと、直っていっしょに仲間になる（仮） */
-    if(t.named==='hari'){ G.hariStop=true; G.parts+=R.faintMachineParts; addLog(`ハリネズミの耐久が0になり、止まってしまった。部品${R.faintMachineParts}を手に入れた。食堂の守りを続けて、霧の側を全部晴らしてください。`); checkEnd(); return; }   /* 0.48.0 13章（11/9 ヒロさん「止まるだけ」）。仲間にはならない。外伝3の工房で直せるように CAMP.stopM に残す（saveCamp） */
+    if(t.named==='tomo'){ G.tomoStop=true; G.parts+=rw(R.faintMachineParts); addLog(`トモシビの耐久が0になり、灯を落として止まった。部品${rw(R.faintMachineParts)}を手に入れた。`); computeVis(); checkEnd(); return; }   /* 0.55.0 18章：止まるだけ。夜回りの影を呼び戻すと、直っていっしょに仲間になる（仮） */
+    if(t.named==='hari'){ G.hariStop=true; G.parts+=rw(R.faintMachineParts); addLog(`ハリネズミの耐久が0になり、止まってしまった。部品${rw(R.faintMachineParts)}を手に入れた。食堂の守りを続けて、霧の側を全部晴らしてください。`); checkEnd(); return; }   /* 0.48.0 13章（11/9 ヒロさん「止まるだけ」）。仲間にはならない。外伝3の工房で直せるように CAMP.stopM に残す（saveCamp） */
     if(t.named==='mori'){ addLog('モリヒトの耐久が0になり、止まってしまった。'); lose('モリヒトが動かなくなってしまった。耐久を0にせず、熱を下げて呼び戻してください。'); return; }   // 0.34.0 8章（11/8 ヒロさん「負け（やり直し）」）
     if(t.named==='yoake'){ G.yoakeEnd='hp'; addLog('ヨアケの耐久が0になり、鐘を背負ったまま、静かに止まった。'); computeVis(); checkEnd(); return; }   /* 0.76.0 40章：耐久0でも止まってクリア */
     if(t.named==='kane'||t.named==='turara') kaneDrop(true,t);   /* 0.67.0 32章のツララも */   /* 0.52.0 16章の鐘番 */
-    else if(t.named==='elif'){ G.gems+=R.faintElifGems; G.away=Object.assign(G.away||{},{'エリフ':true}); addLog(`霧が晴れて、先頭の人は気を失った。宝石${R.faintElifGems}がこぼれた。この人は灯台で目を覚まして、物語では仲間になる（名前はエリフ。出撃は外伝2で迎えに行ってから）。`); }   // 0.17.0 CAMP.away へ
-    else if(t.kind==='machine'){ G.parts+=R.faintMachineParts; addLog(`霧が晴れて、${t.name}は止まった。部品${R.faintMachineParts}を手に入れた。`); }
+    else if(t.named==='elif'){ G.gems+=rw(R.faintElifGems); G.away=Object.assign(G.away||{},{'エリフ':true}); addLog(`霧が晴れて、先頭の人は気を失った。宝石${rw(R.faintElifGems)}がこぼれた。この人は灯台で目を覚まして、物語では仲間になる（名前はエリフ。出撃は外伝2で迎えに行ってから）。`); }   // 0.17.0 CAMP.away へ
+    else if(t.kind==='machine'){ G.parts+=rw(R.faintMachineParts); addLog(`霧が晴れて、${t.name}は止まった。部品${rw(R.faintMachineParts)}を手に入れた。`); }
     else { G.shards+=R.faintPersonShards; addLog(`霧が晴れて、影は人の姿に戻り、気を失った。灯のかけら${R.faintPersonShards}が残った。`); }
     g7Again();   /* 0.38.0 外伝7：2体とも晴らすと、すぐ次の2体 */
   } else if(t.kind==='machine'){
@@ -3952,7 +3968,8 @@ function checkEnd(){
   else if(G.goal==='yas'&&G.units.some(u=>u.name==='ヤスミン'&&u.kind==='person'&&u.side==='ally'&&u.out)) lose('ヤスミンが倒れてしまった。帳面の続きが、書けなくなってしまった。');   /* 0.62.0 28章（20章と同じ形） */
   else if(!G.units.some(u=>u.side==='ally'&&u.kind==='person'&&!u.out)) lose('みんな療養に入ってしまった。');
 }
-function persuade(p,t,retry){
+function persuade(p,t,retry){ return soloWrap(p,()=>persuade0(p,t,retry)); }   /* 0.95.0 */
+function persuade0(p,t,retry){
   computeVis();
   const m=t.kind==='machine';
   const ev=REC?{k:'per',p,t,m,pn:p.name,tn:t.name,res:resName(t),mp0:t.mp,elif:t.named==='elif'}:null;
@@ -4067,25 +4084,25 @@ function calm(t){
   if(t.named==='kane'||t.named==='turara'){ t.out='calm'; kaneDrop(false,t); return; }   /* 0.67.0 32章のツララも */   /* 0.52.0 16章の鐘番（仲間にはならない・経験値はボスの分） */
   t.out='calm';
   const R=RULES.reward;
-  if(t.kind==='machine'){ G.gems+=R.calmMachineGems; addLog(`${t.name}の熱が下がり、灯が戻った。お礼に宝石${R.calmMachineGems}を差し出してきた。`); }
-  else { G.shards+=R.calmPersonShards; G.gems+=R.calmPersonGems; addLog(`影は人の姿に戻った。灯のかけら${R.calmPersonShards}と、手に握っていた宝石${R.calmPersonGems}をくれた。`); }
+  if(t.kind==='machine'){ G.gems+=rw(R.calmMachineGems); addLog(`${t.name}の熱が下がり、灯が戻った。お礼に宝石${rw(R.calmMachineGems)}を差し出してきた。`); }
+  else { G.shards+=R.calmPersonShards; G.gems+=rw(R.calmPersonGems); addLog(`影は人の姿に戻った。灯のかけら${R.calmPersonShards}と、手に握っていた宝石${rw(R.calmPersonGems)}をくれた。`); }
   g7Again();   /* 0.38.0 外伝7 */
 }
 /* 0.52.0 16章の鐘番が止まったとき（hp0＝耐久0・false＝熱0）。名入りの部品は、その章をはじめてクリアするときだけ（CAMP.npDone・何度も遊んで増やせないように・仮）。
    耐久0は部品200（設計書 §2「部品200と名入りの部品」）。熱0の経験値はボスの分（RULES.exp.boss）が上乗せ。贈り物はまだ仕組みがない */
 function kaneDrop(hp0,t){ const R=RULES.reward, first=!(CAMP.npDone&&CAMP.npDone[G.ch]), tu=t&&t.named==='turara';   /* 0.67.0 32章のツララも */
-  if(hp0) G.parts+=R.bossParts;
+  if(hp0) G.parts+=rw(R.bossParts);
   if(first){ G.nparts=(G.nparts||0)+1; G.npGot=true; }
-  const got=[]; if(hp0) got.push(`部品${R.bossParts}`); if(first) got.push(tu?'名入りの部品（ツララ）1つ':'名入りの部品（鐘番）1つ');
+  const got=[]; if(hp0) got.push(`部品${rw(R.bossParts)}`); if(first) got.push(tu?'名入りの部品（ツララ）1つ':'名入りの部品（鐘番）1つ');
   addLog(`${tu?(hp0?'ツララの耐久が0になり、氷柱槌を落として止まった。':'ツララの熱が下がり、背中の氷柱が、ぽたりと一滴しずくを落とした。'):hp0?'鐘番の耐久が0になり、鐘槌を落として止まった。':'鐘番の熱が下がり、振り上げていた鐘槌を、静かに下ろした。'}${got.length?`${got.join('と、')}を手に入れた。`:''}`);
   computeVis(); }
 /* 0.60.0 24章の霧の壁：耐久0でも闇の心0でも晴れる。はじめてのクリアのときだけ名入りの部品1つ（16章の鐘番と同じ・仮）。耐久0なら部品も */
 function kiriDrop(hp0){ const R=RULES.reward, first=!(CAMP.npDone&&CAMP.npDone[G.ch]);
-  if(hp0) G.parts+=R.bossParts;
+  if(hp0) G.parts+=rw(R.bossParts);
   const np=first&&!CH().kiriNoPart;   /* 0.67.0 32章は名入りの部品をツララが落とす */
   if(np){ G.nparts=(G.nparts||0)+1; G.npGot=true; }
   G.kiriOk=true;
-  const got=[]; if(hp0) got.push(`部品${R.bossParts}`); if(np) got.push('名入りの部品1つ');
+  const got=[]; if(hp0) got.push(`部品${rw(R.bossParts)}`); if(np) got.push('名入りの部品1つ');
   const kn=CH().kiriGoal||'霧の壁';   /* 0.67.0 32章の言い方 */
   addLog(`${hp0?`${kn}が大きくゆらいで、くずれるように晴れた。`:`${kn}が静かにほどけて、${CH().kiriSee||'北の門の向こう'}が見えた。`}${got.length?`${got.join('と、')}を手に入れた。`:''}`);
   computeVis(); }
@@ -4413,7 +4430,8 @@ function back(){
   switch(G.mode){
     case 'exec': flash('いまは霧の側が動いています。取り消せません。'); return;
     case 'predict': backFromPredict(); break;
-    case 'target': G.mode=G.act&&G.act.from==='late'?'late':'menu'; G.act=null; break;
+    case 'target': G.mode=G.act&&G.act.from==='late'?'late':G.act&&G.act.from==='wep'?'wep':'menu'; G.act=null; break;   /* 0.95.0 攻撃方法の画面から来たら、そこへ */
+    case 'wep': G.mode='menu'; break;   /* 0.95.0 */
     case 'menu': undoToMove(); break;
     case 'move': deselect(); break;
     case 'late': deselect(); break;   /* 0.94.0 */
@@ -4457,6 +4475,9 @@ function onTile(x,y){
     else if(pickable(u)) select(u);
     else if(lateCmds(u).length){ G.sel=u; G.inspect=u; }
     else { deselect(); G.inspect=seen||{tile:[x,y]}; }
+  } else if(G.mode==='wep'){   /* 0.95.0 自分のマスでメニューへ戻る */
+    if(x===G.sel.x&&y===G.sel.y) G.mode='menu';
+    else if(seen&&seen!==G.sel) G.inspect=seen;
   } else if(G.mode==='target'||G.mode==='predict'){
     const i=G.act.list.findIndex(t=>t&&t.x===x&&t.y===y);
     if(i>=0){ pickTarget(i); return; }
@@ -4509,18 +4530,21 @@ function atkCard(u,t,w){ w=w||wepsOf(u)[0];
 function perCard(u,t){ const v=persuadeAmount(u,t), left=Math.max(0,t.mp-v), m=t.kind==='machine', cv=critUp(v), cleft=Math.max(0,t.mp-cv);
   return `<span class="e">${t.name}</span> へ ${u.name}の${m?'呼びかけ':'説得'}<br>${RULES.persuade.sure?'<span class="big">必ず届く</span>':`届く見込み <span class="big">${persuadeRate(u,t)}%</span>`}　${resName(t)} <span class="big">-${v}</span><br>`+
     `クリティカル <span class="big">${pcritRate(u,t)}%</span>　なら -${cv}${left>0&&cleft===0?'（霧から戻る）':''}<br>届けば のこり ${left} / ${t.maxMp}${left===0?'（霧から戻る）':''}<br><small>説得に反撃はありません。${t.name}が攻撃を当てると、${resName(t)}は戻ります</small>`+itemsInPlay([[u]]); }
+/* 0.95.0 威力＝力＋武装の強さ＋属性の品（相手の守りを引く前） */
+function wepPow(u,w){ return power(u)+(w.p||0)+elemPow(u,w); }
+/* 0.95.0 武装ごとの中身（攻撃のボタンと、攻撃方法を選ぶ画面で使う） */
+function wepCmds(u){ return wepsOf(u).map(w=>{ const at=attackTargets(u,w), c=wepCost(u,w), ok=canPay(u,w), net=w.e==='網', pw=net?0:wepPow(u,w);
+  const why=w.co?'反撃のときだけ使える':!canAct(u)?'乗る人がいない':u.hold?`${u.hold.name}を持っている間は攻撃できない`:!ok?`${resName(u)}が足りない（使う量 ${c}・のこり ${resOf(u)}）`:at.length?'':'届く相手がいない';
+  const dm=!net&&at.length?Math.max(...at.map(t=>dmgOf(u,coverOf(u,t)||t,w))):null;
+  return {w,at,c,pw,net,why,dm,off:!at.length||!ok||!!u.hold,act:()=>startAct({name:w.n,list:at,label:t=>{ const c=coverOf(u,t); return c?`${t.name}　→ ${c.name}がかばう　命中${hitRate(u,c,w)}%　${w.e==='網'?'止める':dmgOf(u,c,w)}`:`${t.name}　命中${hitRate(u,t,w)}%　${w.e==='網'?'止める':dmgOf(u,t,w)}`; },card:t=>(coverOf(u,t)?`<small><b>${coverOf(u,t).name}</b>が${t.name}をかばう（${coverOf(u,t).name}が受ける）</small><br>`:'')+atkCard(u,coverOf(u,t)||t,w)+(w.twice?'<br><small>2回つつく（2回目も同じ命中とダメージ・EP は1回分）</small>':''),run:t=>{doAttack(u,t,true,w);
+        if(w.twice&&!G.over&&!t.out&&!u.out&&canAct(u)){ if(u.maxEp!=null) u.ep+=wepCost(u,w); addLog(`${u.name}は続けてもう一度つついた。`); doAttack(u,t,true,w); }   // 0.36.0 ツバメのつつき（2回攻撃・EP は1回分）
+        if(!postAttack(u)) finish(u);}})}; }); }   /* 0.80.0 ツバメの仕上げ */
 function menuCommands(u){
   const cmds=[];
-  const ws=wepsOf(u), many=ws.length>1;
-  for(const w of ws){   // 機械は武装ごとにボタン（「攻撃：名前」）。生身は「攻撃」1つ
-    const at=attackTargets(u,w), c=wepCost(u,w), ok=canPay(u,w);
-    const sub=w.co?'反撃のときだけ使える':!canAct(u)?'乗る人がいない':u.hold?`${u.hold.name}を持っている間は攻撃できない`:!ok?`${resName(u)}が足りない（使う量 ${c}・のこり ${resOf(u)}）`:
-      (many?`${rangeText(w)}・${resName(u)}${c}・`:'')+(at.length?`届く相手 ${at.length}`:'届く相手がいない');
-    cmds.push({label:many?`攻撃：${w.n}`:'攻撃',sub,off:!at.length||!ok||!!u.hold,
-      act:()=>startAct({name:w.n,list:at,label:t=>{ const c=coverOf(u,t); return c?`${t.name}　→ ${c.name}がかばう　命中${hitRate(u,c,w)}%　${w.e==='網'?'止める':dmgOf(u,c,w)}`:`${t.name}　命中${hitRate(u,t,w)}%　${w.e==='網'?'止める':dmgOf(u,t,w)}`; },card:t=>(coverOf(u,t)?`<small><b>${coverOf(u,t).name}</b>が${t.name}をかばう（${coverOf(u,t).name}が受ける）</small><br>`:'')+atkCard(u,coverOf(u,t)||t,w)+(w.twice?'<br><small>2回つつく（2回目も同じ命中とダメージ・EP は1回分）</small>':''),run:t=>{doAttack(u,t,true,w);
-        if(w.twice&&!G.over&&!t.out&&!u.out&&canAct(u)){ if(u.maxEp!=null) u.ep+=wepCost(u,w); addLog(`${u.name}は続けてもう一度つついた。`); doAttack(u,t,true,w); }   // 0.36.0 ツバメのつつき（2回攻撃・EP は1回分）
-        if(!postAttack(u)) finish(u);}})});   /* 0.80.0 ツバメの仕上げ */
-  }
+  /* 0.95.0 攻撃のボタンは1つ（11/22 ヒロさん「攻撃を選ぶときは最初から３つ出てるのではなく、攻撃を選ぶと攻撃方法選択画面が出てくるようにして」）。武装が2つ以上なら、押すと攻撃方法を選ぶ画面（G.mode='wep'） */
+  { const wc=wepCmds(u), ok=wc.filter(c=>!c.off), why=c=>c.why||'届く相手がいない';
+    if(wc.length>1) cmds.push({label:'攻撃',sub:ok.length?`攻撃方法を${wc.length}つから選ぶ（使えるのは${ok.length}つ）`:why(wc.find(c=>!c.w.co)||wc[0]),off:!ok.length,key:ok.length>0,act:()=>{ G.mode='wep'; render(); }});
+    else if(wc.length){ const c=wc[0]; cmds.push({label:'攻撃',sub:c.off?why(c):`${c.w.n}・威力 ${c.net?'なし（止める）':c.pw}・${rangeText(c.w)}・届く相手 ${c.at.length}`,off:c.off,key:!c.off,act:c.act}); } }
   if(u.side==='ally'&&u.kind==='machine'&&modN(u,'aim')>=7){ const on=sureOn(u), used=(G.sureUsed||{})[u.name];   /* 0.80.0 照準7段：必中の一撃（行動を使わずに選ぶ・次の攻撃が必ず当たる・1章1回） */
     cmds.push({label:on?'必中の一撃をやめる':'必中の一撃',sub:used?'この章ではもう使った':!canAct(u)?'乗る人がいない':on?'次の攻撃は命中100%（押すと取りやめ）':'次の攻撃を必ず当てる（1章に1回・行動を使わない）',off:!on&&!sureCan(u),
       act:()=>{ G.sure=on?null:u.id; render(); }}); }
@@ -5387,6 +5411,14 @@ function updatePanel(){
     if(nothingToDo(G.sel)) hint(c,`<b class="p">${G.sel.name}</b>：ここでできることはありません。もう一度${G.sel.name}を押すと待機します。`);
     else hint(c,`<b class="p">${G.sel.name}</b>：することを選びます。何もしないなら、もう一度${G.sel.name}を押すと待機します。`);   /* 0.94.0 */
     for(const m of menuCommands(G.sel)) mkBtn(c,{label:m.label,sub:m.sub,off:m.off,cls:(m.wide?'wide ':'')+(m.key?'key':''),fn:m.act});
+  } else if(G.mode==='wep'){   /* 0.95.0 攻撃方法を選ぶ（威力の数字と帯・射程・命中・EP・届く相手と、与えるダメージのいちばん大きい数） */
+    const u=G.sel, wc=wepCmds(u), mx=Math.max(1,...wc.map(x=>x.pw));
+    hint(c,`<b class="${u.kind==='machine'?'m':'p'}">${u.name}</b>：攻撃方法を選びます。威力は「力＋武装の強さ」で、相手の守りを引いた分がダメージになります。`);
+    for(const x of wc){ const w=x.w, eff=[w.twice?'2回つつく':'',w.gust?'突風で相手の命中が半分':'',w.push?'当てると押し出す':'',x.net?'ダメージなし・相手を止める':''].filter(Boolean).join('・');
+      mkBtn(c,{label:`<span class="wn">${w.n}</span><span class="wpow">威力 <b>${x.net?'－':x.pw}</b></span><span class="powbar" aria-hidden="true"><i style="width:${x.net?0:Math.round(100*x.pw/mx)}%"></i></span>`,
+        sub:`${w.e?w.e+'・':''}${rangeText(w)}・命中${(w.h||0)>=0?'+':''}${w.h||0}${usesRes(u)?`・${resName(u)} ${x.c}（のこり ${resOf(u)}）`:''}${eff?'<br>'+eff:''}<br>${x.why||`届く相手 ${x.at.length}${x.dm!=null?`・与えるダメージ 最大 ${x.dm}`:''}`}`,
+        off:x.off,cls:'wide wepb'+(x.off?'':' key'),fn:x.act}); }
+    mkBtn(c,{label:'もどる',cls:'wide',sub:'することを選び直す',fn:()=>{G.mode='menu';render();}});
   } else if(G.mode==='late'){   /* 0.94.0 待機のあとの乗り降り */
     hint(c,`<b class="p">${G.sel.name}</b>：待機のあとの乗り降り。攻撃などはできません。もう一度${G.sel.name}を押すと、やめます。`);
     for(const m of lateCmds(G.sel)) mkBtn(c,{label:m.label,sub:m.sub,cls:'wide'+(m.key?' key':''),fn:m.act});
@@ -5647,6 +5679,16 @@ const REC_K=[
   {n:'説得',d:'説得の強い人を前に出します。乗ったまま説得できる人（コモリ・大声）も数えます。',per:2.4,atk:0.6,mov:0.8,safe:2.5,loss:6,dz:3},
   {n:'攻め',d:'機械と人の攻撃がいちばん強くなるようにします。',per:0.6,atk:2.2,mov:0.8,safe:2.5,loss:6,dz:3},
   {n:'移動',d:'足の速い組を作り、品や材料を拾いに行きやすくします。',per:1,atk:0.8,mov:2.6,safe:2.5,loss:6,dz:3}];   /* dz＝影に dz 回たたかれる前に倒れそうなら大きく減らす（すぐやられる人を歩かせない）。0.91.0 いまのレベルと品で数えるので、育ったり守りの品を持てば歩くこともある */
+/* 0.95.0 品だけの考え方（11/22 ヒロさん「品だけを選ぶときにもっといろいろな考えで人と機械に持たせるパターンが欲しい」）。REC_K の5つ（レア度の重みを小さくしたもの）に6つを足す。
+   pw/mw＝人の枠・機械の枠への重み。wide＝もう品を持った仲間（乗っている人は機械と同じ組）は後回し。ace＝品なしで点の高い仲間ほど重く。help＝その逆。rk＝レア度の重み。keep＝使い切りの品は持たせない。重みは私の仮 */
+const REC_KI=REC_K.map(k=>Object.assign({},k,{rk:0.3})).concat([
+  {n:'人に多く',d:'人（歩く人と席の人）に、先に品を持たせます。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,pw:2,mw:0.4},
+  {n:'機械に多く',d:'機械の枠に、先に品を付けます。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,pw:0.4,mw:2},
+  {n:'広く配る',d:'なるべく多くの仲間に1つずつ配ります。乗っている人と機械は1組と数えます。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,wide:true},
+  {n:'強い仲間に集める',d:'いちばん働けそうな仲間に、よい品を集めます。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,ace:true},
+  {n:'弱い仲間を助ける',d:'働きにくい仲間や打たれ弱い仲間に、よい品を回して底上げします。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,help:true},
+  {n:'使い切りの品は残す',d:'使うとなくなる品は持ち物に残して、なくならない品だけを持たせます。',per:1.2,atk:1,mov:1,safe:2.5,loss:6,dz:3,rk:0.3,keep:true}]);
+function recKs(kind){ return kind==='item'?REC_KI:REC_K; }
 function machSolo(m){ return !!(allyDef(m.name)||m).solo; }
 function seatBonus(m,i,p){ const k=p.rideSkill, w=RIDE_SEAT[k]; if(!k||k==='breath') return 0; if(w&&w!==(i?'b':'f')) return 0;
   if(k==='loudspk') return m.pipe||ifx(m,'pipe')?12:0; return 8; }
@@ -5654,7 +5696,7 @@ function seatBonus(m,i,p){ const k=p.rideSkill, w=RIDE_SEAT[k]; if(!k||k==='brea
 function recFoe(){ const c=CAMP.ch||1, K=CHAPTERS[c]||{}, E=RULES.enemyLevel, lv=c>=E.perCh?c:(K.enemyLv??E.base), mb=K.mob||RULES.mob, g=E.growth.shadow, b=ET.shadow();
   let d=0; try{ d=diffLv(); }catch(e){ d=0; } const up=Math.max(0,lv-E.base)+d;
   return {str:Math.max(0,Math.round(b.str*mb.str)+Math.trunc(g.str*up)),def:Math.max(0,Math.round(b.def*mb.def)+Math.trunc(g.def*up)),eva:b.evade}; }
-function recCtx(k){ const K=CHAPTERS[CAMP.ch||1]||{}; return Object.assign({k},REC_K[k],{foe:recFoe(),pick:!!(K.treasures||K.zai)}); }
+function recCtx(k,kind){ const K=CHAPTERS[CAMP.ch||1]||{}; return Object.assign({k},recKs(kind)[k],{foe:recFoe(),pick:!!(K.treasures||K.zai)}); }
 function recDur(hp,def,eva,X){ const dm=Math.max(RULES.dmg.min,X.foe.str-def), h=clamp(RULES.hit.base-eva,RULES.hit.min,RULES.hit.max)/100; return hp/dm/h; }
 function recHit(hb,ak,X){ return clamp(Math.round((RULES.hit.base+hb-X.foe.eva)*ak),RULES.hit.min,RULES.hit.max)/100; }
 function recMix(a,b){ return Math.max(a,b)+0.3*Math.min(a,b); }   /* 1回の行動で説得か攻めのどちらか */
@@ -5732,22 +5774,25 @@ function recItemsK(X,S){
     /* 枠の持ち主の点：乗っている人の品は機械の点に・歩く人は人の点に・出撃しない人は0 */
     const own=a=>{ if(a.kind==='person'){ const at=noMachCh()?null:seatOfPerson(a.name); return at?campAlly(at.m):a; } return a; };
     const term=u=>!goesOut(u)||u.name===stageSinger()?0:u.kind==='machine'?(rideMachs().includes(u)?withSeats(u,campSeat(u.name),()=>recMach(u,X)):0):recFoot(u,X);
-    const R=[0,10,20,35,50,70,90], cache=new Map();
+    const R=[0,10,20,35,50,70,90], cache=new Map(), given=new Map();
+    const base0=new Map(); for(const sl of slots){ const o=own(sl.a); if(!base0.has(o)) base0.set(o,Math.max(0,term(o))); }   /* 0.95.0 強い仲間に集める */
+    const avg0=Math.max(1,[...base0.values()].reduce((a,b)=>a+b,0)/Math.max(1,base0.size));
     const gain=(n,j)=>{ const sl=slots[j], o=own(sl.a), key=n+'|'+j; if(cache.has(key)) return cache.get(key);
       const fit=itemFit(n,sl.a); let g=-1;
-      if(fit>0){ const b=term(o); slotSet(sl.a,sl.s,n); const v=term(o); slotSet(sl.a,sl.s,null); const it=RULES.items[n]; g=(v-b)+(R[it.rare]||10)*(it.use?0.6:1)*fit*0.25; }
+      if(fit>0){ const b=term(o); slotSet(sl.a,sl.s,n); const v=term(o); slotSet(sl.a,sl.s,null); const it=RULES.items[n]; g=(v-b)+(R[it.rare]||10)*(it.use?0.6:1)*fit*0.25*(X.rk??1);   /* 0.95.0 rk＝レア度の重み（品だけでは小さくして、考え方の差が出るように） */
+        g*=sl.a.kind==='machine'?(X.mw??1):(X.pw??1); if(X.ace) g*=clamp((base0.get(o)||0)/avg0,0.3,3); if(X.help) g*=clamp(avg0/Math.max(1,base0.get(o)||0),0.3,3); }   /* 0.95.0 */
       cache.set(key,g); return g; };
     for(;;){ let best=null;
-      slots.forEach((sl,j)=>{ if(out.get(sl)) return; for(const n of names){ if(!cnt[n]||(sl.s&&RULES.items[n].use)) continue; const g=gain(n,j); if(g>0.01&&(!best||g>best.g+1e-9)) best={n,j,g}; } });
+      slots.forEach((sl,j)=>{ if(out.get(sl)) return; for(const n of names){ if(!cnt[n]||(sl.s&&RULES.items[n].use)||(X.keep&&RULES.items[n].use)) continue; let g=gain(n,j); if(X.wide&&g>0) g/=1+2*(given.get(own(sl.a))||0); if(g>0.01&&(!best||g>best.g+1e-9)) best={n,j,g}; } });
       if(!best) break;
-      const sl=slots[best.j], o=own(sl.a); slotSet(sl.a,sl.s,best.n); out.set(sl,best.n); cnt[best.n]--;
+      const sl=slots[best.j], o=own(sl.a); slotSet(sl.a,sl.s,best.n); out.set(sl,best.n); cnt[best.n]--; given.set(o,(given.get(o)||0)+1);
       for(const k of [...cache.keys()]){ const j=+k.split('|')[1]; if(own(slots[j].a)===o) cache.delete(k); } }
   } finally { recItemsLoad(sv); CAMP.seat=so; }
   return out; }
 function recSeatsNow(){ const r={}; for(const m of rideMachs()) r[m.name]=campSeat(m.name).slice(0,2).map(x=>x||null); return r; }
 function recSameS(a,b){ return Object.keys(a).every(k=>(a[k][0]||null)===((b[k]||[])[0]||null)&&(a[k][1]||null)===((b[k]||[])[1]||null)); }
 /* kind：'all'＝まとめて・'seat'＝乗り組みだけ（いまの品のまま）・'item'＝品だけ（いまの乗り組みのまま） */
-function recRun(kind,k){ const X=recCtx(k);
+function recRun(kind,k){ const X=recCtx(k,kind);
   if(kind==='seat') return {X,seats:recSeatsK(X)};
   if(kind==='item') return {X,items:recItemsK(X,recSeatsNow())};
   /* 0.91.0 2つの出だしから回して、合計の高いほう。①品なしの体で乗り組み ②歩くなら品を1つ持てるとして乗り組み（打たれ弱くても、守りの品を持てば歩けるかもしれない人のため） */
@@ -5764,11 +5809,11 @@ function recSig(r){ return JSON.stringify([r.seats?Object.keys(r.seats.S).sort()
 function recSigNow(kind){ const r={}; if(kind!=='item') r.seats={S:recSeatsNow()}; if(kind!=='seat'){ r.items=new Map(); for(const sl of recSlots()) r.items.set(sl,slotGet(sl.a,sl.s)||null); } return recSig(r); }
 function recCan(kind){ const ms=!noMachCh()&&rideMachs().length>0, it=CAMP.items.length>0; return kind==='seat'?ms:kind==='item'?it:ms||it; }
 /* 考え方 k から順に、いまと同じ結果（と、いま見せていた結果）を飛ばして見せる */
-function recOpen(kind,k,prev){ k=k||0; const now=recSigNow(kind), skip=[];
-  for(let t=0;t<REC_K.length;t++){ const kk=(k+t)%REC_K.length, r=recRun(kind,kk), sg=recSig(r);
-    if(sg===now||sg===prev){ skip.push(REC_K[kk].n); continue; } recShow(kind,kk,r,sg,skip); return; }
+function recOpen(kind,k,prev){ const KS=recKs(kind); k=k||0; const now=recSigNow(kind), skip=[];
+  for(let t=0;t<KS.length;t++){ const kk=(k+t)%KS.length, r=recRun(kind,kk), sg=recSig(r);
+    if(sg===now||sg===prev){ skip.push(KS[kk].n); continue; } recShow(kind,kk,r,sg,skip); return; }
   closeModal(); flashPrep(prev?'ほかの考え方でも、同じ結果になりました。':'どの考え方でも、いまの形がおすすめです。'); }
-function recShow(kind,k,r,sg,skip){ const X=r.X, rows=[];
+function recShow(kind,k,r,sg,skip){ const KS=recKs(kind); const X=r.X, rows=[];
   if(r.seats&&Object.keys(r.seats.S).length){ const now=recSeatsNow(); rows.push('<div class="xrow"><b>乗り組み</b></div>');
     for(const m in r.seats.S){ const s=r.seats.S[m], a=now[m]||[null,null], same=(a[0]||null)===s[0]&&(a[1]||null)===s[1];
       rows.push(`<div class="xrow"><b>${m}</b>${same?'':'<span class="xnew">変わる</span>'}<br><small>前の席：${s[0]||(machSolo(campAlly(m))?'空き（ひとりで動く）':'空き（動けない）')}　後ろの席：${s[1]||'空き'}</small></div>`); } }
@@ -5782,9 +5827,9 @@ function recShow(kind,k,r,sg,skip){ const X=r.X, rows=[];
     rows.push('<div class="xrow"><b>品</b></div>',...(ir.length?ir:['<div class="xrow"><small>持たせられる品がありません。</small></div>']));
     if(rest.length) rows.push(`<div class="xrow"><b>持ち物に残る品</b><br><small>${rest.join('・')}</small></div>`); }
   const what={all:'乗り組みと品を、いっしょに',seat:'いま持っている品のまま、乗り組みを',item:'いまの乗り組みのまま、品を'}[kind];
-  openModal(`<b>おすすめ（考え方：${REC_K[k].n}）</b><br><small>${REC_K[k].d}${what}考えました。いまのレベル・改造・持っている品と、この章の影の強さ（力${X.foe.str}・守り${X.foe.def}）から計算しています。${X.pick?'この章は拾う物があるので、移動を重く見ています。':''}${skip.length?`（${skip.join('・')}は、同じ結果だったので飛ばしました）`:''}</small><div class="xlist">${rows.join('')}</div>このおすすめにしますか。`,
-    [['これにする',()=>{ closeModal(); recApply(r); flashPrep(`おすすめ（${REC_K[k].n}）にしました。もう一度押すと、ほかの考え方も見られます。`); },'go'],
-     [`ほかの考え方で<small>${REC_K[(k+1)%REC_K.length].n}から</small>`,()=>recOpen(kind,(k+1)%REC_K.length,sg)],['やめる',closeModal]]); }
+  openModal(`<b>おすすめ（考え方：${KS[k].n}）</b><br><small>${KS[k].d}${what}考えました。いまのレベル・改造・持っている品と、この章の影の強さ（力${X.foe.str}・守り${X.foe.def}）から計算しています。${X.pick?'この章は拾う物があるので、移動を重く見ています。':''}${skip.length?`（${skip.join('・')}は、同じ結果だったので飛ばしました）`:''}</small><div class="xlist">${rows.join('')}</div>このおすすめにしますか。`,
+    [['これにする',()=>{ closeModal(); recApply(r); flashPrep(`おすすめ（${KS[k].n}）にしました。もう一度押すと、ほかの考え方も見られます。`); },'go'],
+     [`ほかの考え方で<small>${KS[(k+1)%KS.length].n}から</small>`,()=>recOpen(kind,(k+1)%KS.length,sg)],['やめる',closeModal]]); }
 function recWith(p,n,fn){ if(n===undefined) return fn(); const o=p.item; p.item=n; try{ return fn(); } finally{ p.item=o; } }
 function recApply(r){ if(r.seats&&Object.keys(r.seats.S).length){ CAMP.seat={}; for(const m in r.seats.S) if(r.seats.S[m][0]||r.seats.S[m][1]) CAMP.seat[m]=r.seats.S[m].slice(); seatClean(); }
   if(r.items) for(const [sl,n] of r.items) slotSet(sl.a,sl.s,n||null);
@@ -8761,12 +8806,13 @@ function layout(){
   document.body.classList.toggle('land',land);
   let maxW,maxH;
   if(land){ maxW=Math.max(160,vw-Math.max(220,Math.min(300,vw*0.36))); maxH=vh-8; }
-  else { const topH=$('top').offsetHeight, botH=$('bottom').offsetHeight; maxW=vw; maxH=Math.max(150,(vh-topH-botH)*0.62); }
+  else { const topH=$('top').offsetHeight, botH=$('bottom').offsetHeight; maxW=vw; maxH=Math.max(150,(vh-topH-botH)*0.66); }   /* 0.95.0 0.62→0.66 */
   const sW=Math.floor(maxW*dpr/320), sH=Math.floor(maxH*dpr/248);
   let s=Math.min(sW,sH);
   if(!land) s=Math.max(s,Math.min(sW,Math.ceil(dpr)));   // 縦では、1マスが16 CSS px を下回らないようにする（パネルはスクロール）
   let cssW,cssH;
   if(s>=1){ cssW=320*s/dpr; cssH=248*s/dpr; } else { const k=Math.min(maxW/320,maxH/248); cssW=320*k; cssH=248*k; }
+  if(!land){ const k=Math.min(maxW/320,maxH/248); if(320*k>cssW){ cssW=320*k; cssH=248*k; } }   /* 0.95.0 縦の画面では、地図を横幅いっぱいに（11/22 ヒロさん「スマホのマップのレイアウト変えて、マップの画面を少し広げて」。整数倍でなくてもよい） */
   SCALE={cssW,cssH};
   document.documentElement.style.setProperty('--mapW',(land?Math.ceil(cssW)+8:vw)+'px');
   const box=$('mapbox'); box.style.width=cssW+'px'; box.style.height=cssH+'px';

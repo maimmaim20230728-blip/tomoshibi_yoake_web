@@ -41,14 +41,15 @@ function faceURL(u,ex,blink,talk,yaw,pitch){ return url(ART.portrait(faceUnit(u)
 window.faceURL=faceURL;
 
 function sideState(u,snap){
-  const s=snap.units.get(u)||{name:u.name,hp:u.hp,maxHp:u.maxHp,mp:u.mp,maxMp:u.maxMp,lv:u.lv};
-  return {u,name:s.name,lv:s.lv,hp:s.hp,maxHp:s.maxHp,mp:s.mp,maxMp:s.maxMp,off:0,dy:0,fl:0,sh:0,alpha:1,glow:0,white:0,expr:'normal',talk:0,_key:''};
+  const s=snap.units.get(u)||{name:u.name,hp:u.hp,maxHp:u.maxHp,mp:u.mp,maxMp:u.maxMp,ep:u.ep,maxEp:u.maxEp,lv:u.lv};
+  const ep=s.maxMp==null&&s.maxEp!=null;   /* 0.95.0 味方の機械は EP を同じ棒で見せる（11/22 ヒロさん「戦闘画面でこちらのEPバーが無い」） */
+  return {u,name:s.name,lv:s.lv,hp:s.hp,maxHp:s.maxHp,mp:ep?s.ep:s.mp,maxMp:ep?s.maxEp:s.maxMp,off:0,dy:0,fl:0,sh:0,alpha:1,glow:0,white:0,expr:'normal',talk:0,_key:''};
 }
 function plate(el,P){
   const isM=P.u.kind==='machine', fu=P.faceU||faceUnit(P.u), sub=P.faceU?`<small>${fu.name}が乗ったまま</small>`:isM&&fu!==P.u?`<small>${fu.name}が操縦</small>`:'';
   el.innerHTML=`<img class="bpf" alt=""><div class="bpt"><b class="${P.u.side==='enemy'?'e':isM?'m':'p'}">${P.name}</b>${P.lv!=null?` <small>Lv${P.lv}</small>`:''}${sub}`+
     `<div class="bbar"><i class="hpb"></i></div><div class="bnum"><span>耐久</span> <b class="hpn"></b></div>`+
-    (P.maxMp!=null?`<div class="bbar"><i class="mpb"></i></div><div class="bnum"><span>${typeof resName==='function'?resName(P.u):'闇の心'}</span> <b class="mpn"></b></div>`:'')+`</div>`;
+    (P.maxMp!=null?`<div class="bbar"><i class="mpb${P.u.side==='ally'?' epb':''}"></i></div><div class="bnum"><span>${typeof resName==='function'?resName(P.u):'闇の心'}</span> <b class="mpn"></b></div>`:'')+`</div>`;
   P.el=el; P._key='';
 }
 function updPlate(P){
@@ -471,7 +472,7 @@ function impact(kind,A,T,ev){
 async function runAtk(ev){
   const A=sideOf(ev.a), T=sideOf(ev.t); if(!A||!T) return;
   ex(A,'resolve'); say(`${ev.an}の ${ev.w.n}！`); A.pose='atk'; BT.S.dodgeP=null;
-  if(ev.mpA1!=null&&ev.mpA1!==ev.mpA0) await tween(220,p=>{ A.mp=lerp(ev.mpA0,ev.mpA1,p); },false);
+  { const m0=A.mp; if(ev.mpA1!=null&&m0!=null&&ev.mpA1!==m0) await tween(220,p=>{ A.mp=lerp(m0,ev.mpA1,p); },false); }   /* 0.95.0 いまの棒から（ツバメの2回目で戻って見えないように） */
   const st=motionOf(ev,A); BT.S.motion=st;   // 0.21.0 型（試験で見る）
   const imp=await (MOT[st]||MOT.swing)(A,T,ev);
   if(ev.hit&&ev.net){   // 0.33.0 イカリの網：ダメージなしで止める
@@ -554,7 +555,7 @@ function rewardLines(pre){
 /* 行動の前に、みんなの数字を写しておく */
 window.btSnap=function(){
   const units=new Map(); for(const u of G.units){ const st={}; for(const k of LV_KEYS) if(u[k]!=null) st[k]=u[k];
-    units.set(u,{name:u.name,side:u.side,hp:u.hp,maxHp:u.maxHp,mp:u.mp,maxMp:u.maxMp,lv:u.lv,exp:u.exp,stats:st}); }
+    units.set(u,{name:u.name,side:u.side,hp:u.hp,maxHp:u.maxHp,mp:u.mp,maxMp:u.maxMp,ep:u.ep,maxEp:u.maxEp,lv:u.lv,exp:u.exp,stats:st}); }   /* 0.95.0 ep */
   return {units,res:{parts:G.parts,gems:G.gems,shards:G.shards}};
 };
 /* 0.6.0：カットイン（fx.js）が出ているあいだも on。押すとカットインだけ次へ進む */
