@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.93.0（2026-11-22）：スマホの音割れ・雑音（11/22 ヒロさん「スマホだと音割れと言うかノイズが混ざる」）。測ると出力の山は0.45まで（1.0に届かない）ので数字の上での音割れではない。sound.js でスマホ（指で触る画面）だけ、大きめのバッファ（latencyHint:playback）で途切れを防ぎ、小さなスピーカーが震える100Hzより下を切り、9kHzより上を少し落とす。パソコンはこれまでのまま。数字は仮 -->
 <!-- 版 0.92.0（2026-11-22）：はじめからの持ち物とプロローグ（11/22 ヒロさん「最初に最低レアのアイテムをランダムで１つ持っている状態でスタート」「始めるを選んだ後に、準備画面にすぐに行かず、ゲームのストーリーの話を少し入れて何のために冒険が始まるのかなんとなくはわかるようにして。いわゆるプロローグ的な部分が必要」）。はじめからはレア度1の袋の品を1つ持つ（評価の品と同じ引き方・newCamp）。タイトルの「はじめから」と中断の「最初から」のあと、準備画面の前に「プロローグ」の題の絵→灯台の会話17行（霧が夜ごと来る・影と暴走・倒すのでなく取り戻す・霧のわけはまだだれも知らない・だれも置いていかない・ユラが物置の品を渡す）→「第1部『港の灯』」の題の絵。幕間を見返すからも見られる。題・文・台詞・曲は仮 -->
 <!-- 版 0.91.0（2026-11-22）：まとめてのおすすめで、打たれ弱い人も守りの品を持てば歩く形を試す（11/22 ヒロさん「レベルが上がったりアイテム次第ではノアでも歩いた方が良い場面もある」）。品なしの体から始める形と、歩くなら品を1つ持てるとして始める形の2つを回し、点の合計が高いほう（recFootBest・recTot）。歩く人の「倒れるまで影に約何回」は難しさが簡単のときだけ見せる（11/22 ヒロさん「かんたんモードだけで出るようにして。ヒントがあるとつまらなくなる人もいる」） -->
 <!-- 版 0.90.0（2026-11-22）：おすすめの作り直し（11/22 ヒロさん「決まり決まったものではなく、アルゴリズムでその都度レベルや移動距離、改造度に合わせて考え直してほしい」「説得が強くてもすぐやられる人を機械から降ろすのは危険」「もう一度おすすめを選んだ時に、優先することを変更して別のおすすめ結果を出せる」）。出撃する人と機械を点にして合計がいちばん大きい組み合わせを探す（recSeatsK・recItemsK・recRun）。点は、いまのレベル・改造・品の数と、この章の影の強さから押すたびに計算。打たれ弱い人は乗せて守る・コモリと大声は乗ったまま説得・拾う物のある章は移動を重く。「まとめておすすめにする」を足した。考え方（釣り合い・やられにくさ・説得・攻め・移動）を「ほかの考え方で」で変えられる（同じ結果は飛ばす）。重みと数は仮 -->
@@ -496,7 +497,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.92.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.93.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">

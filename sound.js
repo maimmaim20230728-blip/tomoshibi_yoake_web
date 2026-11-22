@@ -1,4 +1,4 @@
-/* 灯守りの夜明け 音（版 0.84.0・2026-11-15 タイトルの曲を倍の長さで作り直し、前奏・ビブラート・こだま・タム・シンバル・小節ごとの打楽器を足した。版 0.19.0・2026-11-07。0.19.0 で和音の3度と5度をのばす音（pad）を足した。版 0.18.0。0.18.0 で旋律の下にハモりを1音足し、戦いの曲 battleAtk・battleTalk を足した。版 0.15.0・2026-11-06）
+/* 灯守りの夜明け 音（版 0.93.0・2026-11-22 スマホは大きめのバッファと、100Hzより下を切る・9kHzより上を少し落とす。版 0.84.0・2026-11-15 タイトルの曲を倍の長さで作り直し、前奏・ビブラート・こだま・タム・シンバル・小節ごとの打楽器を足した。版 0.19.0・2026-11-07。0.19.0 で和音の3度と5度をのばす音（pad）を足した。版 0.18.0。0.18.0 で旋律の下にハモりを1音足し、戦いの曲 battleAtk・battleTalk を足した。版 0.15.0・2026-11-06）
    ヒロさん「音楽とかサウンドは作ったの？ マップ音楽は最低3種類＋部の最終マップ＋最終マップ。タイトルグラと音楽もいる。インターミッションのBGMもいる」
    ヒロさんの答え：全部ゲームの中で作る・マップの曲は昼・夜・特別の章・部の最終マップは1曲を共通で。
    ・音のファイルは使わない。Web Audio で、ドット絵に合うチップチューン風（矩形波2つ・三角波のベース・雑音の打楽器）をその場で鳴らす
@@ -124,12 +124,21 @@ let ctx=null, master=null, musicG=null, seG=null, bgmVG=null, waves={}, noiseBuf
 let bgmOn=true, seOn=true, unlocked=false, want=null, cur=null, timer=0, live=[];
 /* 0.39.5 ヒロさん「ゲームの設定内で各種音量調整できるようにしてほしい（音量スライダー）」：全体・音楽・効果音の音量（0〜100）。耳の感じ方に合わせて2乗で効かせる。100＝これまでの大きさ */
 let vol={all:100,bgm:100,se:100};
+/* 0.93.0 スマホの音割れ・雑音（11/22 ヒロさん「スマホだと音割れと言うかノイズが混ざる」）。
+   測ると、どの曲も出力の山は0.45まで（1.0に届かない）。効果音を重ねても同じ。数字の上での音割れではない。
+   そこでスマホで起きやすい2つに手を打つ（パソコンの音はこれまでのまま）：
+   ①音を作るのが間に合わず途切れる（プチプチ）→ スマホは latencyHint:'playback' で大きめのバッファにする（押した音が数十ミリ秒おくれる）
+   ②小さなスピーカーが鳴らせない低い音で震える（ビリビリ）→ スマホは100Hzより下を切る。きつい高い音も9kHzより上を少し落とす */
+const MOBILE=(()=>{ try{ return matchMedia('(pointer:coarse)').matches; }catch(_){ return false; } })();
 const vg=v=>{ const x=Math.max(0,Math.min(100,+v||0))/100; return x*x; };
 function applyVol(){ if(!ctx) return; const t=ctx.currentTime;
   for(const [g,v] of [[master,0.6*vg(vol.all)],[bgmVG,vg(vol.bgm)],[seG,vg(vol.se)]]){ try{ g.gain.cancelScheduledValues(t); g.gain.setTargetAtTime(Math.max(0.0001,v),t,0.02); }catch(_){ g.gain.value=v; } } }
 function ensure(){
-  if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(_){ ctx=null; return; }
-    master=ctx.createGain(); master.gain.value=0.6*vg(vol.all); master.connect(ctx.destination);
+  if(!ctx){ try{ const AC=window.AudioContext||window.webkitAudioContext; try{ ctx=MOBILE?new AC({latencyHint:'playback'}):new AC(); }catch(_){ ctx=new AC(); } }catch(_){ ctx=null; return; }
+    master=ctx.createGain(); master.gain.value=0.6*vg(vol.all);
+    if(MOBILE){ const hp=ctx.createBiquadFilter(), lp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=100; hp.Q.value=0.7; lp.type='lowpass'; lp.frequency.value=9000; lp.Q.value=0.5;   /* 0.93.0 スマホのスピーカー向け */
+      master.connect(hp); hp.connect(lp); lp.connect(ctx.destination); }
+    else master.connect(ctx.destination);
     bgmVG=ctx.createGain(); bgmVG.gain.value=vg(vol.bgm); bgmVG.connect(master);   /* 0.39.5 音楽の音量（曲を変えても残る） */
     musicG=ctx.createGain(); musicG.gain.value=1; musicG.connect(bgmVG);
     seG=ctx.createGain(); seG.gain.value=vg(vol.se); seG.connect(master);
