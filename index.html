@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.96.1（2026-11-22）：コモリがひとり（だれも乗っていない）で影を呼び戻したときのカットインで、コモリが言葉を話さないようにした（11/22 ヒロさん「コモリの説得成功した場合、コモリが言葉をしゃべるのは違和感がある」「コモリ単体の時ね」）。「こっちだよ」などの台詞の代わりに、ランプや救助アームのようすの文（3通り・仮）。口も動かさない。fx.js -->
 <!-- 版 0.96.0（2026-11-22）：見つけたときの顔とひとこと（11/22 ヒロさん「アイテムを拾うイベントが分かりにくいので、拾った時に拾った人の顔とキャラごとのセリフ」）。倉庫の戸口の品と部品の箱・外伝7の光る品・38章の材料・21章の設計図と台帳で、見つけた人の顔と台詞と、見つけた物の説明の枠を出す（押すと閉じる）。台詞は全員ぶん（§12の話し方）。機械だけで見つけたときは機械の顔とようすの文。会話を切っていても出す。章のクリアになる最後のひとつでは出さない。台詞と出し方は仮 -->
 <!-- 版 0.95.0（2026-11-22）：11/22 ヒロさん「スマホのマップのレイアウト変えて、マップの画面を少し広げて」「攻撃を選ぶと攻撃方法選択画面が出てくるようにして。攻撃方法にはちゃんと威力もわかりやすく」「品だけを選ぶときにもっといろいろな考えで人と機械に持たせるパターンが欲しい」「戦闘画面でこちらのEPバーが無い」。縦の画面では地図を横幅いっぱいに（整数倍でなくてよい・地図の高さの上限を0.62→0.66）。攻撃のボタンは1つにして、武装が2つ以上なら押すと攻撃方法を選ぶ画面（名前・威力の数字と帯・属性・射程・命中・EP・届く相手・与えるダメージの最大）。武装が1つなら今までどおりすぐ相手を選ぶ（ボタンの下に名前と威力）。品だけのおすすめに考え方を5つ足した（人に多く・機械に多く・広く配る・強い仲間に集める・使い切りの品は残す・重みは仮）。戦いの場面で味方の機械の EP を青い棒で見せ、攻撃で減るのも見せる -->
 <!-- 版 0.94.1（2026-11-22）：戸口・棚・家の戸口で起きることは、着いたときでなく、そのマスで行動を決めて終えたとき（11/22 ヒロさん「イベントのあるマスの上で攻撃終了と待機でイベント発生にしてほしい。あくまで行動を決定して終了した時にイベント発生」）。攻撃・待機・手当て・品など、行動を終えるものすべてで起きる。着いただけでは何も起きないので、移動は今までどおり戻せる（0.94.0 の「戻せない」はなくした）。同じマスで1ターンに1回だけ。16章の鐘を鳴らすはボタンのまま。マスの説明・章のはじめ・ユラの台詞を合わせた（文は仮） -->
@@ -512,7 +513,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.96.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.96.1</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">

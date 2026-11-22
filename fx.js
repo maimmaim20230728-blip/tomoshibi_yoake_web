@@ -199,21 +199,24 @@ const LINES={
   'ノア':['聞こえる？　灯は、ここにあるよ','大丈夫。こっちだよ','一緒に、灯台のほうへ帰ろう'],
   'イネス':['ずれてただけ。もう戻れるよ','こっち。灯の向き、合わせてある','大丈夫。わたしたちがいる'],
   '_':['こっちだよ','大丈夫。灯はここにある','一緒に帰ろう']};
+/* 0.96.1 コモリがひとり（だれも乗っていない）で呼び戻したときは、言葉を話さない。ランプや腕のようすの文にする（11/22 ヒロさん「コモリが言葉をしゃべるのは違和感がある」・文は仮） */
+const KOMORI=['（コモリのランプが、ゆっくり2回点いた）','（コモリが、救助アームをそっと差し出した）','（コモリのランプが、灯台のほうを照らした）'];
 const BACK=['……あったかい。灯が見える','……ここ、港だ。帰ってこられた','……ありがとう。もう歩ける'];
 function wantsCutin(ev){ return typeof SET!=='undefined'&&SET.cutin!==false&&ev&&ev.k==='per'&&ev.ok&&ev.calm&&!ev.m; }
 async function persuadeCutin(ev){
   if(!wantsCutin(ev)) return;
   const sp=speaker(ev.p), nm=sp?sp.name:ev.pn, i=Math.max(0,((typeof G!=='undefined'&&G.stats?G.stats.calm:1)-1))%3;
-  const cols=COLOR[nm]||['#8a6ab0','#3a2a5a'], say=(LINES[nm]||LINES._)[i];
+  const mute=!!sp&&sp.kind==='machine';   /* 0.96.1 前の席にだれもいない機械（コモリ）＝言葉なし */
+  const cols=COLOR[nm]||['#8a6ab0','#3a2a5a'], say=mute?KOMORI[i]:(LINES[nm]||LINES._)[i];
   const shadow=ART.tall?ART.tall(ev.t,'idle',0,true):null;   /* 0.51.0 カットインの影は今までの大きさ */
   open();
   const c=$('cic').getContext('2d'); c.imageSmoothingEnabled=false;
   // 1：呼びかける人の帯
   await beat(1500,(p,t)=>{
     skyNight(c,t);
-    const talk=calm()?0:(p<0.6?(Math.floor(t/120)%2):0);
+    const talk=mute||calm()?0:(p<0.6?(Math.floor(t/120)%2):0);
     band(c,1,p/0.25,t,cols,faceCanvas(sp,'resolve',talk,1));
-    line(nm,'「'+typed(say,p)+'」','p');
+    if(mute) line(nm,typed(say,p),'n'); else line(nm,'「'+typed(say,p)+'」','p');
   });
   // 2：影が白く輝いていく（0.6.1 ヒロさん「光の柱は要らない。影が白く輝いていく感じ」）
   // 影の姿のまま、すそから上へ白く染まり、まわりに白い光がにじむ。消えずに最後まで残る
