@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.98.0（2026-11-23）：11/23 ヒロさん「大波の演出が文字だけでわからない。マップ上で簡単なアニメーションなどでわかるようにして」。大波が来たとき、沖から白い波頭の帯が海と水辺をななめに横切り、押された人は1マスすべり、減った耐久の数字が出て、少し画面がゆれる（fx.js）。知らせのターンの水辺の白さは明滅に。長さ1.7秒は仮。動きを減らすでは帯を走らせず白く光らせるだけ。ルールと乱数は変えていない -->
 <!-- 版 0.97.1（2026-11-23）：11/23 ヒロさん「この文言自体要らない。あと、1.5→2倍に変更」。だれも乗っていない機械の部品と宝石を2倍に（1.5倍から）。記録の「〇〇にだれも乗っていなかったので…」は出さない -->
 <!-- 版 0.97.0（2026-11-23）：11/23 ヒロさん「コモリを含む無人でも相手を倒す、説得する可能性がある機械は、操縦者が不在の場合に敵を処理した場合、本来貰える部品や宝石などを1.5倍もらえる事とする。これは、機械だけでは経験値が増えないことをカバーする目的」。0.95.0 のコモリだけの1.5倍を、だれも乗っていない味方の機械すべてに広げた（いまはコモリと、無人でも反撃するハリネズミ。この先、無人で動ける機械が増えても同じ）。灯のかけらと章のクリアの部品は変えない・端数は四捨五入（0.95.0 のまま） -->
 <!-- 版 0.96.3（2026-11-22）：11/22 ヒロさん「つけて」（0.96.2 の確認待ち「下にまだボタンがあると分かる目印」）。縦の画面で欄に入りきらないとき、下の4つのボタンのすぐ上に「▼ 下にまだあります」を出す。押すと欄を下へ送り、いちばん下まで見たら消える。横の画面では出さない -->
@@ -528,7 +529,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.97.1</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.98.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -3710,10 +3711,12 @@ function junSpot(){ const j=junU(); if(!j||G.junSeenT===G.turn||!seeU(j)) return
    陸に近い（下・左の）人から順に動かす。押せるマスがなければその場に残る。乱数は使わない。
    0.33.1 ダメージ4（11/8 ヒロさん）。ただし耐久1未満にはならない＝大波では気を失わない。押せなかった人も受ける */
 function bigWave(WV){
-  const ps=G.units.filter(u=>!u.out&&!u.inMachine&&u.kind==='person'&&terrain(u.x,u.y)==='w').sort((a,b)=>b.y-a.y||a.x-b.x), moved=[], hurt=[];
-  for(const u of ps){ const d=Math.max(0,Math.min(WV.dmg||0,u.hp-1)); if(d){ u.hp-=d; hurt.push(`${u.name}${d}`); } }
+  const ps=G.units.filter(u=>!u.out&&!u.inMachine&&u.kind==='person'&&terrain(u.x,u.y)==='w').sort((a,b)=>b.y-a.y||a.x-b.x), moved=[], hurt=[], fxH=[], fxM=[];
+  for(const u of ps){ const d=Math.max(0,Math.min(WV.dmg||0,u.hp-1)); if(d){ u.hp-=d; hurt.push(`${u.name}${d}`); if(seeU(u)) fxH.push({x:u.x,y:u.y,d}); } }
   for(const u of ps){ for(const [dx,dy] of WV.dirs){ const x=u.x+dx,y=u.y+dy,t=terrain(x,y);
-      if(moveCost(t)>=99||(u.side==='enemy'&&t==='H')||unitAt(x,y)) continue; u.x=x; u.y=y; moved.push(u.name); break; } }
+      if(moveCost(t)>=99||(u.side==='enemy'&&t==='H')||unitAt(x,y)) continue; fxM.push({u,sx:u.x,sy:u.y}); u.x=x; u.y=y; moved.push(u.name); break; } }
+  /* 0.98.0 マップの上で大波を見せる（11/23 ヒロさん「大波の演出が文字だけでわからない。マップ上で簡単なアニメーションなどで」）。見せるだけで、ルールは変えない */
+  if(window.FX&&FX.wave){ let vx=0,vy=0; for(const [dx,dy] of WV.dirs){ vx+=dx; vy+=dy; } FX.wave({vx,vy,hurt:fxH,moves:fxM,k:1/mvSpd()}); }
   addLog(!ps.length?'大波が防波堤を越えた。水辺にいる人はいなかった。':
     `大波が防波堤を越えた。${hurt.length?`耐久が減った（${hurt.join('、')}）。`:''}${moved.length?`${moved.join('、')}が陸のほうへ1マス押された。`:''}`);
   computeVis();
@@ -4985,7 +4988,8 @@ function walkPath(u,sx,sy,tx,ty){
       prev.set(k,[x,y]); q.push([nx,ny]); } }
   if(!prev.has(key(tx,ty))) return [[sx,sy],[tx,ty]];
   const p=[]; let c=[tx,ty]; while(c){ p.unshift(c); c=prev.get(key(c[0],c[1])); } return p; }
-function walkPos(u){ if(WALK.u!==u||!WALK.path) return [u.x,u.y]; const P=WALK.path, n=P.length-1, t=Math.max(0,Math.min(1,(performance.now()-WALK.t0)/WALK.dur))*n, i=Math.min(n-1,Math.floor(t)), f=t-i;
+function walkPos(u){ const wp=window.FX&&FX.wavePos&&FX.wavePos(u); if(wp) return wp;   /* 0.98.0 大波に押されている間は、もとのマスから1マスすべる */
+  if(WALK.u!==u||!WALK.path) return [u.x,u.y]; const P=WALK.path, n=P.length-1, t=Math.max(0,Math.min(1,(performance.now()-WALK.t0)/WALK.dur))*n, i=Math.min(n-1,Math.floor(t)), f=t-i;
   return [P[i][0]+(P[i+1][0]-P[i][0])*f, P[i][1]+(P[i+1][1]-P[i][1])*f]; }
 function walkStop(){ if(WALK.raf) cancelAnimationFrame(WALK.raf); clearTimeout(WALK.tm); const r=WALK.res; WALK.u=null; WALK.path=null; WALK.raf=0; WALK.res=null; if(r) r(); }
 function walkAnim(u,sx,sy){
@@ -5074,7 +5078,7 @@ function draw(){
     ctx.fillStyle='#5e3a20'; ctx.fillRect(px,py+2,TS,TS-2); ctx.fillStyle='#b07a44'; for(let i=0;i<3;i++) ctx.fillRect(px+1,py+4+i*4,TS-2,3);
     ctx.fillStyle='#d84a4a'; ctx.fillRect(px,py+1,TS,2); ctx.fillStyle='#ffd25a'; ctx.fillRect(px+2,py+1,1,1); ctx.fillRect(px+7,py+1,1,1); ctx.fillRect(px+12,py+1,1,1); }
   /* 0.33.0 7章：大波が来る前のターンは、水辺に白い波頭。防波堤の先の灯（石の台と灯の柱。ともすと明るく光る） */
-  if(G.waveNext&&!G.over) for(let y=0;y<H;y++)for(let x=0;x<W;x++) if(terrain(x,y)==='w'){ const px=x*TS,py=tileY(y); ctx.fillStyle='rgba(235,248,255,.35)'; ctx.fillRect(px,py,TS,TS); ctx.fillStyle='rgba(255,255,255,.85)'; for(let i=0;i<TS;i+=4) ctx.fillRect(px+i,py+((i+(ART.tick>>2))%8<4?3:5),2,1); }
+  if(G.waveNext&&!G.over) for(let y=0;y<H;y++)for(let x=0;x<W;x++) if(terrain(x,y)==='w'){ const px=x*TS,py=tileY(y); ctx.fillStyle=`rgba(235,248,255,${(ART.tick>>1)%2?.5:.28})`; ctx.fillRect(px,py,TS,TS);   /* 0.98.0 知らせのターンは白さがゆっくり明滅 */ ctx.fillStyle='rgba(255,255,255,.85)'; for(let i=0;i<TS;i+=4) ctx.fillRect(px+i,py+((i+(ART.tick>>2))%8<4?3:5),2,1); }
   const BC=CH().beacon||CH().relay; if(BC){ const px=BC.x*TS,py=tileY(BC.y);   // 0.36.0 9章の中継灯も同じ形
     ctx.fillStyle='#5e5a58'; ctx.fillRect(px+2,py+9,12,6); ctx.fillStyle='#968e84'; ctx.fillRect(px+3,py+9,10,2);
     ctx.fillStyle='#3a2618'; ctx.fillRect(px+7,py-2,2,11); ctx.fillStyle='#46423e'; ctx.fillRect(px+5,py-6,6,5);

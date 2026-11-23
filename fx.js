@@ -88,8 +88,45 @@ function drawNum(c,e,p){
   const up=p<0.25?ease(p/0.25)*9:9+Math.sin(Math.min(1,(p-0.25)/0.2)*Math.PI)*-1.5;   // 少しはねて止まる
   c.globalAlpha=p>0.75?(1-p)/0.25:1; pixText(c,e.text,e.x,Math.round(e.y-up),1,e.col); c.globalAlpha=1;
 }
+/* 0.98.0 7章の大波（11/23 ヒロさん「大波の演出が文字だけでわからない。マップ上で簡単なアニメーションなどで」）。
+   沖（押す向きの反対側）から、白い波頭の帯が海と水辺をななめに横切る。水辺（w）は泡を強く。
+   波頭が来たマスで、減った耐久の数字を出し、押された人は1マスすべる。少し画面がゆれる。
+   長さは 1.7秒（仮）を「ユニットの動く速さ」で割る。乱数は使わない。「動きを減らす」では帯は走らせず、海と水辺を一度白く光らせるだけ */
+const WAVE_MS=1700, WAVE_RUN=0.7, WAVE_SLIDE=0.22;
+function waveS(e,x,y){   /* 沖側の端＝0、陸側の端＝1 */
+  const v=(x-(e.vx<0?W-1:0))*(e.vx||0)+(y-(e.vy<0?H-1:0))*(e.vy||0), m=(W-1)*Math.abs(e.vx||0)+(H-1)*Math.abs(e.vy||0);
+  return m?clamp01(v/m):0; }
+function waveC(p){ return -0.15+(p/WAVE_RUN)*1.3; }   /* 波頭の位置 */
+function waveAt(e,x,y){ return (waveS(e,x,y)+0.15)*WAVE_RUN/1.3; }   /* 波頭がそのマスに来るときの p */
+function wave(o){
+  if(typeof G==='undefined'||!G) return;
+  const ms=Math.round(WAVE_MS*(o.k||1)), e=Object.assign({ms},o); add('wave',e);
+  if(!calm()) setTimeout(()=>quake(3,420),Math.round(ms*0.3));
+  for(const h of o.hurt||[]) setTimeout(()=>{ const [x,y]=tileC(h.x,h.y); add('num',{ms:1000,x,y:y-10,text:'-'+h.d,col:'#ff8a7a'}); },calm()?0:Math.round(ms*waveAt(e,h.x,h.y)));
+}
+function wavePos(u){
+  if(calm()||!M.list.length) return null; const t=now();
+  for(const e of M.list){ if(e.kind!=='wave') continue; const m=(e.moves||[]).find(m=>m.u===u); if(!m) continue;
+    const p0=waveAt(e,m.sx,m.sy), q=clamp01(((t-e.t0)/e.ms-p0)/WAVE_SLIDE), f=ease(q);
+    return [m.sx+(u.x-m.sx)*f, m.sy+(u.y-m.sy)*f]; }
+  return null; }
+function drawWave(c,e,p){
+  const fade=p>0.85?(1-p)/0.15:1;
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){ const tr=terrain(x,y); if(tr!=='~'&&tr!=='w') continue; const px=x*TS, py=tileY(y), sh=tr==='w';
+    if(calm()){ const a=Math.sin(p*Math.PI)*(sh?0.6:0.3); c.fillStyle=`rgba(240,250,255,${a})`; c.fillRect(px,py,TS,TS); continue; }
+    const d=waveC(p)-waveS(e,x,y);
+    if(Math.abs(d)<0.07){   /* 波頭：白い面と泡の粒 */
+      c.fillStyle=`rgba(240,250,255,${(sh?0.8:0.6)*fade})`; c.fillRect(px,py,TS,TS);
+      c.fillStyle=`rgba(255,255,255,${fade})`; for(let i=0;i<TS;i+=3){ const j=(i*5+x*7+y*3)%TS; c.fillRect(px+i,py+j,2,1); c.fillRect(px+((i+7)%TS),py+((j+9)%TS),1,1); } }
+    else if(d>0&&d<0.35){   /* 波頭のあと：しぶきが引いていく */
+      const a=(1-d/0.35)*(sh?0.5:0.28)*fade; c.fillStyle=`rgba(225,242,255,${a})`; c.fillRect(px,py,TS,TS);
+      c.fillStyle=`rgba(255,255,255,${Math.min(1,a*1.4)})`; for(let i=1;i<TS;i+=5) c.fillRect(px+i,py+((i*3+x+y)%TS),1,1); }
+    else if(d<0&&d>-0.13){   /* 波頭の手前：盛り上がる暗いうねり */
+      c.fillStyle=`rgba(10,30,70,${0.3*fade})`; c.fillRect(px,py,TS,TS); } }
+}
 function drawMap(c){
   if(!M.list.length) return; const t=now();
+  for(const e of M.list) if(e.kind==='wave') drawWave(c,e,clamp01((t-e.t0)/e.ms));   /* 0.98.0 大波は数字より下に */
   for(const e of M.list){ const p=clamp01((t-e.t0)/e.ms);
     if(e.kind==='beam') drawBeam(c,e,p);
     else if(e.kind==='burst'){ if(!calm()) drawBurst(c,e,p); }
@@ -302,6 +339,6 @@ async function dawnCutin(){
 /* 戦いの場面を見ないとき：カットインだけ順に */
 async function cutinsFor(rec){ for(const ev of rec) if(wantsCutin(ev)) await persuadeCutin(ev); }
 
-window.FX={drawMap,beam,mapRec,quake,persuadeCutin,dawnCutin,cutinsFor,wantsCutin,
+window.FX={drawMap,beam,mapRec,quake,wave,wavePos,persuadeCutin,dawnCutin,cutinsFor,wantsCutin,
   get ciOn(){ return CI.on; }, skip(){ if(CI.on) CI.skip=true; }};
 })();
