@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.99.0（2026-11-25）：11/25 ヒロさん「アマラの歌など行動力を使う特技は機械でも生身でも経験値を10もらえる。敵を倒したときと同じく、レベルによって倍率が変わるようにして」。行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）を使うと、基本10（RULES.exp.skill）にレベル差の倍率（倒したときと同じ表）と品の経験値+を掛けて四捨五入。生身なら本人、乗ったまま（アマラの乗ったままのうた）なら倒したときと同じく乗っている人のそれぞれ。上級職のわざ・品・説得のわざ・章の目的の行動は入れていない（確認待ち）。乱数は使わない -->
 <!-- 版 0.98.1（2026-11-25）：11/25 ヒロさん「マップで「戻る」を押し続けると最後にそのマップを止めることになる。誤タップで途中で戻らないように…やめる前に保存を促すように保存画面を出して」。何も選んでいないときの「もどる」は、先に保存の画面（やめる前に、マップの途中を保存しませんか）を出す。そこでもう一度もどると閉じてマップに戻るので、押し続けても止まらない。やめるのは「保存せずにやめる」（確かめあり）か、保存したあとの「マップをやめる」から。文言は仮。ルールと乱数は変えていない -->
 <!-- 版 0.98.0（2026-11-23）：11/23 ヒロさん「大波の演出が文字だけでわからない。マップ上で簡単なアニメーションなどでわかるようにして」。大波が来たとき、沖から白い波頭の帯が海と水辺をななめに横切り、押された人は1マスすべり、減った耐久の数字が出て、少し画面がゆれる（fx.js）。知らせのターンの水辺の白さは明滅に。長さ1.7秒は仮。動きを減らすでは帯を走らせず白く光らせるだけ。ルールと乱数は変えていない -->
 <!-- 版 0.97.1（2026-11-23）：11/23 ヒロさん「この文言自体要らない。あと、1.5→2倍に変更」。だれも乗っていない機械の部品と宝石を2倍に（1.5倍から）。記録の「〇〇にだれも乗っていなかったので…」は出さない -->
@@ -530,7 +531,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.98.1</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.99.0</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -948,6 +949,7 @@ const RULES={
      機械が倒したときは、乗っている人のそれぞれが同じだけもらう（0.24.0 機械にはレベルがない） */
   /* clear＝クリア経験値（0.9.0・ヒロさん「入れる：基本30」）。夜明けに、出撃して休みに入らなかった全員（機械も）に。倍率は下の above・below と同じ表 */
   exp:{ toNext:100, normal:20, boss:100, clear:30, chip:0.2,   /* 0.43.0 倒せなくても減らしたら、倒したときの20%（11/9 ヒロさん） */
+    skill:10,   /* 0.99.0 行動を使う特技を使ったとき（11/25 ヒロさん「経験値を10」「敵を倒したときと同じく、レベルによって倍率が変わるように」） */
     above:{ 1:1.5, 2:2, 3:3, 4:5, 5:8 },   // 敵が自分より上。5より上は 5 の倍率
     below:{ 1:0.7, 2:0.5, 3:0.3 } },       // 敵が自分より下。3より下は 3 の倍率
   /* 武装と EP（11/5 ヒロさん）。機械は武装を2〜3つ持ち、使うたびに EP を使う。数値はすべて仮（あとでヒロさんが決める）
@@ -3281,7 +3283,7 @@ function songCmd(u,s,cmds){ const C=RULES.cheer, R=songRange(u,s), T=C.songTurns
   const nm=a=>a.map(t=>t.name).join('、')+(hid?`${a.length?'、':''}見えない敵${hid}`:'');
   cmds.push({label:ride?`${s.name}のうた`:'うた',sub:!ok?'前の席に人がいない':st.length?`${ride?'乗ったまま、':''}${R}マス以内の敵 ${st.length}のこころの壁を半分（${T}ターン）`:`${R}マス以内に敵がいない`,off:!st.length,key:st.length>0,
     act:()=>startAct({name:'うた',noTarget:true,list:[null],card:()=>`${s.name}が${ride?`${u.name}の後ろの席から`:''}<span class="big">うたう</span><br>${R}マス以内の敵：${sv.map(t=>`${t.name} ${wallOf(t)}→${Math.floor(t.wall*C.songWall)}`).join('、')}${hid?`${sv.length?'、':''}見えない敵${hid}`:''}<br>こころの壁が <span class="big">半分</span>（このターンと次のターン）<br><small>もう半分になっている敵は、続く長さだけ延びます。${u.name}の行動はここで終わります</small>`,
-      run:()=>{ for(const t of st) t.songWall=Math.max(t.songWall||0,G.turn+T-1); addLog(`${s.name}が${ride?`${u.name}に乗ったまま`:''}うたった。${nm(sv)}のこころの壁が半分に（${T}ターン）。`); finish(u); }})}); }
+      run:()=>{ for(const t of st) t.songWall=Math.max(t.songWall||0,G.turn+T-1); addLog(`${s.name}が${ride?`${u.name}に乗ったまま`:''}うたった。${nm(sv)}のこころの壁が半分に（${T}ターン）。`); skillExp(u); finish(u); }})}); }
 /* 0.12.0 がんばれ（応援）とアマラのうた。そのターンだけ説得力+（「こころ+」の置き換え・11/6 ヒロさん「説得力+3」）。2つ受けても重ならない。0.27.0 からうたは倍率（songMul）に変わり、がんばれだけがここ */
 function heartOf(p){ return G&&p.heartT&&p.heartT===G.turn?heartAmt():0; }   // heartT は章の中だけ（保存しない）
 /* 0.79.0 合唱長が留守番にいると、応援の効果2倍（がんばれの説得力と炊き出しの量・祈りの灯は変えない・仮） */
@@ -3488,6 +3490,10 @@ function rewardExp(a,t,base){
 }
 /* 0.43.0 倒せなくても、攻撃や説得で敵の耐久・熱・こころを減らしたら、倒したときの経験値の20%（11/9 ヒロさん）。レベル差の倍率はそのあとに掛ける */
 function chipExp(a,t){ if(!a||a.side!=='ally'||!t||t.side!=='enemy'||t.out) return; const X=RULES.exp; rewardExp(a,t,(t.boss?X.boss:X.normal)*X.chip); }
+/* 0.99.0 行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）を使ったら、基本10にレベル差の倍率（倒したときと同じ表）。
+   生身なら本人、乗ったまま（機械の行動）なら倒したときと同じく乗っている人のそれぞれ（11/25 ヒロさん「機械でも生身でも」） */
+function skillExp(a){ if(!a||a.side!=='ally') return; const b=RULES.exp.skill; gainExp(a,{},b,'特技の');
+  if(a.kind==='machine') for(const r of a.seats||[]) if(r) gainExp(r,{},b,'特技の'); }
 /* 0.17.0 o＝その敵に足す値（5章の列の影 line・移動 mov）。5章の先頭 'elif' は、エリフがもう仲間か物語の仲間なら、ふつうの影が列の先頭に立つ */
 function elifBack(){ return !!(CAMP&&(CAMP.allies.some(a=>a.name==='エリフ')||(CAMP.away||{})['エリフ'])); }
 function moriBack(){ return !!(CAMP&&CAMP.allies.some(a=>a.name==='モリヒト')); }   // 0.34.0 8章のモリヒトがもう仲間
@@ -4631,15 +4637,15 @@ function menuCommands(u){
     if(u.footSkill==='repair'){ const mt=repairTargets(u);
       const rp=t=>Math.round(t.maxHp*RULES.skill.repair), to=t=>Math.min(t.maxHp,t.hp+rp(t)), pc=Math.round(RULES.skill.repair*100);   // 0.22.0 最大耐久の50%（11/7 ヒロさん）
       cmds.push({label:'応急修理',sub:mt.length?`隣の機械の耐久を、最大の${pc}%直す`:'隣に傷んだ機械がいない',off:!mt.length,
-        act:()=>startAct({name:'応急修理',list:mt,label:t=>`${t.name}　耐久 ${t.hp}→${to(t)}`,card:t=>`<span class="m">${t.name}</span> を直す（最大の${pc}%＝${rp(t)}）<br>耐久 ${t.hp} → <span class="big">${to(t)}</span> / ${t.maxHp}`,run:t=>{t.hp=to(t);se('heal');addLog(`${u.name}が${t.name}を直した。`);finish(u);}})}); }
+        act:()=>startAct({name:'応急修理',list:mt,label:t=>`${t.name}　耐久 ${t.hp}→${to(t)}`,card:t=>`<span class="m">${t.name}</span> を直す（最大の${pc}%＝${rp(t)}）<br>耐久 ${t.hp} → <span class="big">${to(t)}</span> / ${t.maxHp}`,run:t=>{t.hp=to(t);se('heal');addLog(`${u.name}が${t.name}を直した。`);skillExp(u);finish(u);}})}); }
     /* 0.39.0 オユナの手当て：隣の人（生身）の耐久を最大の tend 戻す（行動を使う・回数の決まりなし・乱数は使わない・仮） */
     if(u.footSkill==='tend'){ const at=allies().filter(p=>p.kind==='person'&&p!==u&&man(u.x,u.y,p.x,p.y)===1&&p.hp<p.maxHp), to=p=>Math.min(p.maxHp,p.hp+Math.round(p.maxHp*SK.tend)), pc=Math.round(SK.tend*100);
       cmds.push({label:'手当て',sub:at.length?`隣の人の耐久を${pc}%戻す`:'隣に傷ついた人がいない',off:!at.length,
-        act:()=>startAct({name:'手当て',list:at,label:t=>`${t.name}　耐久 ${t.hp}→${to(t)}`,card:t=>`<span class="p">${t.name}</span> を手当てする（最大の${pc}%）<br>耐久 ${t.hp} → <span class="big">${to(t)}</span> / ${t.maxHp}<br><small>${u.name}の行動はここで終わります</small>`,run:t=>{t.hp=to(t);se('heal');addLog(`${u.name}が${t.name}に薬草をあてて手当てした。`);finish(u);}})}); }
+        act:()=>startAct({name:'手当て',list:at,label:t=>`${t.name}　耐久 ${t.hp}→${to(t)}`,card:t=>`<span class="p">${t.name}</span> を手当てする（最大の${pc}%）<br>耐久 ${t.hp} → <span class="big">${to(t)}</span> / ${t.maxHp}<br><small>${u.name}の行動はここで終わります</small>`,run:t=>{t.hp=to(t);se('heal');addLog(`${u.name}が${t.name}に薬草をあてて手当てした。`);skillExp(u);finish(u);}})}); }
     /* 0.60.0 ベルタのスープを配る（11/11 ヒロさん「生身で行動を使い、上下左右の人の耐久を最大の30%戻す」）。上下左右の生身の人みんな・自分は入らない・回数の決まりなし（仮） */
     if(u.footSkill==='soup'){ const at=allies().filter(p=>p.kind==='person'&&p!==u&&!p.inMachine&&man(u.x,u.y,p.x,p.y)===1&&p.hp<p.maxHp), to=p=>Math.min(p.maxHp,p.hp+Math.round(p.maxHp*SK.soup)), pc=Math.round(SK.soup*100);
       cmds.push({label:'スープを配る',sub:at.length?`上下左右の人 ${at.length}人の耐久を${pc}%戻す`:'隣に傷ついた人がいない',off:!at.length,
-        act:()=>startAct({name:'スープを配る',noTarget:true,list:[null],card:()=>`上下左右の人にスープを配る（最大の${pc}%）<br>`+at.map(p=>`<span class="p">${p.name}</span> 耐久 ${p.hp} → <b>${to(p)}</b> / ${p.maxHp}`).join('<br>')+`<br><small>${u.name}の行動はここで終わります</small>`,run:()=>{ for(const p of at) p.hp=to(p); se('heal'); addLog(`${u.name}がスープを配った。${at.map(p=>p.name).join('と')}の耐久が戻った。`); finish(u); }})}); }
+        act:()=>startAct({name:'スープを配る',noTarget:true,list:[null],card:()=>`上下左右の人にスープを配る（最大の${pc}%）<br>`+at.map(p=>`<span class="p">${p.name}</span> 耐久 ${p.hp} → <b>${to(p)}</b> / ${p.maxHp}`).join('<br>')+`<br><small>${u.name}の行動はここで終わります</small>`,run:()=>{ for(const p of at) p.hp=to(p); se('heal'); addLog(`${u.name}がスープを配った。${at.map(p=>p.name).join('と')}の耐久が戻った。`); skillExp(u); finish(u); }})}); }
     /* 0.10.0 2章：止まっている機械を直す（隣・生身の人なら誰でも。イネスは2、ほかの人は1） */
     const F=G.fixT; if(F&&F.broken&&man(u.x,u.y,F.x,F.y)===1){ const v=fixAmount(u), left=Math.max(0,F.fixLeft-v);
       cmds.push({label:'直す',sub:`${F.name}を直す（あと ${F.fixLeft}・${u.name}は ${v}）`,key:true,
@@ -4659,7 +4665,7 @@ function menuCommands(u){
     /* 0.11.0 ダグニの網さばき：隣の敵を1ターン止める（行動を使う・外れない・乱数は使わない） */
     if(u.footSkill==='net'){ const nt=adjEnemies(u).filter(e=>e.kind!=='machine');   // 0.26.0 機械には効かない
       cmds.push({label:'網さばき',sub:nt.length?'隣の人を1ターン止める・回避0%・反撃なし':adjEnemies(u).length?'機械には効かない':'隣に敵がいない',off:!nt.length,key:nt.length>0,
-        act:()=>startAct({name:'網さばき',list:nt,label:t=>`${t.name}を止める`,card:t=>`<span class="e">${t.name}</span> に網を投げる<br><span class="big">次の霧の側の番、動けない</span><br>それまで回避 ${evadeOf(t)}% → <b>0%</b>・反撃できない<br><small>外れません。${u.name}の行動はここで終わります</small>`,run:t=>{t.stun=1;t.netted=true;addLog(`${u.name}の網さばき。${t.name}を1ターン止めた（回避0%・反撃なし）。`);finish(u);}})}); }
+        act:()=>startAct({name:'網さばき',list:nt,label:t=>`${t.name}を止める`,card:t=>`<span class="e">${t.name}</span> に網を投げる<br><span class="big">次の霧の側の番、動けない</span><br>それまで回避 ${evadeOf(t)}% → <b>0%</b>・反撃できない<br><small>外れません。${u.name}の行動はここで終わります</small>`,run:t=>{t.stun=1;t.netted=true;addLog(`${u.name}の網さばき。${t.name}を1ターン止めた（回避0%・反撃なし）。`);skillExp(u);finish(u);}})}); }
     /* 0.31.0 救急箱（人の品）：生身のとき、1章に2回、隣の人（生身）の耐久を最大の30%戻す（行動を使う・乱数は使わない・仮） */
     if(ifx(u,'aid')){ const left=ifx(u,'aid')-(u.aidN||0), at=allies().filter(p=>p.kind==='person'&&man(u.x,u.y,p.x,p.y)===1&&p.hp<p.maxHp), to=p=>Math.min(p.maxHp,p.hp+Math.round(p.maxHp*SK.aid)), pc=Math.round(SK.aid*100);
       cmds.push({label:'手当て',sub:left<=0?'この章ではもう使った':at.length?`隣の人の耐久を${pc}%戻す（のこり${left}回）`:'隣に傷ついた人がいない',off:left<=0||!at.length,
