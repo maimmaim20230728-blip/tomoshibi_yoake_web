@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.98.1（2026-11-25）：11/25 ヒロさん「マップで「戻る」を押し続けると最後にそのマップを止めることになる。誤タップで途中で戻らないように…やめる前に保存を促すように保存画面を出して」。何も選んでいないときの「もどる」は、先に保存の画面（やめる前に、マップの途中を保存しませんか）を出す。そこでもう一度もどると閉じてマップに戻るので、押し続けても止まらない。やめるのは「保存せずにやめる」（確かめあり）か、保存したあとの「マップをやめる」から。文言は仮。ルールと乱数は変えていない -->
 <!-- 版 0.98.0（2026-11-23）：11/23 ヒロさん「大波の演出が文字だけでわからない。マップ上で簡単なアニメーションなどでわかるようにして」。大波が来たとき、沖から白い波頭の帯が海と水辺をななめに横切り、押された人は1マスすべり、減った耐久の数字が出て、少し画面がゆれる（fx.js）。知らせのターンの水辺の白さは明滅に。長さ1.7秒は仮。動きを減らすでは帯を走らせず白く光らせるだけ。ルールと乱数は変えていない -->
 <!-- 版 0.97.1（2026-11-23）：11/23 ヒロさん「この文言自体要らない。あと、1.5→2倍に変更」。だれも乗っていない機械の部品と宝石を2倍に（1.5倍から）。記録の「〇〇にだれも乗っていなかったので…」は出さない -->
 <!-- 版 0.97.0（2026-11-23）：11/23 ヒロさん「コモリを含む無人でも相手を倒す、説得する可能性がある機械は、操縦者が不在の場合に敵を処理した場合、本来貰える部品や宝石などを1.5倍もらえる事とする。これは、機械だけでは経験値が増えないことをカバーする目的」。0.95.0 のコモリだけの1.5倍を、だれも乗っていない味方の機械すべてに広げた（いまはコモリと、無人でも反撃するハリネズミ。この先、無人で動ける機械が増えても同じ）。灯のかけらと章のクリアの部品は変えない・端数は四捨五入（0.95.0 のまま） -->
@@ -529,7 +530,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.98.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.98.1</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -4465,12 +4466,16 @@ function back(){
   }
   render();
 }
+/* 0.98.1 何も選んでいないときの「もどる」は、いきなり「やめますか」を出さず、先に保存の画面を出す（11/25 ヒロさん「誤タップで途中で戻らないように」「やめる前に保存を促すように保存画面を出して」）。
+   保存の画面で、もう一度もどると閉じてマップに戻るので、もどるを押し続けてもマップは止まらない。やめるのは「保存せずにやめる」か、保存のあとの「マップをやめる」だけ */
 function askQuit(){
-  confirmBox(`${chLabel()}をやめますか。`,()=>{
-    const app=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
-    if(app&&app.exitApp) app.exitApp();
-    else openModal('中断しました。',[['続ける',closeModal,'go wide'],['マップの途中を保存',showMapSave,'wide'],['準備に戻る',()=>{closeModal();openPrep();}],['最初から',()=>confirmBox('育ちと持ち物も消えて、最初からになります。よいですか。',()=>{newGame();openPrep('start');prologuePlay(()=>renderPrep(true));})]]);
-  });
+  if(mapCanSave()) showMapSave(true);
+  else confirmBox(`${chLabel()}をやめますか。`,quitGo);
+}
+function quitGo(){
+  const app=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
+  if(app&&app.exitApp) app.exitApp();
+  else openModal('中断しました。',[['続ける',closeModal,'go wide'],['マップの途中を保存',()=>showMapSave(),'wide'],['準備に戻る',()=>{closeModal();openPrep();}],['最初から',()=>confirmBox('育ちと持ち物も消えて、最初からになります。よいですか。',()=>{newGame();openPrep('start');prologuePlay(()=>renderPrep(true));})]]);
 }
 
 /* マップを押したとき（足元のマスで受ける） */
@@ -6110,16 +6115,19 @@ function resumeMap(s,i){
   buildField(); applySet(); if(window.Sound) Sound.play(songNow());
   addLog(`保存${i}から続けた（${chLabel()}・${G.turn}ターン目）。`); render(); flash(`保存${i}から続けます。${G.turn}ターン目・味方の番です。`);
 }
-function showMapSave(){
+function showMapSave(quit){   /* 0.98.1 quit＝マップの「もどる」から来た（やめる前に保存をすすめる） */
+  quit=quit===true;
   if(!mapCanSave()){ openModal('いまは保存できません。<br><small>味方の番で、人や機械を選んでいないときに保存できます。</small>',[['閉じる',closeModal,'wide']]); return; }
-  openModal(`<b>マップの途中を保存する</b><br><small>${chLabel()}の${G.turn}ターン目を、いまの形のまま残します。続きは、タイトルの「つづきから」か、準備画面の「読み込む」から。</small><div id="msave" class="pbtns"></div>`,[['もどる',closeModal,'wide']]);
+  openModal((quit?`<b>やめる前に、マップの途中を保存しませんか。</b><br><small>${chLabel()}の${G.turn}ターン目を、いまの形のまま残せます。続けるときは「もどる」を押してください。</small>`
+    :`<b>マップの途中を保存する</b><br><small>${chLabel()}の${G.turn}ターン目を、いまの形のまま残します。続きは、タイトルの「つづきから」か、準備画面の「読み込む」から。</small>`)+`<div id="msave" class="pbtns"></div>`,
+    quit?[['もどる',closeModal,'go wide'],['保存せずにやめる',()=>confirmBox(`保存せずに${chLabel()}をやめますか。`,quitGo),'wide']]:[['もどる',closeModal,'wide']]);
   const g=$('msave');
   for(let i=1;i<=SAVE_SLOTS;i++){ const s=saveRead(i);
-    mkBtn(g,{label:`保存${i}`,cls:'wide',sub:saveSum(s),fn:()=>s?confirmBox(`保存${i}に上書きしますか。<br><small>前の中身（${saveSum(s)}）は消えます。</small>`,()=>doMapSave(i)):doMapSave(i)}); }
+    mkBtn(g,{label:`保存${i}`,cls:'wide',sub:saveSum(s),fn:()=>s?confirmBox(`保存${i}に上書きしますか。<br><small>前の中身（${saveSum(s)}）は消えます。</small>`,()=>doMapSave(i,quit)):doMapSave(i,quit)}); }
 }
-function doMapSave(i){
+function doMapSave(i,quit){
   const ok=saveWrite(i,mapSnap()); if(ok) addLog(`保存${i}に残した（${chLabel()}・${G.turn}ターン目）。`);
-  openModal(ok?`保存${i}に残しました。<br><small>${saveSum(saveRead(i))}</small>`:'この端末では保存できませんでした。<br><small>ブラウザの設定で、サイトのデータが止められているかもしれません。</small>',[['続ける',closeModal,'go wide']]); render();
+  openModal(ok?`保存${i}に残しました。<br><small>${saveSum(saveRead(i))}</small>`:'この端末では保存できませんでした。<br><small>ブラウザの設定で、サイトのデータが止められているかもしれません。</small>',[['続ける',closeModal,'go wide']].concat(quit?[['マップをやめる',()=>{closeModal();quitGo();},'wide']]:[])); render();
 }
 /* 読み込むときは、いまの仲間の表に、保存した育ちを名前で重ねる（版が変わっても壊れにくく）。ない品は外す */
 function campFrom(c){
