@@ -499,9 +499,10 @@ function impact(kind,A,T,ev){
    2段（60以上）：ため＝もっと暗く、後ろへ流れる光の線、技の名前の帯。当たる＝画面が白く光る・光の柱・3重の輪・集中線・大きなゆれ・一瞬の間。
    「動きを減らす」では、暗くなるのと名前の帯と色の輪だけ（白い光・ゆれ・流れる線・集中線・光の柱なし）。乱数は使わない */
 const ECOL={'打':'255,186,110','水':'120,200,255','光':'255,236,150','音':'214,190,255','網':'230,220,180'};
-const BIG_POW=[30,60];
-function powOf(A,ev){ try{ return power(A.u)+(ev.w.p||0)+(typeof elemPow==='function'?elemPow(A.u,ev.w):0); }catch(_){ return 0; } }
-function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev); return v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; }
+/* 0.101.0 段は与えたダメージで決める（11/25 ヒロさん「演出は50と100と150で変化するようにしよう。大技にかかわらずすべての攻撃がダメージで演出が派手になる。これは闇側も一緒」）。
+   機械も生身も、味方も霧の側も。当たったら本当のダメージ（クリティカル込み）、外れたら当たったときの見込み（ev.pv）。3段（150以上）は2段に、2度目の白い光・地をはう衝撃・4重の輪・もっと大きなゆれを足す */
+const BIG_POW=[50,100,150];
+function bigLv(A,ev){ if(!ev.w||ev.net) return 0; const v=ev.hit?(ev.dmg||0):(ev.pv||0); return v>=BIG_POW[2]?3:v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; }
 function ecol(A,ev){ return ECOL[(ev.w&&ev.w.e)||A.u.elem]||'255,220,160'; }
 async function bigCharge(A,T,ev,lv){
   const S=BT.S, col=ecol(A,ev), ms=lv>1?640:420, n=lv>1?16:10;
@@ -513,17 +514,19 @@ async function bigCharge(A,T,ev,lv){
 }
 function bigHit(A,T,ev,lv){
   const S=BT.S, col=ecol(A,ev), t=chest(T), x=t.x, y=t.y-4, L2=lv>1;
-  sfx('big');
-  if(!calm()){ quake(L2?8:5,L2?680:460);
+  sfx('big'); const L3=lv>2;
+  if(!calm()){ quake(L3?11:L2?8:5,L3?900:L2?680:460);
+    if(L3){ setTimeout(()=>{ if(BT.S===S) tween(260,p=>{ S.flash=0.5*(1-p); },false); },260*k());
+      fxd(760,(c,p)=>{ c.globalCompositeOperation='lighter'; for(const s of [-1,1]){ const xx=x+s*ease(p)*150, w=Math.max(1,(1-p)*14); c.fillStyle=`rgba(${col},${0.8*(1-p)})`; c.fillRect(Math.round(xx-w/2),FY-6-w/3,Math.round(w),Math.round(6+w/3)); c.fillStyle=`rgba(255,255,255,${0.7*(1-p)})`; c.fillRect(Math.round(xx-w/6),FY-4,Math.max(1,Math.round(w/3)),4); } c.globalCompositeOperation='source-over'; }); }
     if(L2){ tween(300,p=>{ if(BT.S===S) S.flash=0.65*(1-p); },false);
       fxd(400,(c,p)=>{ c.globalAlpha=1-p; for(let i=0;i<22;i++){ const an=i*0.2856+hs(i)*0.2, r1=30+hs(i+5)*16+p*24, r2=r1+40+hs(i+9)*50; seg(c,x+Math.cos(an)*r1,y+Math.sin(an)*r1,x+Math.cos(an)*r2,y+Math.sin(an)*r2,i%3?1:2,i%2?'#ffffff':`rgb(${col})`); } c.globalAlpha=1; });
       fxd(620,(c,p)=>{ const w=Math.max(0,(1-ease(p))*22); if(w<1) return; c.globalCompositeOperation='lighter'; const g=c.createLinearGradient(x-w,0,x+w,0); g.addColorStop(0,`rgba(${col},0)`); g.addColorStop(0.5,`rgba(${col},${0.85*(1-p)})`); g.addColorStop(1,`rgba(${col},0)`); c.fillStyle=g; c.fillRect(x-w,0,w*2,FY+4);
         c.fillStyle=`rgba(255,255,255,${0.8*(1-p)})`; c.fillRect(Math.round(x-w/5),0,Math.max(1,Math.round(w/2.5)),FY+4); c.globalCompositeOperation='source-over'; }); } }
-  const rings=L2?3:2;
-  fxd(720,(c,p)=>{ c.globalCompositeOperation='lighter'; for(let i=0;i<rings;i++){ const q=clamp01(p*1.5-i*0.18); if(q<=0||q>=1) continue; c.strokeStyle=`rgba(${col},${1-q})`; c.lineWidth=4-i; c.beginPath(); c.ellipse(x,y,8+q*(L2?62:44),5+q*(L2?34:24),0,0,7); c.stroke(); } c.globalCompositeOperation='source-over'; });
-  const nd=L2?16:10;
+  const rings=L3?4:L2?3:2;
+  fxd(720,(c,p)=>{ c.globalCompositeOperation='lighter'; for(let i=0;i<rings;i++){ const q=clamp01(p*1.5-i*0.18); if(q<=0||q>=1) continue; c.strokeStyle=`rgba(${col},${1-q})`; c.lineWidth=4-i; c.beginPath(); c.ellipse(x,y,8+q*(L3?80:L2?62:44),5+q*(L3?42:L2?34:24),0,0,7); c.stroke(); } c.globalCompositeOperation='source-over'; });
+  const nd=L3?24:L2?16:10;
   fxd(780,(c,p)=>{ for(let i=0;i<nd;i++){ const an=-Math.PI*(0.05+0.9*hs(i)), v=(L2?20:14)+hs(i+30)*(L2?34:24), xx=x+Math.cos(an)*v*p*1.4, yy=y+Math.sin(an)*v*p+60*p*p; c.globalAlpha=1-p; dot(c,xx,yy,i%3?2:3,i%2?`rgb(${col})`:'#ffffff'); } c.globalAlpha=1; });
-  fx('burst',x,y,560,{big:true}); if(L2) setTimeout(()=>{ if(BT.S===S) fx('burst',x,y-10,520,{big:true}); },140*k());
+  fx('burst',x,y,560,{big:true}); if(L2) setTimeout(()=>{ if(BT.S===S) fx('burst',x,y-10,520,{big:true}); },140*k()); if(L3) setTimeout(()=>{ if(BT.S===S) fx('burst',x,y+6,560,{big:true}); },300*k());
 }
 function bigEnd(A){ const S=BT.S, d0=S.dim||0; return tween(320,p=>{ S.dim=d0*(1-p); },false).then(()=>{ S.dim=0; S.big=null; A.gcol=null; }); }
 async function runAtk(ev){
@@ -539,7 +542,7 @@ async function runAtk(ev){
   } else if(ev.hit){
     sfx(ev.crit?'crit':'hit');
     impact(imp,A,T,ev);
-    if(big){ bigHit(A,T,ev,big); await wait(big>1?170:80); }   /* 0.99.5 一瞬の間 */
+    if(big){ bigHit(A,T,ev,big); await wait(big>2?260:big>1?170:80); }   /* 0.99.5 一瞬の間 */
     pop(T,'-'+ev.dmg,T.u.side==='enemy'?'#ffe060':'#ff8a7a',ev.crit?5:ev.dmg>=8||big>1?4:3); if(!big) quake(ev.dmg>=8?4:2.5,360);
     const sc=ev.crit?0.55:0.3; if(ev.crit) critMark(T);
     T.white=1; T.sh=1; BT.S.scr=calm()?0:sc; ex(T,'surprise'); T.pose='hurt';
