@@ -99,6 +99,10 @@ function drawScene(){
   for(let i=0;i<60;i++){ const x=(i*67+11)%CW, y=76+(i*29)%64; c.fillStyle=gr[i%2?0:3]; c.fillRect(x,y,i%3?1:2,1); if(terr!=='H'&&i%4===0){ c.fillRect(x+1,y-1,1,1); } }
   // 足場（だ円）
   for(const x of [LX,RX]){ c.fillStyle='rgba(10,8,20,.35)'; c.beginPath(); c.ellipse(x,FY,36,8,0,0,7); c.fill(); c.fillStyle=gr[2]; c.beginPath(); c.ellipse(x,FY-1,32,6,0,0,7); c.fill(); c.fillStyle=gr[0]; c.fillRect(x-20,FY-6,40,1); }
+  /* 0.99.5 機械の威力の高い攻撃：まわりを暗くする。2段は、技を出す側の後ろへ流れる線も（人より奥に描く） */
+  if(S.dim>0){ c.fillStyle=`rgba(4,6,22,${S.dim})`; c.fillRect(-8,-8,CW+16,CH+16);
+    if(S.big&&S.big.lv>1&&!calm()){ const B=S.big, tq=now()-B.t0, W2=CW+80; for(let i=0;i<18;i++){ const y=4+((i*37)%132), len=18+(i*13)%44, x=(((i*71-tq*0.5*B.d)%W2)+W2)%W2-40;
+      c.fillStyle=`rgba(${B.col},${(0.22+0.2*(i%3===0))*S.dim/0.62})`; c.fillRect(Math.round(x),y,len,i%4?1:2); } } }
   // 人
   for(const P of [S.L,S.R]){ if(P.alpha<=0) continue;
     const sx=(P.sh>0&&!calm())?Math.round((Math.random()*2-1)*3*P.sh):0;
@@ -109,7 +113,7 @@ function drawScene(){
     else c.drawImage(sp,0,0,16,24,mid-24,FY-68+dy,48,72);   // 立ち絵のまだ無い人は今までどおり3倍
     c.globalAlpha=1;
     const gx=mid, gy=FY-32+dy;
-    if(P.glow>0){ c.globalCompositeOperation='lighter'; const rg=c.createRadialGradient(gx,gy,2,gx,gy,46); rg.addColorStop(0,`rgba(255,220,140,${0.8*P.glow})`); rg.addColorStop(1,'rgba(255,200,120,0)'); c.fillStyle=rg; c.fillRect(gx-48,gy-48,96,96); c.globalCompositeOperation='source-over'; } }
+    if(P.glow>0){ const gc=P.gcol||'255,220,140'; c.globalCompositeOperation='lighter'; const rg=c.createRadialGradient(gx,gy,2,gx,gy,46); rg.addColorStop(0,`rgba(${gc},${0.8*P.glow})`); rg.addColorStop(1,`rgba(${gc},0)`);   /* 0.99.5 gcol＝大技のときの属性の色 */ c.fillStyle=rg; c.fillRect(gx-48,gy-48,96,96); c.globalCompositeOperation='source-over'; } }
   // 当たった印・光の粒
   for(const h of S.fx){ const p=(now()-h.t0)/(h.ms*k()); if(p>1||p<0) continue;
     if(h.draw){ c.save(); h.draw(c,p); c.restore(); }   // 0.21.0 攻撃方法ごとの絵
@@ -134,6 +138,13 @@ function drawScene(){
     if(!calm()) for(let i=0;i<12;i++){ const an=i*0.5236+qt*0.0016*(i%2?1:-1), rr=L.r*(0.5+0.4*((i*7)%10)/10); c.fillStyle=i%2?`rgba(255,250,225,${L.a})`:`rgba(255,215,240,${L.a})`; c.fillRect(Math.round(L.x+Math.cos(an)*rr),Math.round(L.y+Math.sin(an)*rr*0.85),2,2); }
     c.restore(); }
   c.restore();
+  /* 0.99.5 機械の威力60以上の攻撃の名前の帯（技を出す側から流れ込む） */
+  if(S.big&&S.big.lv>1){ const B=S.big, q=(now()-B.t0)/(1150*k()); if(q<1.2){ const inn=calm()?1:ease(clamp01(q*4)), out=q>0.9?Math.max(0,1-(q-0.9)/0.3):1, ox=Math.round((1-inn)*(B.side==='R'?CW:-CW));
+    c.save(); c.globalAlpha=out; c.fillStyle='rgba(8,10,30,.88)'; c.beginPath(); c.moveTo(ox,14); c.lineTo(ox+CW,8); c.lineTo(ox+CW,32); c.lineTo(ox,38); c.closePath(); c.fill();
+    c.fillStyle=`rgb(${B.col})`; c.beginPath(); c.moveTo(ox,13); c.lineTo(ox+CW,7); c.lineTo(ox+CW,9); c.lineTo(ox,15); c.closePath(); c.fill(); c.beginPath(); c.moveTo(ox,37); c.lineTo(ox+CW,31); c.lineTo(ox+CW,33); c.lineTo(ox,39); c.closePath(); c.fill();
+    c.font='bold 14px sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.lineJoin='round'; c.lineWidth=4; c.strokeStyle=`rgb(${B.col})`; c.strokeText(B.name+'！',CW/2+ox,23); c.fillStyle='#ffffff'; c.fillText(B.name+'！',CW/2+ox,23);
+    c.restore(); } }
+  if(S.flash>0){ c.fillStyle=`rgba(255,255,255,${S.flash})`; c.fillRect(0,0,CW,CH); }   /* 0.99.5 威力60以上が当たったときの白い光 */
   if(S.scr>0){ c.fillStyle=`rgba(255,255,255,${S.scr})`; c.fillRect(0,0,CW,CH); }
   updPlate(S.L); updPlate(S.R);
 }
@@ -469,11 +480,45 @@ function impact(kind,A,T,ev){
   }
   fx('burst',x,y-8,380,{big});
 }
+/* 0.99.5 機械の威力の高い攻撃は派手に（11/25 ヒロさん「特に機械の攻撃アニメーションが地味。威力の高いものだけでも派手にしてほしい」「演出の派手さは中盤くらいの威力が30超えたあたりからでいいかもしれない」「60超えたらさらに派手にする感じがいいかな」「最初は今まで通り地味で良いよ」）。
+   威力は攻撃方法の画面と同じ「力＋武装の強さ」。30未満＝今までどおり。
+   1段（30以上）：ため＝少し暗くなり、機械が属性の色に光って粒が集まる。当たる＝属性の色の衝撃の輪・破片・強めのゆれ。
+   2段（60以上）：ため＝もっと暗く、後ろへ流れる光の線、技の名前の帯。当たる＝画面が白く光る・光の柱・3重の輪・集中線・大きなゆれ・一瞬の間。
+   「動きを減らす」では、暗くなるのと名前の帯と色の輪だけ（白い光・ゆれ・流れる線・集中線・光の柱なし）。乱数は使わない */
+const ECOL={'打':'255,186,110','水':'120,200,255','光':'255,236,150','音':'214,190,255','網':'230,220,180'};
+const BIG_POW=[30,60];
+function powOf(A,ev){ try{ return power(A.u)+(ev.w.p||0)+(typeof elemPow==='function'?elemPow(A.u,ev.w):0); }catch(_){ return 0; } }
+function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev); return v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; }
+function ecol(A,ev){ return ECOL[(ev.w&&ev.w.e)||A.u.elem]||'255,220,160'; }
+async function bigCharge(A,T,ev,lv){
+  const S=BT.S, col=ecol(A,ev), ms=lv>1?640:420, n=lv>1?16:10;
+  S.big={name:ev.w.n,col,lv,t0:now(),d:dirOf(A),side:A===S.L?'L':'R'}; A.gcol=col; sfx('charge');
+  fxd(ms,(c,p)=>{ const h=chest(A); for(let i=0;i<n;i++){ const an=i*6.283/n+hs(i)*0.3, r=(1-ease(clamp01(p*1.3-hs(i+3)*0.3)))*(40+hs(i+7)*26); if(r<=1) continue;
+      c.globalAlpha=Math.min(1,p*3); dot(c,h.x+Math.cos(an)*r,h.y-6+Math.sin(an)*r*0.8,i%3?2:3,i%2?`rgb(${col})`:'#ffffff'); } c.globalAlpha=1;
+    if(!calm()) glowAt(c,h.x,h.y-6,8+p*(lv>1?20:12),(lv>1?0.8:0.6)*p,col); });
+  await tween(ms,p=>{ S.dim=(lv>1?0.62:0.35)*ease(p); A.glow=(lv>1?0.9:0.6)*p; },false);
+}
+function bigHit(A,T,ev,lv){
+  const S=BT.S, col=ecol(A,ev), t=chest(T), x=t.x, y=t.y-4, L2=lv>1;
+  sfx('big');
+  if(!calm()){ quake(L2?8:5,L2?680:460);
+    if(L2){ tween(300,p=>{ if(BT.S===S) S.flash=0.65*(1-p); },false);
+      fxd(400,(c,p)=>{ c.globalAlpha=1-p; for(let i=0;i<22;i++){ const an=i*0.2856+hs(i)*0.2, r1=30+hs(i+5)*16+p*24, r2=r1+40+hs(i+9)*50; seg(c,x+Math.cos(an)*r1,y+Math.sin(an)*r1,x+Math.cos(an)*r2,y+Math.sin(an)*r2,i%3?1:2,i%2?'#ffffff':`rgb(${col})`); } c.globalAlpha=1; });
+      fxd(620,(c,p)=>{ const w=Math.max(0,(1-ease(p))*22); if(w<1) return; c.globalCompositeOperation='lighter'; const g=c.createLinearGradient(x-w,0,x+w,0); g.addColorStop(0,`rgba(${col},0)`); g.addColorStop(0.5,`rgba(${col},${0.85*(1-p)})`); g.addColorStop(1,`rgba(${col},0)`); c.fillStyle=g; c.fillRect(x-w,0,w*2,FY+4);
+        c.fillStyle=`rgba(255,255,255,${0.8*(1-p)})`; c.fillRect(Math.round(x-w/5),0,Math.max(1,Math.round(w/2.5)),FY+4); c.globalCompositeOperation='source-over'; }); } }
+  const rings=L2?3:2;
+  fxd(720,(c,p)=>{ c.globalCompositeOperation='lighter'; for(let i=0;i<rings;i++){ const q=clamp01(p*1.5-i*0.18); if(q<=0||q>=1) continue; c.strokeStyle=`rgba(${col},${1-q})`; c.lineWidth=4-i; c.beginPath(); c.ellipse(x,y,8+q*(L2?62:44),5+q*(L2?34:24),0,0,7); c.stroke(); } c.globalCompositeOperation='source-over'; });
+  const nd=L2?16:10;
+  fxd(780,(c,p)=>{ for(let i=0;i<nd;i++){ const an=-Math.PI*(0.05+0.9*hs(i)), v=(L2?20:14)+hs(i+30)*(L2?34:24), xx=x+Math.cos(an)*v*p*1.4, yy=y+Math.sin(an)*v*p+60*p*p; c.globalAlpha=1-p; dot(c,xx,yy,i%3?2:3,i%2?`rgb(${col})`:'#ffffff'); } c.globalAlpha=1; });
+  fx('burst',x,y,560,{big:true}); if(L2) setTimeout(()=>{ if(BT.S===S) fx('burst',x,y-10,520,{big:true}); },140*k());
+}
+function bigEnd(A){ const S=BT.S, d0=S.dim||0; return tween(320,p=>{ S.dim=d0*(1-p); },false).then(()=>{ S.dim=0; S.big=null; A.gcol=null; }); }
 async function runAtk(ev){
   const A=sideOf(ev.a), T=sideOf(ev.t); if(!A||!T) return;
   ex(A,'resolve'); say(`${ev.an}の ${ev.w.n}！`); A.pose='atk'; BT.S.dodgeP=null;
   { const m0=A.mp; if(ev.mpA1!=null&&m0!=null&&ev.mpA1!==m0) await tween(220,p=>{ A.mp=lerp(m0,ev.mpA1,p); },false); }   /* 0.95.0 いまの棒から（ツバメの2回目で戻って見えないように） */
   const st=motionOf(ev,A); BT.S.motion=st;   // 0.21.0 型（試験で見る）
+  const big=bigLv(A,ev); BT.S.bigMove=big; if(big) await bigCharge(A,T,ev,big);   /* 0.99.5 */
   const imp=await (MOT[st]||MOT.swing)(A,T,ev);
   if(ev.hit&&ev.net){   // 0.33.0 イカリの網：ダメージなしで止める
     sfx('hit'); impact(imp,A,T,ev); pop(T,ev.stun>1?`${ev.stun}ターン止めた`:'止めた','#e8f4ff',3); ex(T,'surprise'); T.pose='hurt';
@@ -481,7 +526,8 @@ async function runAtk(ev){
   } else if(ev.hit){
     sfx(ev.crit?'crit':'hit');
     impact(imp,A,T,ev);
-    pop(T,'-'+ev.dmg,T.u.side==='enemy'?'#ffe060':'#ff8a7a',ev.crit?5:ev.dmg>=8?4:3); quake(ev.dmg>=8?4:2.5,360);
+    if(big){ bigHit(A,T,ev,big); await wait(big>1?170:80); }   /* 0.99.5 一瞬の間 */
+    pop(T,'-'+ev.dmg,T.u.side==='enemy'?'#ffe060':'#ff8a7a',ev.crit?5:ev.dmg>=8||big>1?4:3); if(!big) quake(ev.dmg>=8?4:2.5,360);
     const sc=ev.crit?0.55:0.3; if(ev.crit) critMark(T);
     T.white=1; T.sh=1; BT.S.scr=calm()?0:sc; ex(T,'surprise'); T.pose='hurt';
     say((ev.crit?`クリティカル！ ${ev.tn}に ${ev.dmg} のダメージ！`:`${ev.tn}に ${ev.dmg} のダメージ！`)+(ev.guard==='def'?'（防御で半分）':''));   /* 0.44.0 */
@@ -497,6 +543,7 @@ async function runAtk(ev){
     BT.S.dodgeP=null; T.off=0; T.dy=0;
   }
   const o0=A.off, y0=A.dy; await tween(220,p=>{ A.off=o0*(1-ease(p)); A.dy=y0*(1-ease(p)); },true); A.off=0; A.dy=0; A.glow=0; A.pose='idle'; if(!ev.down) T.pose='idle';
+  if(big) await bigEnd(A);   /* 0.99.5 */
   T.off=0; T.dy=0;
   await wait(380);
   if(ev.cooled){ sfx('calm'); ex(A,'smile'); say(`${ev.tn}の熱が下がり、灯が戻った！`);   // 0.23.0 放水で熱が0に
