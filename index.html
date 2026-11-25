@@ -38,6 +38,7 @@
 <!-- 版 0.99.6（2026-11-25）：11/25 ヒロさん「人は小さいので攻撃をよけやすく」「人同士、機械同士だとあまり変わらないように」「機械側の命中率を変える。見込み命中率に0.6～0.8倍」「0.7倍でしばらくテストプレイ」。機械が生身の人（霧の側の影も）を狙うときだけ、上限で切る前の見込みの命中に0.7を掛ける（RULES.hit.machVsPerson）。敵味方どちらの機械も同じ。人同士・機械同士・人→機械は今のまま。見込みの表示も同じ値 -->
 <!-- 版 0.99.7（2026-11-25）：11/25 ヒロさん「３番目の大技でも命中率はほぼ下げなくていい。EP消費が多いので、そもそも頻繁に使えない。その上で当たらなかったらゲームがつまらなくなる」。機械の大技13個の命中を−15〜−25から−5にした。使う EP は前のまま（hc に前の命中を残し、EP の式にだけ使う）。名前の付いた暴走機械も同じ表 -->
 <!-- 版 0.99.8（2026-11-25）：11/25 ヒロさん「大技でも-5～+5くらいの差は合っていい。EP消費はむしろ５～12くらいの感じで良い。１つの章の中ででせいぜい１～５回くらいしか使えないくらいの大技だからね。多く使いたい場合はEPの改造必須になる感じで良い」。機械の大技13個の命中を−5〜+5に散らし、EP を ec で5〜12に決めた（前の式の数を5〜12に収めた） -->
+<!-- 版 0.101.1（2026-11-25）：11/25 ヒロさん「闇の心もちょっとずつは伸ばして。戦いより説得の方が少し楽なくらいのバランスは保って」。霧の側の闇の心（熱）の伸びも、レベルが上がるほど少し大きく（伸び×上がったレベル×(1＋上がったレベル×0.005)＝耐久の加速0.015の3分の1）。40章の影で闇の心 84→97（耐久は 0.101.0 で 85→126）。数は仮 -->
 <!-- 版 0.101.0（2026-11-25）：11/25 ヒロさん「全体的な威力の計算方法を考え直す。改造で威力が上がるにつれて、２つないしは３つのダメージに差が出てくるようにしたい」「確かな　普段　大技」「つつきは0.85で良いよ」「演出は50と100と150で変化するようにしよう。大技にかかわらずすべての攻撃がダメージで演出が派手になる。これは闇側も一緒」「闇側の耐久に関しては、徐々にこちらより伸びをよくする」。味方の機械の攻撃は「力（機械の力＋席の人＋出力）×武装の倍率」に。倍率＝1＋(武装の強さ÷20)×(1＋出力の段×0.24（大技）または0.1（確かな））・ふだんは1倍。つつきは0.85倍のまま・急旋回は1倍→1.5倍。属性・灯の光・反撃の上乗せは掛けたあとに足す。霧の側の機械と生身の攻撃は今のまま。戦いの場面の演出を、与えたダメージ50以上・100以上・150以上の3段に（生身も霧の側も）。霧の側の耐久の伸びを、レベルが上がるほど大きく（伸び×(1＋上がったレベル×0.015)）。数は仮 -->
 <!-- 版 0.100.1（2026-11-25）：11/25 ヒロさん「ツバメは演出を派手にではなく、攻撃アニメが急旋回っぽくないなと思っていっただけ。演出は他の機械と一緒で30と60以上で派手になるでいいよ」。0.99.11 の演出の1段上をやめ、ほかの機械と同じ（30以上・60以上）に戻した。急旋回の動きを、羽ばたき（風を飛ばす）から、上へ抜けて小さく宙返りし、斜め上から切りつけて相手の後ろへ抜ける動きに（battle.js の turn）。続けてヒロさん「急旋回は　威力0　命中+30　EP7　クリティカル+25にして」：命中+25→+30・クリティカル+15→+25・EP 5→7（ec）。 -->
 <!-- 版 0.100.0（2026-11-25）：11/25 ヒロさん「アイテム追加　レア１　マシンキラー　生身のみ　機械への攻撃が1.2倍になる／レア３　マシンキラーⅡ　〜1.4倍／レア５　マシンキラー終式　〜1.7倍」。人の品（ア＝生身のときだけ）を3つ足した。生身で機械を攻撃するとき、守りを引いたあとのダメージに倍率を掛けて切り上げ。値段はレア度の値（5・20・30）。品は全部で124種。 -->
@@ -562,7 +563,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.101.0</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.101.1</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -901,7 +902,7 @@ const RULES={
   /* 敵のレベル。ET の能力が「普通」での基準のレベル。1レベルごとの伸び（小数は、たまった分だけ上がる） */
   /* 0.59.0 perCh＝この章からは、章の数がそのまま「普通」での敵のレベル（11/11 ヒロさん「章ごとに少しずつ敵のレベルが上がるように。40章でノーマルの敵は40レベル前後」）。
      第1部（1〜8章）はいまのまま3（ヒロさん「前半はバランスよかった」）。9から上げ始めるのは私の仮 */
-  enemyLevel:{ base:3, perCh:9, hpAcc:0.015,   /* 0.101.0 耐久の伸びの加速（hpUp・仮） */
+  enemyLevel:{ base:3, perCh:9, hpAcc:0.015, mpAcc:0.005,   /* 0.101.0 耐久の伸びの加速（hpUp・仮）。0.101.1 闇の心（熱）の伸びの加速＝耐久の3分の1（11/25 ヒロさん「闇の心もちょっとずつは伸ばして。戦いより説得の方が少し楽なくらいのバランスは保って」・仮） */
     /* 闇の心（mp）は耐久（hp）と同じだけ伸びる（11/5 ヒロさん「闇の心も耐久と同じく最大値が上がる」。0.4.2 までは 1） */
     growth:{ shadow:{ hp:2, str:1, def:0.5, mp:2, wall:0.5 },
              elif2:{ hp:2, str:0, def:0.5, mp:1, wall:0.25 },   /* 0.64.0 外伝2の夢の中の影は、闇の心の伸びを半分に（3人で迎えに行くので・仮） */
@@ -3369,7 +3370,7 @@ function diffLv(){ const D=diffOf(), p=partOf((G&&G.ch)||(CAMP&&CAMP.ch)||1); re
 function chLv(){ const c=(G&&G.ch)||(CAMP&&CAMP.ch)||1; return Math.max(1,(c>=RULES.enemyLevel.perCh?c:(CH().enemyLv??RULES.enemyLevel.base))-((G&&G.gd&&CH().lvOff)||0)); }   /* 0.66.0 外伝の lvOff＝敵のレベルを、いまの章の数より下げる（外伝4の軽い戦い） */   /* 0.59.0 perCh 章からは、章の数が「普通」での敵のレベル（外伝は、いまの章の数） */   // 0.10.0 章ごとの敵の「普通」でのレベル（1章は enemyLevel.base のまま）
 /* 0.101.0 霧の側の耐久は、レベルが上がるほど伸びを大きく（11/25 ヒロさん「闇側の耐久に関しては、徐々にこちらより伸びをよくする。こちらが攻撃力の伸びが良いので、それに合わせる形」）。
    伸び×上がったレベル×(1＋上がったレベル×RULES.enemyLevel.hpAcc)（切り捨て）。下がるとき（簡単）は今までどおり。闇の心・力・守りは今のまま。数は仮 */
-function hpUp(g,L){ return Math.trunc(g*L*(L>0?1+L*RULES.enemyLevel.hpAcc:1)); }
+function hpUp(g,L,acc){ return Math.trunc(g*L*(L>0?1+L*(acc==null?RULES.enemyLevel.hpAcc:acc):1)); }
 function enemyStats(type,v){
   const b=ET[type](), ov=(EV[type]||[])[v|0];   // 0.18.0 名無しの種類
   if(ov&&v){ Object.assign(b,ov,{v:v|0}); if(typeof ov.weps==='string') b.weps=EW[ov.weps](); b.atk=b.weps[0].n; }
@@ -3377,7 +3378,7 @@ function enemyStats(type,v){
   const m=b.named?{hp:1,str:1,def:1}:(CH().mob||RULES.mob), w=(v,k)=>Math.max(k==='def'?0:1,Math.round(v*m[k]));
   return Object.assign(b,{type, lv:chLv()+d,
     maxHp:Math.max(1,w(b.maxHp,'hp')+hpUp(g.hp,up+d)), str:Math.max(0,w(b.str,'str')+f(g.str)), def:Math.max(0,w(b.def,'def')+f(g.def)),
-    maxMp:Math.max(1,b.maxMp+f(g.mp)), wall:Math.max(0,b.wall+f(g.wall))});
+    maxMp:Math.max(1,b.maxMp+hpUp(g.mp,up+d,RULES.enemyLevel.mpAcc)), wall:Math.max(0,b.wall+f(g.wall))});
 }
 /* 味方の能力を、始めのレベルから作る */
 function allyStats(a){
