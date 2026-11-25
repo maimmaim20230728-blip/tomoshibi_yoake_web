@@ -172,7 +172,7 @@ const MO={
   '棒術':'combo','竿':'rod','手拍子':'clap','打ち返し':'shield','はね返し板':'shield',
   '霧の手':'claw','霧のつぶて':'mist',
   '体当たり':'dash','突進':'dash','押し込み':'dash','急降下':'dive','跳ねる':'hop','蹴り上げ':'kick',
-  '羽ばたき払い':'flap','羽ばたき':'flap','急旋回':'flap','つつき':'peck',
+  '羽ばたき払い':'flap','羽ばたき':'flap','急旋回':'turn','つつき':'peck',   /* 0.100.1 急旋回は turn */
   '持ち上げ投げ':'lift','救助アーム':'grab','締め上げ':'grab','錨打ち':'smash','岩崩し':'smash',
   '放水':'jet','水鉄砲':'jet','水圧砲':'jetBig','高圧水':'jetBig','散水':'spray','波しぶき':'spray','泡の雨':'spray',
   'しずく砲':'drop','大しずく':'drop','泡':'bubble','大泡':'bubble',
@@ -287,6 +287,19 @@ const MOT={
       c.globalAlpha=1-q*0.4; c.strokeStyle='#e0fff4'; c.lineWidth=2; c.beginPath(); c.arc(x-d*8,y,10,-0.9+(d<0?Math.PI:0),0.9+(d<0?Math.PI:0)); c.stroke(); }
       for(let j=0;j<4;j++){ const q=clamp01(p*1.2-j*0.1), x=lerp(a.x,b.x,q)+Math.sin(q*12+j)*4, y=lerp(a.y,b.y,q)-14+j*8+q*10; c.globalAlpha=1-p; dot(c,x,y,2,'#ffffff'); } c.globalAlpha=1; });
     return 'wind'; },
+  /* 0.100.1 急旋回（ツバメ）：後ろ上へ抜けて小さく宙返りし、斜め上から切りつけて相手の後ろへ抜ける。通った道に白い弧を残す。
+     外れたときは相手がよける（切りつけは相手の少し上を通る）。乱数は使わない */
+  async turn(A,T,ev){ const d=dirOf(A), tr=[], rec=()=>{ const c0=chest(A); tr.push({x:c0.x,y:c0.y-6,t:now()}); if(tr.length>40) tr.shift(); };
+    fxd(1200,(c,p)=>{ const n=tr.length; for(let i=1;i<n;i++){ const a=tr[i-1], b=tr[i], age=(now()-b.t)/260, f=clamp01(1-age)*(i/n); if(f<=0) continue;
+        c.globalAlpha=f; seg(c,a.x,a.y,b.x,b.y,i>n-6?3:2,i>n-4?'#ffffff':'#d8ecff'); } c.globalAlpha=1; });
+    await tween(180,p=>{ A.off=-d*ease(p)*20; A.dy=-ease(p)*10; rec(); },true);
+    const ox=-d*20, oy=-10, R=9;   /* 宙返り（大きな機械なので、画面の上に出ないくらいに小さく）：いまの位置を円の下にして、後ろ回りに1周 */
+    await tween(340,p=>{ const an=Math.PI/2+p*Math.PI*2; A.off=ox-d*Math.cos(an)*R; A.dy=oy-R+Math.sin(an)*R; rec(); },true);
+    const x0=A.off, y0=A.dy, x1=d*(REACH(A)+(ev.hit?4:30)), y1=ev.hit?-4:-14;
+    if(!ev.hit) BT.S.dodgeP=dodge(T);
+    await tween(150,p=>{ const q=p*p; A.off=lerp(x0,x1,q); A.dy=lerp(y0,y1,q); rec(); },true);
+    if(ev.hit){ const t=chest(T); fxd(260,(c,p)=>{ c.globalAlpha=1-p; for(let k=0;k<2;k++) seg(c,t.x-d*(18-k*6),t.y-22+k*4,t.x+d*(14+k*6),t.y+14+k*4,k?1:2,k?'#d8ecff':'#ffffff'); c.globalAlpha=1; }); }
+    return 'slash'; },
   /* つかむ・持ち上げる・たたきつける */
   async grab(A,T,ev){ await stepIn(A); const d=dirOf(A);
     fxd(480,(c,p)=>{ const t=chest(T), g=ease(clamp01(p*2)), w=24-g*12, f=p>0.8?(1-p)/0.2:1; c.globalAlpha=f; c.strokeStyle='#c8d4e4'; c.lineWidth=3;
@@ -488,7 +501,7 @@ function impact(kind,A,T,ev){
 const ECOL={'打':'255,186,110','水':'120,200,255','光':'255,236,150','音':'214,190,255','網':'230,220,180'};
 const BIG_POW=[30,60];
 function powOf(A,ev){ try{ return power(A.u)+(ev.w.p||0)+(typeof elemPow==='function'?elemPow(A.u,ev.w):0); }catch(_){ return 0; } }
-function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev), lv=v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; return ev.w.flashy?Math.min(2,lv+1):lv; }   /* 0.99.11 flashy＝威力で決まる段より1段上（ツバメの急旋回） */
+function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev); return v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; }
 function ecol(A,ev){ return ECOL[(ev.w&&ev.w.e)||A.u.elem]||'255,220,160'; }
 async function bigCharge(A,T,ev,lv){
   const S=BT.S, col=ecol(A,ev), ms=lv>1?640:420, n=lv>1?16:10;
