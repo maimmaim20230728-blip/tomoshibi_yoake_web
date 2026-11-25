@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.99.4（2026-11-25）：11/25 ヒロさん「外伝が人の下にしかなくて気づきにくい」「機械の画面で攻撃方法が見られないのは不便」。準備画面に「外伝」のページを足した（外伝が1つでも開いたら、人・機械・品と店・外伝・保存と設定の5つ。まだクリアしていない外伝があると、ページの名前に●）。機械のカードの攻撃方法を、たたまずに最初から見せる（いまの席の人を乗せたときの威力の数・命中・EP・射程・クリティカル・効果）。工房の改造の画面にも同じ一覧 -->
 <!-- 版 0.99.3（2026-11-25）：11/25 ヒロさん「準備画面で戻るが一番下に行かないと選べないのは手間」「おすすめをお願い」「機械の武器は３つ選べる割に能力がほぼ変わらない。もっと威力と命中、クリティカル率、消費EPに差をつけて」「闇の人に説得するときだけ生身の方が説得クリティカル率が２倍」。準備画面の中の画面（品・席・工房・店・保存など）の「もどる」を、出撃の帯と同じく下に固定した帯へ。機械の武装を「ふだん・確かな・大技」の3つの役に分けて、威力・命中・クリティカル・使うEPの差を大きくした（名前の付いた暴走機械も同じ表を使う）。生身の人が霧の側の人（影も）を説得するときは、説得のクリティカル率が2倍（上限60%のまま） -->
 <!-- 版 0.99.2（2026-11-25）：11/25 ヒロさん「アマラの歌などのわざもカットインで表現して。短めのアニメーションで良い」「戦闘と同じように経験値を」。行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）と上級職のわざ（修理・調整・合唱・まかない・癒し・助け起こす）を使うと、使った人の帯がすべり込み（約1秒）、わざごとの光（音符・火花・光の十字・網）と、戦いの「手に入れた物」と同じ数え方の経験値・レベルの表示（約1.6秒）。押すと次へ。設定のカットイン「見ない」なら出さない（経験値は今まで通り）。経験値の量は 0.99.0 のまま。fx.js -->
 <!-- 版 0.99.1（2026-11-25）：11/25 ヒロさん（上級職のわざも）「これは入れておいて」。修理・調整・合唱・まかない・癒し・助け起こすを使っても、特技と同じく基本10にレベル差の倍率。乗ったまま使ったら乗っている人のそれぞれ。乱数は使わない -->
@@ -309,9 +310,11 @@ body.calm button{transition:none}
 /* 0.20.0 人と機械の見出し・特殊能力の欄 */
 #pbox .pgrp{font-size:.95rem;margin:10px 0 4px;padding-bottom:2px;border-bottom:1px solid var(--line)}
 .pcard .psk{clear:both;margin-top:4px;padding:3px 6px;border-left:3px solid #e0c060;background:rgba(224,192,96,.08);border-radius:0 4px 4px 0;font-size:.85rem;line-height:1.45}
-.pcard .pwep{margin-top:4px;padding:3px 6px;border-left:3px solid #80b0e0;background:rgba(128,176,224,.08);border-radius:0 4px 4px 0;font-size:.85rem;line-height:1.45}
-.pcard .pwep small{white-space:normal}
-.pcard .psk .skl,.pcard .pwep .skl{display:inline-block;font-size:.72rem;border:1px solid #c8a850;color:#f0dc98;border-radius:4px;padding:0 4px;margin-right:4px}
+.pcard .pwep,.pmw .pwep{margin-top:4px;padding:3px 6px;border-left:3px solid #80b0e0;background:rgba(128,176,224,.08);border-radius:0 4px 4px 0;font-size:.85rem;line-height:1.45}
+.pcard .pwep small,.pmw .pwep small{white-space:normal}
+.pwep .wl{display:block;padding:1px 0}   /* 0.99.4 攻撃方法を1行ずつ */
+#ptabs.n5 .ptab{font-size:.8rem}   /* 0.99.4 外伝のページがあると5つ */
+.pcard .psk .skl,.pcard .pwep .skl,.pmw .pwep .skl{display:inline-block;font-size:.72rem;border:1px solid #c8a850;color:#f0dc98;border-radius:4px;padding:0 4px;margin-right:4px}
 .pbtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;clear:both}
 .pbtns .wide{grid-column:1 / 3}
 /* 0.86.0 準備画面の見直し（11/19 ヒロさん「改造度が見にくい」「誰がどの機械に乗っているか一目でわかりにくい」「乗り換える時名前しか出ないから選びにくい」）。
@@ -537,7 +540,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.99.3</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.99.4</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -5935,7 +5938,9 @@ function prepWeps(a){
   if(a.kind!=='machine') return '';
   const ws=(allyDef(a.name)||a).weps; if(!ws||!ws.length) return '';
   const sg=v=>(v>0?'+':'')+v;
-  return `<details class="pwep"><summary><span class="skl">攻撃</span><small style="display:inline">${ws.map(w=>w.n).join('・')}（押すと中身）</small></summary>`+ws.map(w=>`<div><b>${w.n}</b> <small>${w.e}・${rangeText(w)}${w.p?`・威力${sg(w.p)}`:''}${w.h?`・命中${sg(w.h)}`:''}${w.c?`・クリティカル+${w.c}`:''}・EP${wepCost({maxEp:0},w)}${w.fx?`・${w.fx}`:''}</small></div>`).join('')+'</details>';   /* 0.86.0 カードが長いので、攻撃の中身はたたむ */
+  /* 0.99.4 たたまずに最初から見せる（11/25 ヒロさん「機械の画面で攻撃方法が見られないのは不便」）。威力は、準備で決めた席の人を乗せたときの数（攻撃の画面と同じ「力＋武装の強さ」） */
+  let pw=null; try{ pw=withSeats(a,campSeat(a.name),()=>power(a)); }catch(_){ pw=null; }
+  return `<div class="pwep"><span class="skl">攻撃方法</span>${pw!=null?'<small style="display:inline">威力は、いまの席の人を乗せたときの数</small>':''}`+ws.map(w=>`<span class="wl"><b>${w.n}</b>${pw!=null?`　威力 <b>${pw+w.p+elemPow(a,w)}</b>`:`　威力${sg(w.p)}`}　命中${w.h?sg(w.h):'±0'}　EP ${wepCost({maxEp:0},w)} <small>${w.e}・${rangeText(w)}${w.c?`・クリティカル+${w.c}`:''}${w.fx?`・${w.fx}`:''}</small></span>`).join('')+'</div>';
 }
 function prepSkill(a){
   const d=allyDef(a.name)||a, L=(t,s)=>`<div><span class="skl">${t}</span>${s}</div>`;
@@ -6280,7 +6285,7 @@ function renderPrep(focusTop){
     mkBtn(g,{label:'もどる',cls:'wide',fn:prepBack});
   } else if(PREP.view==='mod'&&a){   // 0.31.0 1体の改造。系統ごとに、次の段の中身と費用。決める前に、前と後の数を並べて見せる（比べる画面）
     const M=RULES.mod, cap=modCap();
-    box.innerHTML=`<h2>${a.name}の改造（${modTotal(a)}段）</h2><div class="psub">${prepStats(a,true)}<br>持っている数：部品 ${CAMP.parts}・灯のかけら ${CAMP.shards}　段の上限 ${cap}</div><div id="pmsg" class="psub" aria-live="polite"></div>`;
+    box.innerHTML=`<h2>${a.name}の改造（${modTotal(a)}段）</h2><div class="psub">${prepStats(a,true)}<div class="pmw">${prepWeps(a)}</div>持っている数：部品 ${CAMP.parts}・灯のかけら ${CAMP.shards}　段の上限 ${cap}</div><div id="pmsg" class="psub" aria-live="polite"></div>`;
     const g=document.createElement('div'); g.className='pbtns'; box.appendChild(g);
     for(const k of M.keys){ const n=modN(a,k), nx=n+1, c=modCost(nx), ch=modChange(a,k,nx);
       const why=nx>cap?`いまは${cap}段まで`:CAMP.parts<c.parts?`部品が足りない（${c.parts}）`:CAMP.shards<c.shards?`灯のかけらが足りない（${c.shards}）`:'';
@@ -6337,12 +6342,14 @@ function renderPrep(focusTop){
     PREP.view='main'; seatClean();
     const c=sortieCount();
     const K=CHAPTERS[CAMP.ch]||CHAPTERS[1];
-    const TABS=[['p','人'],['m','機械'],['i','品と店'],['s','保存と設定']];
+    /* 0.99.4 外伝のページ（11/25 ヒロさん「外伝が人の下にしかなくて気づきにくい」）。外伝が1つでも開いたら出す。まだクリアしていない外伝があると、ページの名前に● */
+    const gs=Object.keys(GAIDEN).map(Number).filter(gaidenOpen), gNew=gs.some(n=>!(CAMP.gd||{})[n]);
+    const TABS=[['p','人'],['m','機械'],['i','品と店'],...(gs.length?[['g','外伝']]:[]),['s','保存と設定']];
     if(!TABS.some(t=>t[0]===PREP.tab)) PREP.tab='p';
     box.innerHTML=`<h2>${CAMP.ch||1}章「${K.title}」の前の準備${CAMP.clears?`<small style="display:inline">（クリア ${CAMP.clears}回）</small>`:''}</h2>`+
       `<div class="psub">出撃 人${c.p}／${RULES.sortie.maxPeople}・機械${c.m}／${RULES.sortie.maxMachines}　部品 ${CAMP.parts}・宝石 ${CAMP.gems}・灯のかけら ${CAMP.shards}${CAMP.nparts?`・名入りの部品 ${CAMP.nparts}`:''}</div><div id="pmsg" class="psub" aria-live="polite"></div>`;
-    const tb=document.createElement('div'); tb.id='ptabs'; tb.setAttribute('role','tablist'); tb.setAttribute('aria-label','準備のページ'); box.appendChild(tb);
-    for(const [k,t] of TABS){ const b=document.createElement('button'); b.className='ptab'+(PREP.tab===k?' on':''); b.id='ptab_'+k; b.textContent=t;
+    const tb=document.createElement('div'); tb.id='ptabs'; if(TABS.length>4){ tb.className='n5'; tb.style.gridTemplateColumns=`repeat(${TABS.length},1fr)`; } tb.setAttribute('role','tablist'); tb.setAttribute('aria-label','準備のページ'); box.appendChild(tb);
+    for(const [k,t] of TABS){ const b=document.createElement('button'); b.className='ptab'+(PREP.tab===k?' on':''); b.id='ptab_'+k; b.textContent=t+(k==='g'&&gNew?' ●':''); if(k==='g'&&gNew) b.setAttribute('aria-label','外伝（まだクリアしていない外伝があります）');
       b.setAttribute('role','tab'); b.setAttribute('aria-selected',PREP.tab===k?'true':'false'); b.setAttribute('aria-controls','ppage'); b.tabIndex=PREP.tab===k?0:-1;
       b.addEventListener('click',()=>{ if(PREP.tab===k) return; PREP.tab=k; renderPrep(true); const n=$('ptab_'+k); if(n) try{ n.focus({preventScroll:true}); }catch(_){} });
       b.addEventListener('keydown',e=>{ const i=TABS.findIndex(x=>x[0]===k), d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d) return; e.preventDefault();
@@ -6360,11 +6367,11 @@ function renderPrep(focusTop){
       note(`小さいマップ：人${RULES.sortie.maxPeople}・機械${RULES.sortie.maxMachines}まで出撃できます。品は人も機械も1つ持てます。機械の席は、人のカードの「乗る機械を選ぶ」か、「機械」のページの乗り組みの表で決めます。${K.cheer?`<br>留守番にした人は、章の中で灯台のユラに応援を託します（1ターンに1回。がんばれは1人から、祈りの灯は${RULES.cheer.prayN}人から）。応援の経験値は、クリアしたとき留守番の全員に入ります。`:''}${Object.keys(CAMP.away||{}).length?`<br>${Object.keys(CAMP.away).join('、')}は灯台で休んでいます。物語では仲間ですが、出撃は外伝で迎えに行ってからです。`:''}`);
       sec('おすすめ'); recBtns(btns());   /* 0.89.0。0.90.0 まとめて・乗り組みだけ・品だけ */
       cards('person','人',RULES.sortie.maxPeople);
-      const gs=Object.keys(GAIDEN).map(Number).filter(gaidenOpen);
-      if(gs.length){ sec('外伝'); const g=btns();
+    } else if(PREP.tab==='g'){   /* 0.99.4 人のページの下から、外伝のページへ */
+      note('本編とは別の話です。遊ばなくても先へ進めます。何度でも遊べます。'); const g=btns();
         for(const n of gs){ const K=GAIDEN[n], c=(CAMP.gd||{})[n]||0;   // 0.37.0 外伝（遊ばなくても先へ進める・何度でも）
-          mkBtn(g,{label:`外伝${n}「${K.title}」`,cls:'wide',sub:`${K.talkOnly?`${K.only.join('・')}の会話（戦いなし）`:K.only?`${K.only.join('・')}で遊ぶ`:`${K.place||''}・いまの出撃の顔ぶれで遊ぶ`}（遊ばなくても先へ進めます・何度でも${c?`・クリア ${c}回`:''}）`,
-            fn:()=>confirmBox(`<b>外伝${n}「${K.title}」</b>を始めますか。<br><small>${K.talkOnly||K.talkNote?K.talkNote:K.stalls?K.stallNote:K.only?`出るのは${K.only.join('・')}だけです。${c?'品は、はじめてのクリアでもらいました。部品と経験値は、クリアのたびに入ります。':'はじめてクリアすると、品を1つもらえます。'}`:`出るのは、この準備画面で出撃にしている顔ぶれです（${CAMP.allies.filter(goesOut).map(a=>a.name).join('・')||'まだいない'}）。5ターンのあいだに光る品を多く拾うか、霧の側を多く晴らすと評価が上がり、カササギのお礼（部品・宝石・灯のかけら）が増えます。品はもらえません。`}${K.talkOnly?'':'外伝では、倒れても次の章は休みません。'}</small>`,()=>gaidenGo(n))}); } }   /* 0.38.0 外伝7 */
+          mkBtn(g,{label:`外伝${n}「${K.title}」`,cls:'wide',sub:`${K.talkOnly?`${K.only.join('・')}の会話（戦いなし）`:K.only?`${K.only.join('・')}で遊ぶ`:`${K.place||''}・いまの出撃の顔ぶれで遊ぶ`}（${c?`クリア ${c}回`:'● まだクリアしていない'}）`,
+            fn:()=>confirmBox(`<b>外伝${n}「${K.title}」</b>を始めますか。<br><small>${K.talkOnly||K.talkNote?K.talkNote:K.stalls?K.stallNote:K.only?`出るのは${K.only.join('・')}だけです。${c?'品は、はじめてのクリアでもらいました。部品と経験値は、クリアのたびに入ります。':'はじめてクリアすると、品を1つもらえます。'}`:`出るのは、この準備画面で出撃にしている顔ぶれです（${CAMP.allies.filter(goesOut).map(a=>a.name).join('・')||'まだいない'}）。5ターンのあいだに光る品を多く拾うか、霧の側を多く晴らすと評価が上がり、カササギのお礼（部品・宝石・灯のかけら）が増えます。品はもらえません。`}${K.talkOnly?'':'外伝では、倒れても次の章は休みません。'}</small>`,()=>gaidenGo(n))}); }   /* 0.38.0 外伝7 */
     } else if(PREP.tab==='m'){
       note('前の席の人が操縦し、後ろの席の人が支えます。章の中で、降りたり乗りかえたりもできます。');
       recBtns(btns(),'m');   /* 0.89.0 */
