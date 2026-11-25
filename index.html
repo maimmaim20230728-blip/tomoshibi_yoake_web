@@ -34,6 +34,7 @@
 <!-- 版 0.67.0（2026-11-11）：32章「灯を分ける夜」（第4部の最終章・特別・夜・曲「長い夜」）。ヒロさんの答え：クリアは「大きな霧を晴らす」（24章と同じ形・雪原の入口の霧）、
      村の灯は「能力が少し上がる」（村の家の隣で人が「灯を受け取る」と、この章のあいだ力・守り・説得力が1.1倍）、「ボスを置く」（雪原の入口を見張ってきた暴走機械ツララ・耐久0でも熱0でも止まり、初回だけ名入りの部品）。
      幕間32「二度鳴る鐘」。地図・数・台詞・ツララの名前と絵は仮 -->
+<!-- 版 0.99.2（2026-11-25）：11/25 ヒロさん「アマラの歌などのわざもカットインで表現して。短めのアニメーションで良い」「戦闘と同じように経験値を」。行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）と上級職のわざ（修理・調整・合唱・まかない・癒し・助け起こす）を使うと、使った人の帯がすべり込み（約1秒）、わざごとの光（音符・火花・光の十字・網）と、戦いの「手に入れた物」と同じ数え方の経験値・レベルの表示（約1.6秒）。押すと次へ。設定のカットイン「見ない」なら出さない（経験値は今まで通り）。経験値の量は 0.99.0 のまま。fx.js -->
 <!-- 版 0.99.1（2026-11-25）：11/25 ヒロさん（上級職のわざも）「これは入れておいて」。修理・調整・合唱・まかない・癒し・助け起こすを使っても、特技と同じく基本10にレベル差の倍率。乗ったまま使ったら乗っている人のそれぞれ。乱数は使わない -->
 <!-- 版 0.99.0（2026-11-25）：11/25 ヒロさん「アマラの歌など行動力を使う特技は機械でも生身でも経験値を10もらえる。敵を倒したときと同じく、レベルによって倍率が変わるようにして」。行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）を使うと、基本10（RULES.exp.skill）にレベル差の倍率（倒したときと同じ表）と品の経験値+を掛けて四捨五入。生身なら本人、乗ったまま（アマラの乗ったままのうた）なら倒したときと同じく乗っている人のそれぞれ。上級職のわざ・品・説得のわざ・章の目的の行動は入れていない（確認待ち）。乱数は使わない -->
 <!-- 版 0.98.1（2026-11-25）：11/25 ヒロさん「マップで「戻る」を押し続けると最後にそのマップを止めることになる。誤タップで途中で戻らないように…やめる前に保存を促すように保存画面を出して」。何も選んでいないときの「もどる」は、先に保存の画面（やめる前に、マップの途中を保存しませんか）を出す。そこでもう一度もどると閉じてマップに戻るので、押し続けても止まらない。やめるのは「保存せずにやめる」（確かめあり）か、保存したあとの「マップをやめる」から。文言は仮。ルールと乱数は変えていない -->
@@ -532,7 +533,7 @@ body.calm #tPress{animation:none}
   <button id="bEnd">ターン終了</button>
 </div>
 <div id="prep" role="dialog" aria-modal="true" aria-label="章の前の準備"><div id="pbox"></div></div>
-<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.99.1</div></div></div></div>
+<div id="title" role="dialog" aria-modal="true" aria-labelledby="tName"><canvas id="tcv" aria-hidden="true"></canvas><div id="tbox"><h1 id="tName">灯守りの夜明け</h1><div id="tFoot"><button id="tPress" type="button">画面を押してください</button><div id="tMenu" class="pbtns" hidden></div><div id="tVer">試作 0.99.2</div></div></div></div>
 <div id="chCard" aria-live="assertive"><div class="band"><div id="chNo" class="pin"></div><div id="chName" class="pin"></div><div id="chSub" class="pin"></div></div></div>
 <div id="part" role="dialog" aria-modal="true" aria-labelledby="partName"><div id="partNo" class="pin"></div><div id="partName" class="pin"></div><div id="partSub" class="pin" aria-live="polite"></div><div id="partFoot"></div></div>
 <div id="mk" role="dialog" aria-modal="true" aria-label="幕間"><div id="mkbox">
@@ -3284,7 +3285,7 @@ function songCmd(u,s,cmds){ const C=RULES.cheer, R=songRange(u,s), T=C.songTurns
   const nm=a=>a.map(t=>t.name).join('、')+(hid?`${a.length?'、':''}見えない敵${hid}`:'');
   cmds.push({label:ride?`${s.name}のうた`:'うた',sub:!ok?'前の席に人がいない':st.length?`${ride?'乗ったまま、':''}${R}マス以内の敵 ${st.length}のこころの壁を半分（${T}ターン）`:`${R}マス以内に敵がいない`,off:!st.length,key:st.length>0,
     act:()=>startAct({name:'うた',noTarget:true,list:[null],card:()=>`${s.name}が${ride?`${u.name}の後ろの席から`:''}<span class="big">うたう</span><br>${R}マス以内の敵：${sv.map(t=>`${t.name} ${wallOf(t)}→${Math.floor(t.wall*C.songWall)}`).join('、')}${hid?`${sv.length?'、':''}見えない敵${hid}`:''}<br>こころの壁が <span class="big">半分</span>（このターンと次のターン）<br><small>もう半分になっている敵は、続く長さだけ延びます。${u.name}の行動はここで終わります</small>`,
-      run:()=>{ for(const t of st) t.songWall=Math.max(t.songWall||0,G.turn+T-1); addLog(`${s.name}が${ride?`${u.name}に乗ったまま`:''}うたった。${nm(sv)}のこころの壁が半分に（${T}ターン）。`); skillExp(u); finish(u); }})}); }
+      run:()=>{ for(const t of st) t.songWall=Math.max(t.songWall||0,G.turn+T-1); addLog(`${s.name}が${ride?`${u.name}に乗ったまま`:''}うたった。${nm(sv)}のこころの壁が半分に（${T}ターン）。`); skillExp(u,s); finish(u); }})}); }
 /* 0.12.0 がんばれ（応援）とアマラのうた。そのターンだけ説得力+（「こころ+」の置き換え・11/6 ヒロさん「説得力+3」）。2つ受けても重ならない。0.27.0 からうたは倍率（songMul）に変わり、がんばれだけがここ */
 function heartOf(p){ return G&&p.heartT&&p.heartT===G.turn?heartAmt():0; }   // heartT は章の中だけ（保存しない）
 /* 0.79.0 合唱長が留守番にいると、応援の効果2倍（がんばれの説得力と炊き出しの量・祈りの灯は変えない・仮） */
@@ -3493,7 +3494,7 @@ function rewardExp(a,t,base){
 function chipExp(a,t){ if(!a||a.side!=='ally'||!t||t.side!=='enemy'||t.out) return; const X=RULES.exp; rewardExp(a,t,(t.boss?X.boss:X.normal)*X.chip); }
 /* 0.99.0 行動を使う特技（うた・応急修理・手当て・スープを配る・網さばき）と、0.99.1 から上級職のわざ（修理・調整・合唱・まかない・癒し・助け起こす）を使ったら、基本10にレベル差の倍率（倒したときと同じ表）。
    生身なら本人、乗ったまま（機械の行動）なら倒したときと同じく乗っている人のそれぞれ（11/25 ヒロさん「機械でも生身でも」） */
-function skillExp(a){ if(!a||a.side!=='ally') return; const b=RULES.exp.skill; gainExp(a,{},b,'特技の');
+function skillExp(a,s){ if(!a||a.side!=='ally') return; const b=RULES.exp.skill; SKILL={u:a,s:s||null}; gainExp(a,{},b,'特技の');   /* 0.99.2 s＝わざを使った人（乗ったままのとき） */
   if(a.kind==='machine') for(const r of a.seats||[]) if(r) gainExp(r,{},b,'特技の'); }
 /* 0.17.0 o＝その敵に足す値（5章の列の影 line・移動 mov）。5章の先頭 'elif' は、エリフがもう仲間か物語の仲間なら、ふつうの影が列の先頭に立つ */
 function elifBack(){ return !!(CAMP&&(CAMP.allies.some(a=>a.name==='エリフ')||(CAMP.away||{})['エリフ'])); }
@@ -3899,6 +3900,7 @@ function askGuard(e,t,w){
    敵が当てたら、与えたダメージに応じて闇の心（熱）が戻る（説得で減らしていても戻る） */
 /* 戦いの場面の記録（0.5.1）。見せるためだけに写す。計算には使わない */
 let REC=null;
+let SKILL=null;   /* 0.99.2 特技を使った行動（doDecide のあとでカットイン） */
 /* 0.95.0 コモリがひとりで動いたとき（だれも乗っていない）の部品と宝石は1.5倍（11/22 ヒロさん「コモリが単体で説得や倒したときに経験値がもらえないため、損した気持ちになる。コモリに誰も操縦者がいない時は、部品や宝石を1.5倍もらえるようにしてほしい」）。
    反撃で倒したときも入れる。灯のかけらと、章のクリアの部品は変えない。端数は四捨五入（仮） */
 /* 0.97.1 1.5倍→2倍（11/23 ヒロさん「1.5→2倍に変更」） */
@@ -4438,13 +4440,15 @@ function doDecide(){
   const t=a.list[a.idx];
   buzz();
   G.act=null; G.mode='idle';   // 実行のあとは待ちへ（乗せるはメニューへ、ターン終了は霧の側の番へ、run の中で移る）
-  const pre=btSnap(); REC=[];
-  try{ a.run(t); } finally{ var rec=REC; REC=null; }
+  const pre=btSnap(); REC=[]; SKILL=null;
+  try{ a.run(t); } finally{ var rec=REC; REC=null; var sk=SKILL; SKILL=null; }
   if(!G.over&&G.mode!=='exec') render();
   /* 0.10.0 昼の章：目的を果たしたら、戦いの場面のあとでクリア */
   const fin=()=>{ if(goalMet()&&G.phase==='player') win(); else talkFlush(); };   // 0.19.0 仲間入りの会話は戦いの場面のあと
-  if(rec.length){ const pb=playBattle(rec,pre); if(pb&&pb.then) pb.then(fin,fin); else fin(); }   // 戦いの場面（0.5.1）。出ているあいだは画面全体をおおうので、ほかは押せない
-  else fin();
+  /* 0.99.2 特技を使ったら、短いカットインと「手に入れた物」（経験値・レベル）。カットインを「見ない」なら記録だけ */
+  const fin2=sk&&window.FX&&FX.wantsSkillCutin()?()=>FX.skillCutin(Object.assign({name:a.name,pre},sk)).then(fin,fin):fin;
+  if(rec.length){ const pb=playBattle(rec,pre); if(pb&&pb.then) pb.then(fin2,fin2); else fin2(); }   // 戦いの場面（0.5.1）。出ているあいだは画面全体をおおうので、ほかは押せない
+  else fin2();
 }
 function backFromPredict(){
   const a=G.act;
@@ -4761,15 +4765,15 @@ function advCmds(u,cmds){ const X=RULES.cls.ex, foot=u.kind==='person', who=foot
     if(a==='修理工'){ const mt=allies().filter(m=>m.kind==='machine'&&m!==u&&man(u.x,u.y,m.x,m.y)===1&&(m.hp<m.maxHp||(m.maxEp!=null&&m.ep<m.maxEp)));
       cmds.push({label:`${pre}修理`,sub:mt.length?`隣の機械の耐久と EP を${pc(X.fix)}%戻す`:'隣に傷んだ機械がいない',off:!mt.length,
         act:()=>startAct({name:'修理',list:mt,label:t=>`${t.name}　耐久 ${t.hp}→${hpTo(t,X.fix)}${t.maxEp!=null?`　EP ${t.ep}→${epTo(t,X.fix)}`:''}`,card:t=>`${ride?`<small>${s.name}が${u.name}に乗ったまま</small><br>`:''}<span class="m">${t.name}</span> を修理する（最大の${pc(X.fix)}%）<br>耐久 ${t.hp} → <span class="big">${hpTo(t,X.fix)}</span> / ${t.maxHp}${t.maxEp!=null?`<br>EP ${t.ep} → <span class="big">${epTo(t,X.fix)}</span> / ${t.maxEp}`:''}`+end,
-          run:t=>{ t.hp=hpTo(t,X.fix); t.ep=epTo(t,X.fix); se('heal'); addLog(`${s.name}が${t.name}を修理した。`); skillExp(u); finish(u); }})}); }
+          run:t=>{ t.hp=hpTo(t,X.fix); t.ep=epTo(t,X.fix); se('heal'); addLog(`${s.name}が${t.name}を修理した。`); skillExp(u,s); finish(u); }})}); }
     if(a==='発明家'){ const mt=allies().filter(m=>m.kind==='machine'&&m!==u&&man(u.x,u.y,m.x,m.y)===1);
       cmds.push({label:`${pre}調整`,sub:mt.length?`隣の機械1体の能力を${X.tuneT}ターン${X.tune}倍`:'隣に機械がいない',off:!mt.length,
         act:()=>startAct({name:'調整',list:mt,label:t=>`${t.name}${t.tuneT!=null&&t.tuneT>=G.turn?`（いま調整ずみ・ターン${t.tuneT}まで）`:''}`,card:t=>`${ride?`<small>${s.name}が${u.name}に乗ったまま</small><br>`:''}<span class="m">${t.name}</span> を調整する<br>耐久（最大）・威力・装甲・命中・回避・移動が <span class="big">${X.tune}倍</span>（このターンを入れて${X.tuneT}ターン）`+end,
-          run:t=>{ t.tuneT=G.turn+X.tuneT-1; hpSync(t); se('heal'); addLog(`${s.name}が${t.name}を調整した。ターン${t.tuneT}まで、能力が${X.tune}倍。`); skillExp(u); finish(u); }})}); }
+          run:t=>{ t.tuneT=G.turn+X.tuneT-1; hpSync(t); se('heal'); addLog(`${s.name}が${t.name}を調整した。ターン${t.tuneT}まで、能力が${X.tune}倍。`); skillExp(u,s); finish(u); }})}); }
     if(a==='合唱長'){ const R=songR(s), al=G.units.filter(f=>f!==u&&f.side==='ally'&&!f.out&&!f.inMachine&&!f.guest&&f.encoreUsed!==G.turn&&man(u.x,u.y,f.x,f.y)<=R);
       cmds.push({label:`${pre}合唱`,sub:al.length?`${R}マス以内の味方 ${al.length}が、行動のあとにもう一度動ける`:`${R}マス以内に味方がいない`,off:!al.length,key:al.length>0,
         act:()=>startAct({name:'合唱',noTarget:true,list:[null],card:()=>`${ride?`<small>${s.name}が${u.name}に乗ったまま</small><br>`:''}<span class="p">${s.name}</span> の <span class="big">合唱</span>（${R}マス以内）<br>${al.map(f=>`${f.name}${f.done?'：すぐもう一度動ける':'：行動のあとにもう一度動ける'}`).join('<br>')}<br><small>1ターンに1回ずつ</small>`+end,
-          run:()=>{ for(const f of al){ if(f.done){ f.encoreUsed=G.turn; f.done=false; f.moved=false; f.halfMove=false; } else f.encore=G.turn; } se('heal'); addLog(`${s.name}の合唱が響いた。${al.map(f=>f.name).join('、')}は、もう一度動ける。`); skillExp(u); finish(u); }})}); }
+          run:()=>{ for(const f of al){ if(f.done){ f.encoreUsed=G.turn; f.done=false; f.moved=false; f.halfMove=false; } else f.encore=G.turn; } se('heal'); addLog(`${s.name}の合唱が響いた。${al.map(f=>f.name).join('、')}は、もう一度動ける。`); skillExp(u,s); finish(u); }})}); }
     if(a==='料理長'&&foot){ const at=allies().filter(p=>p.kind==='person'&&p!==u&&man(u.x,u.y,p.x,p.y)===1&&p.hp<p.maxHp);
       cmds.push({label:'まかない',sub:at.length?`隣の人の耐久を${pc(X.feed)}%戻す`:'隣に傷ついた人がいない',off:!at.length,
         act:()=>startAct({name:'まかない',list:at,label:t=>`${t.name}　耐久 ${t.hp}→${hpTo(t,X.feed)}`,card:t=>`<span class="p">${t.name}</span> にまかないを出す（最大の${pc(X.feed)}%）<br>耐久 ${t.hp} → <span class="big">${hpTo(t,X.feed)}</span> / ${t.maxHp}`+end,
@@ -5549,7 +5553,7 @@ function showSettings(){
    <div class="setrow">戦いの場面の速さ<br><small>攻撃と説得の場面・カットイン・マップの上の数字の速さ。音楽の速さは変わりません</small><div class="seg seg5">${SPDS.map(v=>`<button data-bs="${v}" aria-pressed="${btSpd()===v}">${spdName(v)}</button>`).join('')}</div></div>
    <div class="setrow">ユニットの動く速さ<br><small>味方と霧の側が歩く速さと、霧の側の番の間。音楽の速さは変わりません</small><div class="seg seg5">${SPDS.map(v=>`<button data-ms="${v}" aria-pressed="${mvSpd()===v}">${spdName(v)}</button>`).join('')}</div></div>
    <div class="setrow">戦いの場面<br><small>攻撃と説得のあとに、ダメージ・よけた・倒した・手に入れた物を大きく見せます。押すと早送り</small><div class="seg seg2">${yn('battle','見る','見ない')}</div></div>
-   <div class="setrow">カットイン<br><small>影を呼び戻したときと、夜明けに、顔とひとことを大きく見せます。押すと次へ</small><div class="seg seg2">${yn('cutin','見る','見ない')}</div></div>
+   <div class="setrow">カットイン<br><small>影を呼び戻したとき、夜明け、特技を使ったときに、顔とひとことを大きく見せます。押すと次へ</small><div class="seg seg2">${yn('cutin','見る','見ない')}</div></div>
    <div class="setrow">動きを減らす<br><small>点滅・画面のゆれ・流れる線を止めます</small><div class="seg seg2">${yn('calm','オン','オフ')}</div></div>
    <div class="setrow">決定したときの振動<div class="seg seg2">${yn('buzz','オン','オフ')}</div></div>
    <div class="setrow">音楽<br><small>音は、画面を最初に押したときから鳴ります</small><div class="seg seg2">${yn('bgm','あり','なし')}</div></div>

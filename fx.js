@@ -2,7 +2,7 @@
    ルールの計算はしない。乱数（Math.random）も使わない（ゆれや光のちらつきは時刻から作る）。
    ・マップ：灯台の光の筋のなぞり（光を回したとき・ターンの始め）
    ・マップ：戦いの場面を「見ない」にしたとき、ダメージの数字・命中の光・画面ゆれ・MISS をマップの上に出す
-   ・カットイン：影を呼び戻したとき（毎回・11/6 ヒロさん）と、夜明け
+   ・カットイン：影を呼び戻したとき（毎回・11/6 ヒロさん）と、夜明け。0.99.2 から行動を使う特技と上級職のわざ（経験値とレベルの表示つき）
    ・「動きを減らす」では、点滅・ゆれ・すべり込み・流れる線を止める（字と顔は出る）
    ・押す・Enter・Esc・戻るで次へ（何もしなくても進む） */
 (function(){
@@ -164,7 +164,7 @@ const css=`
 #ciTx{min-height:3.3em;padding:6px 6px 2px;font-size:1.05rem;line-height:1.5}
 #ciNm{display:block;font-size:.8rem;color:var(--key,#ffd25a)}
 #ciNm.p{color:#ffb060}#ciNm.n{color:#cfd6f0}
-#ciLn{font-weight:bold}
+#ciLn{font-weight:bold;white-space:pre-line}
 #ciSkip{font-size:.72rem;color:#aab;text-align:center}
 @media (orientation:landscape) and (max-height:560px){
   #cibox{width:min(100%,900px);display:grid;grid-template-columns:1fr minmax(160px,240px);gap:0 8px;align-items:center}
@@ -336,9 +336,57 @@ async function dawnCutin(){
   if(ines) await beat(2000,(p,t)=>{ scene(1,t+4200); band(c,-1,p/0.25,t,COLOR['イネス'],faceCanvas(ines,'smile',calm()?0:(p<0.5?Math.floor(t/120)%2:0),-1)); line('イネス','「'+typed(say2,p)+'」','p'); });
   close();
 }
+/* ---------- 0.99.2 行動を使う特技・上級職のわざ（11/25 ヒロさん「アマラの歌などのわざもカットインで。短めのアニメーションで良い」「戦闘と同じように経験値を」） ----------
+   o＝{u:行動した人か機械, s:わざを使った人, name:わざの名前, pre:行動の前の数字（btSnap）}
+   1：使った人の帯がすべり込む（約1秒）　2：わざごとの光と、戦いの「手に入れた物」と同じ経験値・レベルの表示（約1.6秒） */
+function skillKind(n){ return /うた|合唱/.test(n)?'song':/修理|調整/.test(n)?'fix':/網/.test(n)?'net':'heal'; }
+const SKCOL={song:['#c08ad8','#4a2a6a'],fix:['#d8a040','#5a3a14'],net:['#4fa0b0','#16404a'],heal:['#6cc08a','#1c4a32']};
+/* わざごとの光（右半分）。乱数は使わず、つぶの位置は番号と時刻から */
+function skillFx(c,k,p,t){
+  const cx=184, cy=74, mv=calm()?0:1;
+  c.save(); c.globalCompositeOperation='lighter';
+  const g=c.createRadialGradient(cx,cy,2,cx,cy,60); const col=k==='song'?'230,190,255':k==='fix'?'255,220,140':k==='net'?'170,230,240':'190,255,200';
+  g.addColorStop(0,`rgba(${col},${0.45*ease(p)})`); g.addColorStop(1,`rgba(${col},0)`); c.fillStyle=g; c.fillRect(cx-64,cy-64,128,128);
+  c.restore();
+  for(let i=0;i<12;i++){
+    const ph=((i*0.083)+(mv?t*0.0006:0))%1, a=i*0.52, x=Math.round(cx+Math.cos(a)*(14+i%4*9)+ (mv?Math.sin(t*0.004+i)*3:0)), y=Math.round(cy+30-ph*70);
+    const al=(mv?Math.sin(ph*Math.PI):0.8)*clamp01(p*2);
+    if(k==='song'){ c.fillStyle=`rgba(255,235,255,${al})`; c.fillRect(x,y,3,3); c.fillRect(x+2,y-7,1,8); c.fillRect(x+3,y-7,3,1); }   /* 音符 */
+    else if(k==='fix'){ c.fillStyle=`rgba(255,230,150,${al})`; c.fillRect(x,y,1,4); c.fillRect(x-1,y+1,3,1); c.fillRect(x+2,y-2,1,1); }   /* 火花 */
+    else if(k==='heal'){ c.fillStyle=`rgba(220,255,225,${al})`; c.fillRect(x-1,y,3,1); c.fillRect(x,y-1,1,3); }   /* 小さな光の十字 */
+  }
+  if(k==='net'){ const r=Math.round(10+ease(p)*34); c.strokeStyle=`rgba(210,245,250,${0.85*clamp01(p*2)})`; c.lineWidth=1;
+    for(let i=-3;i<=3;i++){ const d=i*r/3; c.beginPath(); c.moveTo(cx+d-0.5,cy-r); c.lineTo(cx+d-0.5,cy+r); c.stroke(); c.beginPath(); c.moveTo(cx-r,cy+d-0.5); c.lineTo(cx+r,cy+d-0.5); c.stroke(); } }
+}
+/* 戦いの「手に入れた物」と同じ数え方で、経験値とレベルの文を作る */
+function skillGot(pre){
+  const out=[]; let lvUp=false;
+  if(!pre||typeof G==='undefined') return {out,lvUp};
+  for(const u of G.units){ const s=pre.units.get(u); if(!s||u.side!=='ally'||s.side!=='ally'||u.lv==null) continue;
+    const got=(u.lv-s.lv)*RULES.exp.toNext+u.exp-s.exp; if(got<=0) continue;
+    out.push(`${u.name}　経験値 +${got}（あと ${RULES.exp.toNext-u.exp} で Lv${u.lv+1}）`);
+    if(u.lv>s.lv){ lvUp=true; const up=LV_KEYS.filter(k=>s.stats[k]!=null&&u[k]>s.stats[k]).map(k=>`${LV_NAME[k]}+${u[k]-s.stats[k]}`);
+      out.push(`${u.name}は Lv${u.lv} に上がった！${up.length?'　'+up.join('　'):''}`); } }
+  return {out,lvUp};
+}
+function wantsSkillCutin(){ return typeof SET!=='undefined'&&SET.cutin!==false&&!(typeof G!=='undefined'&&G.fast); }
+async function skillCutin(o){
+  if(!o||!wantsSkillCutin()) return;
+  const sp=o.s||speaker(o.u), nm=sp?sp.name:'', k=skillKind(o.name||''), cols=SKCOL[k];
+  const mute=!!sp&&sp.kind==='machine';
+  const {out,lvUp}=skillGot(o.pre);
+  open();
+  const c=$('cic').getContext('2d'); c.imageSmoothingEnabled=false;
+  const title=`${nm}の ${o.name}！`;
+  await beat(1000,(p,t)=>{ skyNight(c,t); band(c,1,p/0.3,t,cols,faceCanvas(sp,'resolve',mute||calm()?0:(p<0.6?Math.floor(t/120)%2:0),1)); line('',typed(title,p),'n'); });
+  if(lvUp&&window.Sound) Sound.se('levelup');
+  await beat(out.length?1600:900,(p,t)=>{ skyNight(c,t+1000); band(c,1,1,t+1000,cols,faceCanvas(sp,'smile',0,1)); skillFx(c,k,p,t);
+    if(out.length) line('手に入れた物',out.join('\n'),'n'); else line('',title,'n'); });
+  close();
+}
 /* 戦いの場面を見ないとき：カットインだけ順に */
 async function cutinsFor(rec){ for(const ev of rec) if(wantsCutin(ev)) await persuadeCutin(ev); }
 
-window.FX={drawMap,beam,mapRec,quake,wave,wavePos,persuadeCutin,dawnCutin,cutinsFor,wantsCutin,
+window.FX={drawMap,beam,mapRec,quake,wave,wavePos,persuadeCutin,dawnCutin,cutinsFor,wantsCutin,skillCutin,wantsSkillCutin,
   get ciOn(){ return CI.on; }, skip(){ if(CI.on) CI.skip=true; }};
 })();
