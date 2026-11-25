@@ -488,7 +488,7 @@ function impact(kind,A,T,ev){
 const ECOL={'打':'255,186,110','水':'120,200,255','光':'255,236,150','音':'214,190,255','網':'230,220,180'};
 const BIG_POW=[30,60];
 function powOf(A,ev){ try{ return power(A.u)+(ev.w.p||0)+(typeof elemPow==='function'?elemPow(A.u,ev.w):0); }catch(_){ return 0; } }
-function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev); return v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; }
+function bigLv(A,ev){ if(!isM(A)||!ev.w||ev.net) return 0; const v=powOf(A,ev), lv=v>=BIG_POW[1]?2:v>=BIG_POW[0]?1:0; return ev.w.flashy?Math.min(2,lv+1):lv; }   /* 0.99.11 flashy＝威力で決まる段より1段上（ツバメの急旋回） */
 function ecol(A,ev){ return ECOL[(ev.w&&ev.w.e)||A.u.elem]||'255,220,160'; }
 async function bigCharge(A,T,ev,lv){
   const S=BT.S, col=ecol(A,ev), ms=lv>1?640:420, n=lv>1?16:10;
@@ -606,7 +606,7 @@ window.btSnap=function(){
   return {units,res:{parts:G.parts,gems:G.gems,shards:G.shards}};
 };
 /* 0.6.0：カットイン（fx.js）が出ているあいだも on。押すとカットインだけ次へ進む */
-window.BTL={get on(){ return BT.on||!!(window.FX&&FX.ciOn); }, get motion(){ return BT.S&&BT.S.motion||null; }, skipNow(){ if(window.FX&&FX.ciOn) FX.skip(); else if(BT.on) BT.skip=true; }, pixText};
+window.BTL={get on(){ return BT.on||!!(window.FX&&FX.ciOn); }, get motion(){ return BT.S&&BT.S.motion||null; }, get big(){ return BT.S&&BT.S.bigMove||0; },   /* 0.99.11 big＝いまの攻撃の演出の段（試験で見る） */ skipNow(){ if(window.FX&&FX.ciOn) FX.skip(); else if(BT.on) BT.skip=true; }, pixText};
 window.playBattle=async function(rec,pre){
   if(!rec||!rec.length) return;
   if(G.fast) return;
